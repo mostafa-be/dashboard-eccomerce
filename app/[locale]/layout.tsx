@@ -29,7 +29,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Providers>
           <SessionProvider>
-            <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+            <ThemeProvider >
               <Custom>{children}</Custom>
               <Toaster position="top-center" reverseOrder={false} />
             </ThemeProvider>

@@ -1,9 +1,11 @@
-import React from 'react'
+import React from "react";
 
 const Description = () => {
   return (
-    <div>Description</div>
-  )
-}
+      <div className="relative overflow-hidden w-full h-full bg-blue-200 rounded-2xl p-3 flex items-center">
+          
+    </div>
+  );
+};
 
-export default Description
+export default Description;
