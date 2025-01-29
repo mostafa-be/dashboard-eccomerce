@@ -1,5 +1,5 @@
 "use client";
-import { Inter } from "next/font/google";
+import { Josefin_Sans, Poppins } from "next/font/google";
 import "./globals.css";
 //import { NextIntlClientProvider } from "next-intl";
 //import { getMessages } from "next-intl/server";
@@ -9,7 +9,17 @@ import { ThemeProvider } from "@/utils/theme-provider";
 import { Toaster } from "react-hot-toast";
 import { Custom } from "@/utils/Custom";
 
-const inter = Inter({ subsets: ["latin"] });
+const poppins = Poppins({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-Poppins",
+});
+
+const josefin = Josefin_Sans({
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  variable: "--font-Josefin",
+});
 
 export default function RootLayout({
   children,
@@ -24,12 +34,13 @@ export default function RootLayout({
     <html lang={"en"} dir={locale === "ar" ? "rtl" : "ltr"}>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <meta name="theme-color" content="#872e4e" />
       </head>
-      <body className={inter.className}>
+      <body
+        className={`${poppins.variable} ${josefin.variable} !bg-white bg-no-repeat dark:bg-gradient-to-b dark:from-gray-900 dark:to-black duration-300`}
+      >
         <Providers>
           <SessionProvider>
-            <ThemeProvider >
+            <ThemeProvider>
               <Custom>{children}</Custom>
               <Toaster position="top-center" reverseOrder={false} />
             </ThemeProvider>

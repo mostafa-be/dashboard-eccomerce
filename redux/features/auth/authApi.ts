@@ -51,11 +51,34 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     login: builder.mutation({
       query: ({ email, password }) => ({
-        url: "login-user",
+        url: "login-admin",
         method: "POSt",
         body: {
           email,
           password,
+        },
+        credentials: "include" as const,
+      }),
+      async onQueryStarted(arg, { queryFulfilled, dispatch }) {
+        try {
+          const result = await queryFulfilled;
+          dispatch(
+            userLoggedIn({
+              accessToken: result.data.accessToken,
+              user: result.data.user,
+            })
+          );
+        } catch (error) {
+          console.log(error);
+        }
+      },
+    }),
+    forgotPassword: builder.mutation({
+      query: ({ email }) => ({
+        url: "forgot-password",
+        method: "POSt",
+        body: {
+          email,
         },
         credentials: "include" as const,
       }),
@@ -120,6 +143,7 @@ export const {
   useRegisterMutation,
   useActivationMutation,
   useLoginMutation,
+  useForgotPasswordMutation,
   useSocialAuthMutation,
   useLogOutQuery,
 } = authApi;

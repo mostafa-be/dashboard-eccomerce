@@ -4,7 +4,7 @@ import Description from "./Description";
 
 const HomePage = () => {
   return (
-    <main className="w-dvw h-dvh bg-white dark:bg-black/90 grid grid-cols-2 gap-10 p-5">
+    <main className="min-w-dvw min-h-dvh overflow-hidden bg-white flex flex-col lg:grid lg:grid-cols-2 lg:gap-10 lg:p-5">
       <Description />
       <Auth />
     </main>

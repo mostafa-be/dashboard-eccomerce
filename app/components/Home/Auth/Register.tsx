@@ -1,16 +1,15 @@
 "use client";
-import Image from "next/image";
+//import { signIn } from "next-auth/react";
+
 import React, { useEffect, useState } from "react";
-import apple_svg from "../../../../public/icons_svg/apple.svg";
-import google_svg from "../../../../public/icons_svg/google.svg";
 import { Eye, EyeOff } from "lucide-react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
-import { redirect } from "next/navigation";
 import toast from "react-hot-toast";
-import { useLoginMutation } from "@/redux/features/auth/authApi";
-import { signIn } from "next-auth/react";
+import { useRegisterMutation } from "@/redux/features/auth/authApi";
+
 const schema = Yup.object().shape({
+  name: Yup.string().required("Please enter your full name!").min(6),
   email: Yup.string()
     .email("Invalid email!")
     .required("Please enter your email!"),
@@ -20,20 +19,20 @@ type Props = {
   setAuth: (type: string) => void;
 };
 
-const Login = ({ setAuth }: Props) => {
+const Register = ({ setAuth }: Props) => {
   const [show, setShow] = useState(false);
-  const [login, { isSuccess, error, isLoading }] = useLoginMutation();
+  const [register, { isSuccess, error, isLoading }] = useRegisterMutation();
   const formik = useFormik({
-    initialValues: { email: "", password: "" },
+    initialValues: { name: "", email: "", password: "" },
     validationSchema: schema,
-    onSubmit: async ({ email, password }) => {
-      await login({ email, password });
+    onSubmit: async ({ name, email, password }) => {
+      await register({ name, email, password });
     },
   });
   useEffect(() => {
     if (isSuccess) {
-      toast.success("Login successful!");
-      redirect("/en/dashboard");
+      toast.success("Please check your email to verify your account!");
+      setAuth("verify");
     }
 
     if (error) {
@@ -53,46 +52,37 @@ const Login = ({ setAuth }: Props) => {
     >
       <div className="w-full flex flex-col gap-2">
         <h1 className="text-2xl font-semibold text-black">
-          Login in to your account
+          Register your account
         </h1>
         <p className="text-sm text-gray-500">
           Enter your credentials to access your account
         </p>
       </div>
-      <div className="w-full mt-5 flex max-lg:flex-col items-center justify-center gap-7">
-        <button
-          onClick={() => signIn("google")}
-          className="w-[300px] select-none shadow border border-zinc-400 px-2 py-3  flex items-center justify-center gap-4 rounded-full cursor-pointer"
-        >
-          <Image
-            src={google_svg}
-            alt="logo google-svg"
-            className="w-5 h-5 object-cover"
-          />
-          <span className="text-sm text-black font-[500] capitalize">
-            log in with google
-          </span>
-        </button>
-        <button    onClick={()=> signIn("appel")} className="w-[300px] select-none shadow border border-zinc-400 px-2 py-3  flex items-center justify-center gap-4 rounded-full cursor-pointer">
-          <Image
-            src={apple_svg}
-            alt="logo apple-svg"
-            className="w-5 h-5 object-cover"
-          />
-          <span className="text-sm text-black font-[500] capitalize">
-            log in with apple
-          </span>
-        </button>
-      </div>
-      <div className="w-full flex items-center gap-2 my-3">
-        <hr className="w-full m-0" />
-        <h5 className="text-center  font-Poppins text-sm text-gray-700 dark:text-white ">
-          Or
-        </h5>
-        <hr className="w-full m-0" />
-      </div>
-      <div className="w-full flex flex-col gap-2">
+      <div className="w-full flex flex-col mt-10 gap-2">
         <div className="w-full ">
+          <div className="w-full">
+            <label className={`text-lg text-black font-normal`} htmlFor="name">
+              Full Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              value={values.name}
+              onChange={handleChange}
+              id="name"
+              placeholder="John Doe"
+              className={`outline-none ${
+                errors.name &&
+                touched.name &&
+                "border border-red-500 outline outline-red-500"
+              } w-full text-black bg-transparent rounded-lg !h-[45px] px-3.5   font-Poppins border mt-1.5`}
+            />
+            {errors.name && touched.name && (
+              <span className="text-sm font-normal text-red-500 pt-2 block">
+                {errors.name}
+              </span>
+            )}
+          </div>
           <div className="w-full">
             <label className={`text-lg text-black font-normal`} htmlFor="email">
               Email
@@ -159,19 +149,10 @@ const Login = ({ setAuth }: Props) => {
             )}
           </div>
         </div>
-        <div className="w-full flex items-center py-2 justify-end">
-          <span
-            className="text-sm text-black font-[500] "
-            onClick={() => setAuth && setAuth("forgotPassword")}
-          >
-            Forgot password?{" "}
-            <span className="text-blue-650 cursor-pointer">Rest</span>
-          </span>
-        </div>
         <div className="w-full mt-5">
           <input
             type="submit"
-            value={isLoading ? "Loading..." : "Login"}
+            value={isLoading ? "Loading..." : "Register"}
             className={`w-full  rounded-lg flex items-center justify-center py-3 text-sm font-[600] text-white ${
               isLoading
                 ? "bg-blue-650/80 cursor-progress"
@@ -181,12 +162,12 @@ const Login = ({ setAuth }: Props) => {
         </div>
         <div className="w-full flex items-center mt-2 justify-center ">
           <p className="text-sm text-center text-black/90 font-bold">
-            Don&apos;t have an account yet?{" "}
+            Have an account ?{" "}
             <span
-              onClick={() => setAuth && setAuth("register")}
+              onClick={() => setAuth && setAuth("login")}
               className="text-blue-650 underline cursor-pointer"
             >
-              Sign up now
+              Login now
             </span>
           </p>
         </div>
@@ -195,4 +176,4 @@ const Login = ({ setAuth }: Props) => {
   );
 };
 
-export default Login;
+export default Register;
