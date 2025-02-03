@@ -1,8 +1,7 @@
 "use client";
-import { useTheme } from "next-themes";
 import React, { useEffect, useState } from "react";
 import { Sun, Moon } from "lucide-react";
-
+import { useTheme } from "next-themes";
 const ThemeSwitcher = () => {
   const [mounted, setMounted] = useState(false);
   const { theme, setTheme } = useTheme();
@@ -12,18 +11,19 @@ const ThemeSwitcher = () => {
     return null;
   }
   return (
-    <div className="flex items-center justify-center  bg-zinc-200 p-2 rounded-full">
+    <div className=" hidden md:flex select-none items-center justify-center ">
       {theme === "light" ? (
         <Moon
-          className="cursor-pointer"
-          fill="black"
-          size={25}
+          className="cursor-pointer "
+          color="#009ef9"
+          size={20}
           onClick={() => setTheme("dark")}
         />
       ) : (
         <Sun
-          className="cursor-pointer text-[#fcd34d]"
-          size={25}
+          className="cursor-pointer "
+          color="#0561FC"
+          size={20}
           onClick={() => setTheme("light")}
         />
       )}

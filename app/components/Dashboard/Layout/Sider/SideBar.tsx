@@ -1,10 +1,9 @@
 "use client";
 import React, { createContext, useState, useContext, JSX } from "react";
-import { Bell, ChevronDown, ChevronLeft, Dot, Search } from "lucide-react";
+import { ChevronDown, ChevronLeft, Dot } from "lucide-react";
 
 import Link from "next/link";
-import Image from "next/image";
-import defaultProfile from "../../../../../public/icons_svg/profile.svg";
+
 export const SidebarContext = createContext({ expanded: false });
 type PropsSidebar = {
   expanded: boolean;
@@ -15,9 +14,9 @@ type PropsSidebar = {
 export const SideBar = ({ expanded, setExpanded, children }: PropsSidebar) => {
   return (
     <aside
-      className={`h-dvh bg-white dark:bg-black-100 ${
+      className={` hidden z-30 md:block h-dvh  bg-white dark:bg-black-100 ${
         expanded ? "w-64 " : "w-20 max-md:hidden"
-      } transition-all transform ease-in-out duration-500 origin-left fixed md:sticky top-0 left-0 `}
+      } transition-all transform ease-in-out duration-500 origin-left sticky top-0 left-0  `}
     >
       <div className="w-full bg-transparent">
         <div className="w-full flex items-center justify-center my-5">
@@ -37,20 +36,22 @@ export const SideBar = ({ expanded, setExpanded, children }: PropsSidebar) => {
             />
           </button>
         </div>
-        <nav
-          className={`flex flex-col items-center justify-center mt-2  ${
-            expanded ? "px-5" : "px-2"
-          } transition-all transform ease-in-out `}
-        >
-          <SidebarContext.Provider value={{ expanded }}>
-            <ul
-              className={`w-full flex-1 flex flex-col items-center justify-center gap-2 `}
-            >
-              {children}
-            </ul>
-          </SidebarContext.Provider>
-        </nav>
-      </div>
+
+          <nav
+            className={`flex  flex-col items-center justify-center mt-2  ${
+              expanded ? "px-5" : "px-2"
+            } transition-all transform ease-in-out `}
+          >
+            <SidebarContext.Provider value={{ expanded }}>
+              <ul
+                className={`w-full flex-1 flex flex-col items-center justify-center gap-2 `}
+              >
+                {children}
+              </ul>
+            </SidebarContext.Provider>
+          </nav>
+        </div>
+
     </aside>
   );
 };
@@ -90,13 +91,13 @@ export const SideBarItem = ({
         <>
           <li
             className={`
-            relative  p-3 flex flex-col items-center justify-between  font-medium rounded-md cursor-pointer transition-all group
+            relative p-3 font-medium rounded-lg cursor-pointer transition-all group
             ${
               active
                 ? "bg-blue-650 text-white"
-                : "hover:bg-blue-650/90 hover:text-white-100 text-gray-700"
+                : "hover:bg-blue-650/90 hover:text-white-100 text-gray-700/75 dark:text-white/80"
             }
-                ${expanded ? "w-52" : ""}
+                    ${expanded ? "w-52" : ""}
             `}
           >
             <div className="w-full flex items-center justify-between">
@@ -128,14 +129,18 @@ export const SideBarItem = ({
             )}
             {!expanded && (
               <div
-                className={`hidden group-hover:flex flex-col absolute w-24 left-20 top-1/2 -translate-y-1/2 bg-blue-650 text-white p-3 rounded-lg shadow`}
+                className={`hidden group-hover:flex flex-col absolute min-w-24 left-20 top-1/2 -translate-y-1/2 bg-blue-650 text-white px-4 py-5 gap-y-1.5 rounded-lg shadow`}
               >
                 {groupLinks &&
                   groupLinks.map(
                     (link: { url: string; text: string }, index: number) => {
                       return (
-                        <Link key={index} href={`/${url}`}>
-                          {text}
+                        <Link
+                          className="text-nowrap"
+                          key={index}
+                          href={`/${link.url}`}
+                        >
+                          {link.text}
                         </Link>
                       );
                     }
@@ -153,9 +158,9 @@ export const SideBarItem = ({
           </li>
           {expanded && (
             <ul
-              className={`w-full grid gap-2 list-disc px-3 text-gray-700 transition-all origin-top ease-in-out transform ${
+              className={`w-full grid gap-2 list-disc px-3 text-gray-700 dark:text-white transition-all origin-top ease-in-out transform ${
                 openLinks === text
-                  ? "bg-slate-50 rounded py-2 flex-1  h-max"
+                  ? "bg-slate-50 dark:bg-black-200 rounded py-2 flex-1  h-max"
                   : "h-0"
               }`}
             >
@@ -173,7 +178,7 @@ export const SideBarItem = ({
                 ${
                   item.active
                     ? " text-blue-650"
-                    : "hover:text-blue-650 text-gray-800"
+                    : "hover:text-blue-650 dark:hover:text-blue-700/90 text-gray-800 dark:text-white/70"
                 }
                 ${openLinks === text ? "block" : " hidden"}
                 `}
@@ -190,11 +195,11 @@ export const SideBarItem = ({
       ) : (
         <li
           className={`
-            relative font-medium rounded-md cursor-pointer transition-all group
+            relative font-medium rounded-lg cursor-pointer transition-all group
             ${
               active
                 ? "bg-blue-650 text-white"
-                : "hover:bg-blue-650/90 hover:text-white-100 text-gray-700"
+                : "hover:bg-blue-650/90 hover:text-white-100 text-gray-700/75 dark:text-white/80"
             }
                     ${expanded ? "w-52" : ""}
             `}
@@ -210,7 +215,7 @@ export const SideBarItem = ({
             </span>
             {alert && (
               <div
-                className={` absolute right-2 w-2 h-2 rounded bg-indigo-400 ${
+                className={` absolute right-2 w-2 h-2 rounded bg-red-400 ${
                   expanded ? "" : "top-2"
                 }`}
               />
@@ -234,48 +239,5 @@ export const SideBarItem = ({
         </li>
       )}
     </>
-  );
-};
-
-export const NavBar = ({}) => {
-  return (
-    <header className="w-full px-10 h-[60px] z-20 flex items-center justify-between bg-white ">
-      <div className="flex items-center justify-center">
-        <div className="relative">
-          <Search
-            size={20}
-            className=" absolute left-3 top-1/2 -translate-y-1/2 text-gray-600/90"
-          />
-          <input
-            type="search"
-            name="search"
-            id="search"
-            title="Search"
-            placeholder="Search..."
-            className="h-10 w-80 lg:w-96 bg-slate-100/70 pl-10 outline-none rounded-lg placeholder:text-lg placeholder:text-gray-600/90"
-          />
-        </div>
-      </div>
-      <div className="flex items-center">
-        <div className="relative">
-          <Bell size={20} className="text-gray-700/90" />
-        </div>
-        <div className="flex items-center gap-1.5">
-          <div className="w-12 h-12 bg-slate-100/70 rounded-full overflow-hidden">
-            <Image
-              src={defaultProfile}
-              width={500}
-              height={500}
-              alt="default profile"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div className="flex flex-col items-center gap-1">
-            <p className="text-sm font-semibold text-black">Jon Dialot</p>
-            <span className="text-sm text-gray-700/90 capitalize ">admin</span>
-          </div>
-        </div>
-      </div>
-    </header>
   );
 };

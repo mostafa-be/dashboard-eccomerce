@@ -23,15 +23,13 @@ const josefin = Josefin_Sans({
 
 export default function RootLayout({
   children,
-  params: { locale },
 }: Readonly<{
   children: React.ReactNode;
-  params: { locale: string };
 }>) {
   // const messages = await getMessages();
 
   return (
-    <html lang={"en"} dir={locale === "ar" ? "rtl" : "ltr"}>
+    <html lang={"en"} suppressHydrationWarning>
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       </head>
@@ -40,7 +38,12 @@ export default function RootLayout({
       >
         <Providers>
           <SessionProvider>
-            <ThemeProvider>
+            <ThemeProvider
+              attribute="class"
+              defaultTheme="system"
+              enableSystem
+              disableTransitionOnChange
+            >
               <Custom>{children}</Custom>
               <Toaster position="top-center" reverseOrder={false} />
             </ThemeProvider>
