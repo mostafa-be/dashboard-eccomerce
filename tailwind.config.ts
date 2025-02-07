@@ -29,6 +29,9 @@ const config: Config = {
           "100": "#E4ECFF",
           "650": "#0561FC",
         },
+        yellow: {
+          "650": "#F5B400",
+        },
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
@@ -49,4 +52,3 @@ const config: Config = {
   plugins: [],
 };
 export default config;
-

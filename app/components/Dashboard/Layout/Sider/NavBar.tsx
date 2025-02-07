@@ -13,7 +13,7 @@ export const NavBar = ({}) => {
   const [isOpen, setIsopen] = useState<boolean>(false);
   return (
     <>
-      <header className="w-full sticky top-0  px-10 h-[60px] flex items-center justify-between bg-white dark:bg-black-100 ">
+      <header className="w-full z-20 sticky top-0  px-10 h-[60px] flex items-center justify-between bg-white dark:bg-black-100 ">
         <div className="flex items-center justify-center ">
           <AlignLeft
             size={20}

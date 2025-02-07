@@ -25,7 +25,7 @@ export const SideBar = ({ expanded, setExpanded, children }: PropsSidebar) => {
           </h5>
           <button
             type="button"
-            className=" absolute  -right-5 overflow-hidden w-10 h-10 bg-blue-650 p-1.5 rounded-full flex items-center justify-center"
+            className=" absolute  -right-5 z-40 overflow-hidden w-10 h-10 bg-blue-650 p-1.5 rounded-full flex items-center justify-center"
             title="Toggle Sidebar"
           >
             <ChevronLeft

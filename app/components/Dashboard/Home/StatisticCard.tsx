@@ -23,7 +23,7 @@ const StatisticCard: React.FC<StatisticCardProps> = ({ period, statistic }) => {
   const mouvementYearly = yearly.mouvement;
 
   return (
-    <div className="bg-white/85 select-none dark:bg-black-100/70 shadow rounded p-4 flex flex-col gap-2 cursor-pointer hover:scale-105 transition-all ">
+    <div className="bg-white/85 select-none dark:bg-black-100/70 shadow rounded-lg p-4 flex flex-col gap-2 cursor-pointer hover:scale-105 transition-all ">
       <div className="w-full flex items-center justify-between">
         <p className="text-[16px] text-gray-700/70 dark:text-white capitalize">
           {statistic.title}
