@@ -14,7 +14,7 @@ type PropsSidebar = {
 export const SideBar = ({ expanded, setExpanded, children }: PropsSidebar) => {
   return (
     <aside
-      className={` hidden z-30 md:block h-dvh  bg-white dark:bg-black-100 ${
+      className={` hidden z-50 md:block h-dvh  bg-white dark:bg-black-100 ${
         expanded ? "w-64 " : "w-20 max-md:hidden"
       } transition-all transform ease-in-out duration-500 origin-left sticky top-0 left-0  `}
     >
@@ -25,7 +25,7 @@ export const SideBar = ({ expanded, setExpanded, children }: PropsSidebar) => {
           </h5>
           <button
             type="button"
-            className=" absolute  -right-5 z-40 overflow-hidden w-10 h-10 bg-blue-650 p-1.5 rounded-full flex items-center justify-center"
+            className=" absolute  -right-5  z-50 overflow-hidden w-10 h-10 bg-blue-650 p-1.5 rounded-full flex items-center justify-center"
             title="Toggle Sidebar"
           >
             <ChevronLeft
@@ -36,11 +36,11 @@ export const SideBar = ({ expanded, setExpanded, children }: PropsSidebar) => {
             />
           </button>
         </div>
-
+        <div className="">
           <nav
-            className={`flex  flex-col items-center justify-center mt-2  ${
-              expanded ? "px-5" : "px-2"
-            } transition-all transform ease-in-out `}
+            className={`w-full h-[85vh]  bg-transparent layout-scroll mt-2 ${
+              expanded ? "px-5 overflow-y-auto " : "px-2"
+            } transition-all transform ease-in-out duration-300 `}
           >
             <SidebarContext.Provider value={{ expanded }}>
               <ul
@@ -51,7 +51,7 @@ export const SideBar = ({ expanded, setExpanded, children }: PropsSidebar) => {
             </SidebarContext.Provider>
           </nav>
         </div>
-
+      </div>
     </aside>
   );
 };

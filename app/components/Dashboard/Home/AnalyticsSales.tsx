@@ -14,7 +14,13 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "../../ui/chart";
-import { Card, HeaderCard, SelectorPeriod, TitleCard } from "../../ui/card";
+import {
+  Card,
+  CardContent,
+  HeaderCard,
+  SelectorPeriod,
+  TitleCard,
+} from "../../ui/card";
 import { ChevronDown, TrendingUp } from "lucide-react";
 const chartData = [
   { month: "January", order: 189.5, sales: "80" },
@@ -73,8 +79,8 @@ export function AnalyticsSales({ setPeriod, period }: Props) {
 */
 
   return (
-    <Card className="w-full min-h-[200px]  col-span-1 md:col-span-3 lg:col-span-5 bg-white dark:bg-black-100 shadow-sm rounded-xl">
-      <HeaderCard className="w-full px-5 py-5 border-b-2 border-b-gray-300/90 dark:border-b-white-100 border-dashed">
+    <Card className="w-full min-h-[200px]  col-span-1 md:col-span-3 lg:col-span-6 bg-white dark:bg-black-100 shadow rounded-lg">
+      <HeaderCard className="w-full px-5 py-5 border-b border-b-gray-300/90 dark:border-b-white-100 border-dashed">
         <div className="w-full flex items-center justify-between">
           <TitleCard title="Order and Sales Overview" />
           <SelectorPeriod setPeriod={setPeriod} period={period} />
@@ -112,13 +118,13 @@ export function AnalyticsSales({ setPeriod, period }: Props) {
 
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
-              <div className="p-1 shadow bg-blue-650 rounded-[0.5px]" />
+              <div className="p-1 shadow bg-blue-650 rounded-full" />
               <span className="text-gray-900 dark:text-white text-sm font-[500]">
                 Order
               </span>
             </div>
             <div className="flex items-center gap-1">
-              <div className="p-1 shadow bg-yellow-650 rounded-[0.5px]" />
+              <div className="p-1 shadow bg-yellow-650 rounded-full" />
               <span className="text-gray-900 dark:text-white text-sm font-[500]">
                 Sales
               </span>
@@ -126,36 +132,38 @@ export function AnalyticsSales({ setPeriod, period }: Props) {
           </div>
         </div>
       </HeaderCard>
-      <ChartContainer config={chartConfig} className="w-full h-[300px]">
-        <ComposedChart accessibilityLayer data={chartData}>
-          <CartesianGrid vertical={false} />
-          <XAxis
-            dataKey="month"
-            tickLine={false}
-            tickMargin={10}
-            axisLine={false}
-            tickFormatter={(value) => value.slice(0, 3)}
-          />
-          <YAxis />
-          <ChartTooltip content={<ChartTooltipContent />} />
-          {/*<ChartLegend content={<ChartLegendContent />} />*/}
-          <Area
-            dataKey="order"
-            type="natural"
-            fill="#0561fc" //var(--color-desktop)
-            fillOpacity={0.4}
-            stroke="#0561fc" //var(--color-desktop)
-            stackId="b"
-          />
-          <Line
-            dataKey="sales"
-            type="natural"
-            stroke="#F5B400" //var(--color-desktop)
-            strokeWidth={2}
-            dot={false}
-          />
-        </ComposedChart>
-      </ChartContainer>
+      <CardContent className="w-full h-[300px]">
+        <ChartContainer config={chartConfig} className="w-full h-full">
+          <ComposedChart accessibilityLayer data={chartData}>
+            <CartesianGrid vertical={false} />
+            <XAxis
+              dataKey="month"
+              tickLine={false}
+              tickMargin={10}
+              axisLine={false}
+              tickFormatter={(value) => value.slice(0, 3)}
+            />
+            <YAxis />
+            <ChartTooltip content={<ChartTooltipContent />} />
+            {/*<ChartLegend content={<ChartLegendContent />} />*/}
+            <Area
+              dataKey="order"
+              type="natural"
+              fill="#0561fc" //var(--color-desktop)
+              fillOpacity={0.4}
+              stroke="#0561fc" //var(--color-desktop)
+              stackId="fillOrder"
+            />
+            <Line
+              dataKey="sales"
+              type="natural"
+              stroke="#F5B400" //var(--color-desktop)
+              strokeWidth={2}
+              dot={false}
+            />
+          </ComposedChart>
+        </ChartContainer>
+      </CardContent>
     </Card>
   );
 }

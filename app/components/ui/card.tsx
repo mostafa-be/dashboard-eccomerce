@@ -49,10 +49,10 @@ export const SelectorPeriod: React.FC<SelectorPeriodProps> = ({
   return (
     <div
       onClick={() => setIsOpen(!isOpen)}
-      className="w-32 z-50 py-2 px-3 flex items-center cursor-pointer justify-between relative bg-transparent shadow rounded-lg border border-gray-500/90"
+      className="w-32 z-20 py-2 px-3 flex items-center cursor-pointer justify-between relative bg-transparent shadow rounded-lg border border-gray-500/90"
     >
       <span className="text-sm font-normal text-gray-900 dark:text-white capitalize ">
-      {period==="wekly"?"Last 7 Days":period}
+        {period === "wekly" ? "Last 7 Days" : period}
       </span>
       <ChevronDown size={15} className="text-gray-900 dark:text-white" />
       {isOpen && (
@@ -68,13 +68,31 @@ export const SelectorPeriod: React.FC<SelectorPeriodProps> = ({
                   } ${period === time ? "bg-gray-300/60" : "bg-transparent"} `}
                 >
                   <span className="text-sm text-gray-900 dark:text-white capitalize ">
-                    {time==="wekly"?"Last 7 Days":time}
+                    {time === "wekly" ? "Last 7 Days" : time}
                   </span>
                 </div>
               );
             })}
         </div>
       )}
+    </div>
+  );
+};
+
+interface CardContentProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const CardContent: React.FC<CardContentProps> = ({
+  children,
+  className,
+}) => {
+  return (
+    <div
+      className={` ${className}`}
+    >
+      {children}
     </div>
   );
 };
