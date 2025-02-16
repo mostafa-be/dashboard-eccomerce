@@ -9,6 +9,7 @@ import { ThemeProvider } from "@/utils/theme-provider";
 import { Toaster } from "react-hot-toast";
 import { Custom } from "@/utils/Custom";
 
+
 const poppins = Poppins({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
@@ -44,8 +45,10 @@ export default function RootLayout({
               enableSystem
               disableTransitionOnChange
             >
-              <Custom>{children}</Custom>
-              <Toaster position="top-center" reverseOrder={false} />
+     
+                <Custom>{children}</Custom>
+                <Toaster position="top-center" reverseOrder={false} />
+     
             </ThemeProvider>
           </SessionProvider>
         </Providers>

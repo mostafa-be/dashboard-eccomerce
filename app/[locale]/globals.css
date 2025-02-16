@@ -70,3 +70,21 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background-color: transparent;/*rgba(201, 199, 199, 0.767)*/
+
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #0561FC;
+  border-radius: 5px;
+}

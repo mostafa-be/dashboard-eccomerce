@@ -5,7 +5,8 @@ import Statistic from "./Statistic";
 import { AnalyticsSales } from "./AnalyticsSales";
 import RecentAndSales from "./RecentAndSales";
 import BestSelling from "./BestSelling/BestSelling";
-import Country from "./Country";
+import { VisitorByBrowser } from "./VisitorByBrowser";
+import { VisitorByDevice } from "./VisitorByDevice";
 
 const PageDashboard = () => {
   const [period, setPeriod] = React.useState<string>("wekly");
@@ -17,8 +18,9 @@ const PageDashboard = () => {
         <AnalyticsSales period={period} setPeriod={setPeriod} />
         <RecentAndSales />
         <BestSelling />
-        <div className="col-span-1 md:col-span-3">
-          <Country />
+        <div className="col-span-1 md:col-span-3 grid gap-5">
+          <VisitorByBrowser period={ period} />
+          <VisitorByDevice period={ period}/>
         </div>
       </div>
     </section>

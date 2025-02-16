@@ -5,7 +5,7 @@ export const Card = ({
   className,
   children,
 }: {
-  className: string;
+  className?: string;
   children: React.ReactNode;
 }) => {
   return <section className={` ${className} `}>{children}</section>;
@@ -14,7 +14,7 @@ export const HeaderCard = ({
   className,
   children,
 }: {
-  className: string;
+  className?: string;
   children: React.ReactNode;
 }) => {
   return <div className={` ${className} `}>{children}</div>;

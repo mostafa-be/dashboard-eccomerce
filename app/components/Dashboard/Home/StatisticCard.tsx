@@ -4,7 +4,7 @@ import React from "react";
 interface StatisticCardProps {
   statistic: {
     title: string;
-    amount: { value: string; current: string };
+    amount: { value: number; current: string };
     static: {
       wekly: { percent: number; mouvement: string };
       monthly: { percent: number; mouvement: string };
@@ -21,7 +21,14 @@ const StatisticCard: React.FC<StatisticCardProps> = ({ period, statistic }) => {
   const mouvementMonthly = monthly.mouvement;
   const yearly = statistic.static.yearly;
   const mouvementYearly = yearly.mouvement;
-
+  const current =statistic.amount.current;
+  const amount = statistic.amount.value;
+  const formatted = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: current,
+    notation: 'compact',
+    compactDisplay: 'short',
+  }).format(amount);
   return (
     <div className="bg-white/85 select-none dark:bg-black-100/70 shadow rounded-lg p-4 flex flex-col gap-2 cursor-pointer hover:scale-105 transition-all ">
       <div className="w-full flex items-center justify-between">
@@ -37,8 +44,8 @@ const StatisticCard: React.FC<StatisticCardProps> = ({ period, statistic }) => {
         {" "}
         <div className="flex items-center ">
           <h5 className="text-2xl font-semibold proportional-nums text-gray-950 dark:text-white">
-            {statistic.amount.current}
-            {statistic.amount.value}
+          {formatted}
+       
           </h5>
         </div>
         {period === "wekly" && (

@@ -9,7 +9,7 @@ const Statistic = ({ period }: Props) => {
   const statistics = [
     {
       title: "total sales",
-      amount: { value: "10.6k", current: "$" },
+      amount: { value: 16738296372, current: "usd" },
       static: {
         wekly: {
           percent: 3.6,
@@ -27,7 +27,7 @@ const Statistic = ({ period }: Props) => {
     },
     {
       title: "total purchase",
-      amount: { value: "789.6k", current: "$" },
+      amount: { value: 873892, current: "usd" },
       static: {
         wekly: {
           percent: 36.6,
@@ -45,7 +45,7 @@ const Statistic = ({ period }: Props) => {
     },
     {
       title: "total return",
-      amount: { value: "150.6k", current: "$" },
+      amount: { value: 9382753999, current: "usd" },
       static: {
         wekly: {
           percent: 79.6,
@@ -63,7 +63,7 @@ const Statistic = ({ period }: Props) => {
     },
     {
       title: "total marketing",
-      amount: { value: "108.6k", current: "$" },
+      amount: { value: 7298267819, current: "usd" },
       static: {
         wekly: {
           percent: 3.6,
@@ -99,7 +99,7 @@ const Statistic = ({ period }: Props) => {
             (
               statistic: {
                 title: string;
-                amount: { value: string; current: string };
+                amount: { value: number; current: string };
                 static: {
                   wekly: { percent: number; mouvement: string };
                   monthly: { percent: number; mouvement: string };

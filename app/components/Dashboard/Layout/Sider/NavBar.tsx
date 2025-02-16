@@ -8,9 +8,12 @@ import Beller from "./Beller";
 import { AlignLeft } from "lucide-react";
 import { useState } from "react";
 import SideBarMobile from "./SideBarMobile";
+import { DropdownMenuAccount } from "./DropdownMenuAccount";
+import { useSelector } from "react-redux";
 
 export const NavBar = ({}) => {
   const [isOpen, setIsopen] = useState<boolean>(false);
+  const { user } = useSelector((state: { auth: { user: {name:string ,role:string} } }) => state.auth);
   return (
     <>
       <header className="w-full z-40 sticky top-0  px-10 h-[60px] flex items-center justify-between bg-white dark:bg-black-100 ">
@@ -39,12 +42,14 @@ export const NavBar = ({}) => {
             </div>
             <div className="hidden md:flex flex-col items-center gap-1">
               <p className="text-sm font-semibold text-black dark:text-white/90">
-                Jon Dialot
+              {user.name}
               </p>
               <span className="text-sm text-gray-700/90 dark:text-white/90 capitalize ">
-                admin
+                {user.role}
               </span>
             </div>
+          
+              <DropdownMenuAccount/>
           </div>
         </div>
       </header>
