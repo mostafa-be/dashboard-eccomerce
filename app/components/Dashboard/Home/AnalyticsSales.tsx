@@ -79,7 +79,7 @@ export function AnalyticsSales({ setPeriod, period }: Props) {
 */
 
   return (
-    <Card className="w-full min-h-[200px]  col-span-1 md:col-span-3 lg:col-span-6 bg-white dark:bg-black-100 shadow rounded-lg">
+    <Card className="w-full min-h-[200px]  col-span-1 md:col-span-5 lg:col-span-6 bg-white dark:bg-black-100 shadow rounded-lg">
       <HeaderCard className="w-full px-5 py-5 border-b border-b-gray-300/90 dark:border-b-white-100 border-dashed">
         <div className="w-full flex items-center justify-between">
           <TitleCard title="Order and Sales Overview" />

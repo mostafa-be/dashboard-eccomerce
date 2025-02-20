@@ -16,7 +16,7 @@ export const SideBar = ({ expanded, setExpanded, children }: PropsSidebar) => {
     <aside
       className={` hidden z-50 md:block h-dvh  bg-white dark:bg-black-100 ${
         expanded ? "w-64 " : "w-20 max-md:hidden"
-      } transition-all transform ease-in-out duration-500 origin-left sticky top-0 left-0  `}
+      } transition-all transform ease-in-out duration-300 origin-left sticky top-0 left-0  `}
     >
       <div className="w-full bg-transparent">
         <div className="w-full flex items-center justify-center my-5">
@@ -91,7 +91,7 @@ export const SideBarItem = ({
         <>
           <li
             className={`
-            relative p-3 font-medium rounded-lg cursor-pointer transition-all group
+            relative p-3 font-medium rounded-lg cursor-pointer transition-all  transform ease-in-out group
             ${
               active
                 ? "bg-blue-650 text-white"
@@ -158,9 +158,9 @@ export const SideBarItem = ({
           </li>
           {expanded && (
             <ul
-              className={`w-full grid gap-2 list-disc px-3 text-gray-700 dark:text-white transition-all origin-top ease-in-out transform ${
+              className={`w-full grid gap-2 list-disc px-3 text-gray-700 dark:text-white transition-all duration-500 origin-top ease-in-out transform ${
                 openLinks === text
-                  ? "bg-slate-50 dark:bg-black-200 rounded py-2 flex-1  h-max"
+                  ? "bg-slate-50 dark:bg-black-200 rounded py-2 flex-1  h-[500px]"
                   : "h-0"
               }`}
             >

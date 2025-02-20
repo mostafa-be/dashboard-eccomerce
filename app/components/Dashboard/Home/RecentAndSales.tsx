@@ -126,7 +126,7 @@ const RecentAndSales = () => {
     },
   ];
   return (
-    <Card className="col-span-1 lg:col-span-3 bg-white dark:bg-black-100 shadow rounded-lg px-5">
+    <Card className="col-span-1 md:col-span-4 lg:col-span-3 bg-white dark:bg-black-100 shadow rounded-lg px-5">
       <HeaderCard className="w-full h-[60px] flex items-center justify-between">
         <TitleCard
           className="text-lg font-[500] text-gray-900 dark:text-white"
