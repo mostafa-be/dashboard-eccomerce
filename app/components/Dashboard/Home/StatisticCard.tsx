@@ -1,5 +1,6 @@
 import { Ellipsis, TrendingDown, TrendingUp } from "lucide-react";
 import React from "react";
+import { Card, CardContent, HeaderCard, TitleCard } from "../../ui/card";
 
 interface StatisticCardProps {
   statistic: {
@@ -21,31 +22,31 @@ const StatisticCard: React.FC<StatisticCardProps> = ({ period, statistic }) => {
   const mouvementMonthly = monthly.mouvement;
   const yearly = statistic.static.yearly;
   const mouvementYearly = yearly.mouvement;
-  const current =statistic.amount.current;
+  const current = statistic.amount.current;
   const amount = statistic.amount.value;
   const formatted = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: current,
-    notation: 'compact',
-    compactDisplay: 'short',
+    notation: "compact",
+    compactDisplay: "short",
   }).format(amount);
   return (
-    <div className="bg-white/85 select-none dark:bg-black-100/70 shadow rounded-lg p-4 flex flex-col gap-2 cursor-pointer hover:scale-105 transition-all ">
-      <div className="w-full flex items-center justify-between">
-        <p className="text-[16px] text-gray-700/70 dark:text-white capitalize">
-          {statistic.title}
-        </p>
+    <Card className="bg-white/85 select-none dark:bg-black-100/70 shadow rounded-lg p-4 flex flex-col gap-2 cursor-pointer hover:scale-105 transition-all ">
+      <HeaderCard className="w-full flex items-center justify-between">
+        <TitleCard
+          title={statistic.title}
+          className="text-[16px] text-gray-700/70 dark:text-white capitalize"
+        />
         <Ellipsis
           size={15}
           className="text-sm text-gray-700/70 dark:text-white cursor-no-drop"
         />
-      </div>
-      <div className="flex flex-col  gap-2">
+      </HeaderCard>
+      <CardContent className="flex flex-col  gap-2">
         {" "}
         <div className="flex items-center ">
           <h5 className="text-2xl font-semibold proportional-nums text-gray-950 dark:text-white">
-          {formatted}
-       
+            {formatted}
           </h5>
         </div>
         {period === "wekly" && (
@@ -132,8 +133,8 @@ const StatisticCard: React.FC<StatisticCardProps> = ({ period, statistic }) => {
             </p>
           </div>
         )}
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };
 

@@ -15,6 +15,7 @@ import {
 const SideBarDesktop = () => {
   const [expanded, setExpanded] = React.useState<boolean>(true);
   const url = `en/dashboard`;
+
   return (
     <SideBar expanded={expanded} setExpanded={setExpanded}>
       <SideBarItem

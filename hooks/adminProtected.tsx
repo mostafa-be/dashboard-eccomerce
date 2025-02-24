@@ -14,6 +14,7 @@ export default function AdminProtected({ children }: ProtectedProps) {
   if (role === "admin") {
     return <>{children}</>;
   } else {
-    return redirect("/");
+    redirect("/");
+     return null
   }
 }

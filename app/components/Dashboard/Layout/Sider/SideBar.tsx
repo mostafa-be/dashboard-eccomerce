@@ -1,8 +1,15 @@
 "use client";
-import React, { createContext, useState, useContext, JSX } from "react";
+import React, {
+  createContext,
+  useState,
+  useContext,
+  JSX,
+  useEffect,
+} from "react";
 import { ChevronDown, ChevronLeft, Dot } from "lucide-react";
 
 import Link from "next/link";
+import { getPageInfo } from "@/utils/storage";
 
 export const SidebarContext = createContext({ expanded: false });
 type PropsSidebar = {
@@ -70,7 +77,6 @@ type Props = {
 export const SideBarItem = ({
   icon,
   text,
-  active,
   alert,
   links,
   groupLinks,
@@ -85,6 +91,14 @@ export const SideBarItem = ({
       setOpenLinks(text);
     }
   };
+  const data = getPageInfo();
+  let title = "";
+  let subTitle = "";
+  useEffect(() => {
+    title = data.title as string;
+    subTitle = data.subTitle as string;
+  }, [data]);
+
   return (
     <>
       {links ? (
@@ -93,7 +107,7 @@ export const SideBarItem = ({
             className={`
             relative p-3 font-medium rounded-lg cursor-pointer transition-all  transform ease-in-out group
             ${
-              active
+              text === title
                 ? "bg-blue-650 text-white"
                 : "hover:bg-blue-650/90 hover:text-white-100 text-gray-700/75 dark:text-white/80"
             }
@@ -176,7 +190,7 @@ export const SideBarItem = ({
                         className={`
                 relative flex items-center  px-1.5 my-1 font-medium rounded-md cursor-pointer transition-colors 
                 ${
-                  item.active
+                  item.text === subTitle
                     ? " text-blue-650"
                     : "hover:text-blue-650 dark:hover:text-blue-700/90 text-gray-800 dark:text-white/70"
                 }
@@ -197,7 +211,7 @@ export const SideBarItem = ({
           className={`
             relative font-medium rounded-lg cursor-pointer transition-all group
             ${
-              active
+              text === title
                 ? "bg-blue-650 text-white"
                 : "hover:bg-blue-650/90 hover:text-white-100 text-gray-700/75 dark:text-white/80"
             }

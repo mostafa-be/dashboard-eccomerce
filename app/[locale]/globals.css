@@ -33,6 +33,11 @@ body {
     --chart-4: 43 74% 66%;
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
+    --color-orders:0.746 0.16 232.661;
+    --color-processing:0.852 0.199 91.936;
+    --color-shipped:0.841 0.238 128.85;
+    --color-cancelled:0.637 0.237 25.331;
+    --color-delivered:0.527 0.154 150.069;
   }
   .dark {
     --background: 0 0% 3.9%;
@@ -87,4 +92,13 @@ body {
 ::-webkit-scrollbar-thumb {
   background: #0561FC;
   border-radius: 5px;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
