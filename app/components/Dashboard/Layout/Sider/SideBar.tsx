@@ -91,13 +91,15 @@ export const SideBarItem = ({
       setOpenLinks(text);
     }
   };
-  const data = getPageInfo();
+
   let title = "";
   let subTitle = "";
   useEffect(() => {
+    const data = getPageInfo() as { title: string; subTitle: string };
     title = data.title as string;
     subTitle = data.subTitle as string;
-  }, [data]);
+    console.log(data);
+  }, [getPageInfo]);
 
   return (
     <>
@@ -211,7 +213,7 @@ export const SideBarItem = ({
           className={`
             relative font-medium rounded-lg cursor-pointer transition-all group
             ${
-              text === title
+              text.toLowerCase() === title.toLowerCase() 
                 ? "bg-blue-650 text-white"
                 : "hover:bg-blue-650/90 hover:text-white-100 text-gray-700/75 dark:text-white/80"
             }

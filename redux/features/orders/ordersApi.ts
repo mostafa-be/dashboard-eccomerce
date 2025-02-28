@@ -17,7 +17,14 @@ export const projectsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getOrder: builder.query({
+      query: ({ id }) => ({
+        url: `get-order/${id}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const {useGetAllOrdersQuery} = projectsApi;
+export const { useGetAllOrdersQuery,useGetOrderQuery,useEditStatusOrderMutation } = projectsApi;
