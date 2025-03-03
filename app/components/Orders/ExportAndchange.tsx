@@ -21,7 +21,7 @@ type Props = {
   columns: any[];
 };
 
-const ExportAndchange = ({ setPeriod, period, tableData, columns }: Props) => {
+const ExportAndchange = ({ setPeriod, period }: Props) => {
   const timePeriods = ["weekly", "monthly", "yearly"];
   const [isOpen, setIsOpen] = React.useState<boolean>(false);
 

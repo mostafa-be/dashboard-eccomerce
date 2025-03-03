@@ -1,10 +1,10 @@
 import { apiSlice } from "../api/apiSlice";
 
-export const ordersApi = apiSlice.injectEndpoints({
+export const productsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    getAllOrders: builder.query({
+    getAllProducts: builder.query({
       query: () => ({
-        url: "get-orders",
+        url: "get-products",
         method: "GET",
         credentials: "include" as const,
       }),
@@ -27,4 +27,4 @@ export const ordersApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllOrdersQuery,useGetOrderQuery,useEditStatusOrderMutation } = ordersApi;
+export const { useGetAllProductsQuery} = productsApi;

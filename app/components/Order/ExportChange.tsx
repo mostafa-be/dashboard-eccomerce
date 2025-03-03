@@ -9,11 +9,11 @@ import {
 } from "../ui/breadcrumb";
 import { CloudDownload } from "lucide-react";
 
-type ExportChangeProps = {
+type Props = {
   onExportPDF: () => void;
 };
 
-const ExportChange = ({ onExportPDF }: ExportChangeProps) => {
+const ExportChange = ({onExportPDF}: Props) => {
   return (
     <div className="w-full flex flex-wrap gap-2 items-center justify-between">
       <div className="flex flex-col justify-start gap-0.5">
@@ -36,19 +36,10 @@ const ExportChange = ({ onExportPDF }: ExportChangeProps) => {
                 Dashboard
               </BreadcrumbLink>
             </BreadcrumbItem>
-                      <BreadcrumbSeparator />
-                      <BreadcrumbItem>
-              <BreadcrumbLink
-                href="/en/dashboard/orders"
-                className="text-sm text-gray-700/90 dark:text-white/90 hover:text-blue-500/90 dark:hover:text-blue-500/90"
-              >
-                Orders
-              </BreadcrumbLink>
-            </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage className="text-sm cursor-pointer text-blue-500/90">
-                Order
+                Orders
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
