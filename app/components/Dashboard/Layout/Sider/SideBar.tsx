@@ -98,7 +98,7 @@ export const SideBarItem = ({
     const data = getPageInfo() as { title: string; subTitle: string };
     title = data.title as string;
     subTitle = data.subTitle as string;
-    console.log(data);
+
   }, [getPageInfo]);
 
   return (

@@ -80,7 +80,6 @@ export function TableProducts<TData, TValue>({
           }
           className="max-w-sm pl-8"
         />
-
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button className="ml-auto !bg-transparent shadow border text-black dark:text-white ">

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardContent, HeaderCard, TitleCard } from "../ui/card";
+import { Product } from "./columns";
 
 type StatisticsProductsProps = {
-  products: any;
+  products: Array<Product>;
 };
 
 const StatisticsProducts = ({ products }: StatisticsProductsProps) => {
@@ -15,11 +16,11 @@ const StatisticsProducts = ({ products }: StatisticsProductsProps) => {
     const total = products?.length || 0;
     const inStockCount =
       (products &&
-        products?.filter((product: any) => product.quantity > 0).length) ||
+        products?.filter((product: Product) => product.quantity > 0).length) ||
       0;
     const outStockCount =
       (products &&
-        products?.filter((product: any) => product.quantity === 0).length) ||
+        products?.filter((product: Product) => product.quantity === 0).length) ||
       0;
     const bestProductItem =
       products &&

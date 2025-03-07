@@ -88,11 +88,17 @@ export const CardContent: React.FC<CardContentProps> = ({
   children,
   className,
 }) => {
-  return (
-    <div
-      className={` ${className}`}
-    >
-      {children}
-    </div>
-  );
+  return <div className={` ${className}`}>{children}</div>;
+};
+
+interface CardFooterProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+export const CardFooter: React.FC<CardFooterProps> = ({
+  children,
+  className,
+}) => {
+  return <div className={` ${className}`}>{children}</div>;
 };

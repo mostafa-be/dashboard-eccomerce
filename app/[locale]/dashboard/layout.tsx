@@ -12,7 +12,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <div className="flex-grow ">
             <NavBar />
 
-            <div className="w-full overflow-hidden  px-5 md:px-10 py-10 bg-slate-50 dark:bg-black-200 min-h-dvh ">
+            <div className="w-full overflow-hidden  px-5 md:px-10 py-10 bg-slate-50 dark:bg-black-200 min-h-dvh transition-all ">
               {children}
             </div>
           </div>
