@@ -17,22 +17,26 @@ export const productsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
-    editStatusOrder: builder.mutation({
+    editProduct: builder.mutation({
       query: ({ id, data }) => ({
-        url: `upadte-staus-order/${id}`,
+        url: `edit-product/${id}`,
         method: "PUT",
         body: data,
         credentials: "include" as const,
       }),
     }),
-    getOrder: builder.query({
-      query: ({ id }) => ({
-        url: `get-order/${id}`,
-        method: "GET",
+    deleteProduct: builder.mutation({
+      query: (id) => ({
+        url: `delete-product/${id}`,
+        method: "DELETE",
         credentials: "include" as const,
       }),
     }),
   }),
 });
 
-export const { useGetAllProductsQuery,useCreateProductMutation } = productsApi;
+export const {
+  useGetAllProductsQuery,
+  useCreateProductMutation,
+  useDeleteProductMutation,
+} = productsApi;

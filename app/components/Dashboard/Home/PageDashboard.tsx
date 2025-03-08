@@ -15,11 +15,11 @@ const PageDashboard = () => {
     <section className="w-full">
       <ExportAndchange period={period} setPeriod={setPeriod} />
       <Statistic period={period} />
-      <div className="w-full grid grid-cols-1 lg:grid-cols-9 gap-5 mt-10 ">
+      <div className="max-w-full  md:grid  lg:grid-cols-9 gap-5 mt-10 ">
         <AnalyticsSales period={period} setPeriod={setPeriod} />
         <RecentAndSales />
         <BestSelling />
-        <div className="col-span-1 md:col-span-9 lg:col-span-3 grid md:grid-cols-2 lg:grid-cols-1 gap-5">
+        <div className="max-md:mt-5 col-span-1 md:col-span-9 lg:col-span-3 grid md:grid-cols-2 lg:grid-cols-1 gap-5">
           <VisitorByBrowser period={period} />
           <VisitorByDevice period={period} />
         </div>

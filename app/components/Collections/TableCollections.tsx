@@ -23,21 +23,16 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/components/ui/table";
-import { Columns4, Search } from "lucide-react";
+import { Search } from "lucide-react";
 import { Input } from "../ui/input";
-import {
-  DropdownMenu,
-  DropdownMenuCheckboxItem,
-  DropdownMenuContent,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+
 
 interface TableProductsProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function TableProducts<TData, TValue>({
+export function TableCollections<TData, TValue>({
   columns,
   data,
 }: TableProductsProps<TData, TValue>) {
@@ -73,39 +68,14 @@ export function TableProducts<TData, TValue>({
       <div className="relative flex items-center gap-3 py-4">
         <Search className=" absolute top-1/2 -translate-y-1/2 left-1.5 text-gray-500" />
         <Input
-          placeholder="Search Product Name"
-          value={(table.getColumn("title")?.getFilterValue() as string) ?? ""}
+          placeholder="Search Collection Name"
+          value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
-            table.getColumn("title")?.setFilterValue(event.target.value)
+            table.getColumn("name")?.setFilterValue(event.target.value)
           }
           className="max-w-sm pl-8"
         />
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button className="ml-auto !bg-transparent shadow border text-black dark:text-white ">
-              <Columns4 /> Columns
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent className="dark:bg-black-100" align="end">
-            {  table
-              .getAllColumns()
-              .filter((column) => column.getCanHide())
-              .map((column) => {
-                return (
-                  <DropdownMenuCheckboxItem
-                    key={column.id}
-                    className="capitalize"
-                    checked={column.getIsVisible()}
-                    onCheckedChange={(value) =>
-                      column.toggleVisibility(!!value)
-                    }
-                  >
-                    {column.id}
-                  </DropdownMenuCheckboxItem>
-                );
-              })}
-          </DropdownMenuContent>
-        </DropdownMenu>
+
       </div>
       <div className="">
         <Table>
@@ -148,7 +118,7 @@ export function TableProducts<TData, TValue>({
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className="h-96 text-center"
+                  className="h-[400px] text-center"
                 >
                   No results.
                 </TableCell>

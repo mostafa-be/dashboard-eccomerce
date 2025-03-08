@@ -48,27 +48,27 @@ const SideBarDesktop = () => {
           },
           {
             text: "Collections List",
-            url: `${url}/collections`,
+            url: `${url}/products/collections`,
             active: false,
           },
           {
             text: "Categories List",
-            url: `${url}/categories`,
+            url: `${url}/products/categories`,
             active: false,
           },
           {
             text: "Colors List",
-            url: `${url}/colors`,
+            url: `${url}/products/colors`,
             active: false,
           },
           {
             text: "Sizes List",
-            url: `${url}/Sizes`,
+            url: `${url}/products/Sizes`,
             active: false,
           },
           {
             text: "Tags List",
-            url: `${url}/tags`,
+            url: `${url}/products/tags`,
             active: false,
           },
         ]}

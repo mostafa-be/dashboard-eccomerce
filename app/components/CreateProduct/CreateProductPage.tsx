@@ -6,8 +6,8 @@ import ProductInformation from "../Products/ProductInformation";
 import ProductMedia from "./ProductMedia";
 import { useCreateProductMutation } from "@/redux/features/products/productsApi";
 import ProductPreview from "./ProductPreview";
-
-
+import toast from "react-hot-toast";
+import { redirect } from "next/navigation";
 
 type Image = {
   public_id: string;
@@ -60,12 +60,19 @@ const CreateProductPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-    //  toast.success("Product created successfully!");
+      redirect("/en/dashboard/products");
+      toast.success("Product created successfully!");
     } else if (isError) {
-    //  toast.error("Failed to create product.");
+      //  toast.error("Failed to create product.");
     }
   }, [isSuccess, isError]);
-
+  if (isLoading) {
+    return (
+      <div className="w-flull h-dvh flex items-center justify-center">
+        <h1 className="text-xl text-black dark:text-white">Loading ...</h1>
+      </div>
+    );
+  }
   const handleProductCreate = async () => {
     const data = productData;
     if (!isLoading) {

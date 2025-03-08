@@ -10,39 +10,23 @@ import {
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Trash2 } from "lucide-react";
+import { MoreHorizontal} from "lucide-react";
 
 import { Checkbox } from "@/app/components/ui/checkbox";
 
 import { redirect } from "next/navigation";
-import { AlertDeleteProduct } from "./AlertDeleteProduct";
-export type Product = {
+import Image from "next/image";
+import { Skeleton } from "../ui/skeleton";
+import { AlertDeleteCollection } from "./AlertDeleteCollection";
+export type Collection = {
   _id: string;
-  title: string;
-  description: string;
-  price: number;
-  estimatedPrice: number;
-  quantityOriginal: number;
-  quantity: number;
-  categories: {
-    _id: string;
-    name: string;
+  name: string;
+  image: {
+    public_id: string;
+    url: string;
   };
-  collections: {
-    _id: string;
-    name: string;
-  };
-  brand: {
-    _id: string;
-    name: string;
-  };
-  discount: number;
-  date: Date;
-  tags: [object];
-  colors: [object];
-  sizes: [object];
-  images: [object];
-  ratings?: number;
+  createdAt: Date;
+  updatedAt: Date;
 };
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -56,7 +40,7 @@ const formatDate = (dateString: string) => {
   }).format(date);
 };
 
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<Collection>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -79,18 +63,32 @@ export const columns: ColumnDef<Product>[] = [
   },
   {
     accessorKey: "_id",
-    header: () => <div className="text-left">ID Product</div>,
+    header: () => <div className="text-left">ID Collection</div>,
     cell: ({ row }) => {
       const id = row.getValue("_id") as string;
-      return <div className="text-left font-medium">#{id.slice(4, 9)}</div>;
+      return <div className="text-left font-medium">#{id.slice(7, 10)}</div>;
     },
   },
   {
-    accessorKey: "title",
-    header: () => <div className="text-left">Product Name</div>,
+    accessorKey: "name",
+    header: () => <div className="text-left">Collection Name</div>,
     cell: ({ row }) => {
-      const product = row.original;
-      return <div className="text-left font-medium">{product.title}</div>;
+      const name = row.original.name;
+      const image = row.original.image;
+      return (
+        <div className="w-full flex items-center gap-2">
+          {image ? (
+            <Image
+              className="w-10 h-10 object-cover rounded-sm"
+              src={image.url}
+              alt={image.public_id}
+            />
+          ) : (
+            <Skeleton className="w-10 h-10 object-cover rounded-sm" />
+          )}
+          <div className="text-left font-medium">{name}</div>
+        </div>
+      );
     },
   },
   {
@@ -99,56 +97,6 @@ export const columns: ColumnDef<Product>[] = [
       const ratings = row.original.ratings;
       return (
         <div className="text-center font-medium">{ratings?.toFixed(2)}</div>
-      );
-    },
-  },
-  {
-    header: "Brand",
-    cell: ({ row }) => {
-      const brand = row.original.brand.name;
-      return <div className="text-left font-medium">{brand}</div>;
-    },
-  },
-
-  {
-    header: "Collection",
-    cell: ({ row }) => {
-      const collection = row.original.collections.name;
-      return <div className="text-left font-medium">{collection}</div>;
-    },
-  },
-  {
-    header: "Category",
-    cell: ({ row }) => {
-      const category = row.original.categories.name;
-      return <div className="text-left font-medium">{category}</div>;
-    },
-  },
-  {
-    accessorKey: "price",
-    header: () => <div className="text-left">Price</div>,
-    cell: ({ row }) => {
-      const price = parseFloat(row.getValue("price"));
-      const formatted = new Intl.NumberFormat("en-US", {
-        style: "currency",
-        currency: "USD",
-      }).format(price);
-
-      return <div className="text-left font-medium">{formatted}</div>;
-    },
-  },
-  {
-    header: "Stock",
-    cell: ({ row }) => {
-      const quantity = row.original.quantity;
-      return (
-        <div
-          className={` text-center font-medium ${
-            quantity === 0 ? "text-red-600" : "text-green-500"
-          }`}
-        >
-          {quantity}
-        </div>
       );
     },
   },
@@ -164,9 +112,20 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
+    accessorKey: "updatedAt",
+    header: () => <div className="text-left">Updated At</div>,
+    cell: ({ row }) => {
+      const updatedAt = row.getValue("updatedAt") as string;
+
+      const formatted = formatDate(updatedAt);
+
+      return <div className="text-left font-medium">{formatted}</div>;
+    },
+  },
+  {
     id: "action",
     cell: ({ row }) => {
-      const product = row.original;
+      const collection = row.original;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -181,24 +140,24 @@ export const columns: ColumnDef<Product>[] = [
           >
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(product._id)}
+              onClick={() => navigator.clipboard.writeText(collection._id)}
             >
-              Copy Product ID
+              Copy Collection ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => redirect(`/en/dashboard/products/${product._id}`)}
+              onClick={() =>
+                redirect(`/en/dashboard/products/collections/${collection._id}`)
+              }
             >
-              View Product
+              View collection
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onSelect={(e) => e.preventDefault()}
-              className="flex items-center gap-2 text-red-600 hover:!text-red-800"
+              className="flex items-center gap-2 text-red-600 hover:!text-red-800 py-0"
             >
-              <AlertDeleteProduct _id={product._id} />
-              {/*<Trash2 />
-              <span className="">Delete Product</span>*/}
+              <AlertDeleteCollection _id={collection._id} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

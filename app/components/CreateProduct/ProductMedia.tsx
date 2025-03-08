@@ -11,8 +11,6 @@ import Image from "next/image";
 import { ImageUp } from "lucide-react";
 import { useUploadImageMutation } from "@/redux/features/image/imageApi";
 
-//import toast from "react-hot-toast";
-
 type Image = {
   public_id: string;
   url: string;
@@ -36,17 +34,13 @@ const ProductMedia: React.FC<ProductMediaProps> = ({
   const [uploadImage] = useUploadImageMutation();
 
   const handleImage = async (formData: FormData) => {
-    try {
-      const response = await uploadImage(formData).unwrap();
-      const imageData = {
-        public_id: response.public_id,
-        url: response.url,
-      };
-      setProductImages([...productImages, imageData]);
-      //toast.success("Image uploaded successfully!");
-    } catch (error) {
-      //toast.error("Failed to upload image.");
-    }
+    const response = await uploadImage(formData);
+    const imageData = {
+      public_id: response.image.public_id,
+      url: response.image.url,
+    };
+    setProductImages([...productImages, imageData]);
+    console.log(productImages);
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {

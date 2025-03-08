@@ -47,7 +47,7 @@ interface VisitorProps {
 }
 export function VisitorByBrowser({ period }: VisitorProps) {
   return (
-    <Card className="w-full min-h-[200px]  px-5 py-5   bg-white dark:bg-black-100 shadow rounded-lg">
+    <Card className="max-md:mt-5 w-full min-h-[200px]  px-5 py-5   bg-white dark:bg-black-100 shadow rounded-lg">
       <HeaderCard>
         <TitleCard title="Visitors by Browser" className="" />
         <div className="w-full">

@@ -9,7 +9,14 @@ export const collectionsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    deleteCollection: builder.mutation({
+      query: (id) => ({
+        url: `delete-collection/${id}`,
+        method: "DELETE",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllCollectionsQuery } = collectionsApi;
+export const { useGetAllCollectionsQuery ,useDeleteCollectionMutation } = collectionsApi;

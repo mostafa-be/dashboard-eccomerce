@@ -96,7 +96,7 @@ const ListOrder = () => {
     },
   ];
   return (
-    <Card className="w-full px-5 py-5 col-span-9  bg-white dark:bg-black-100 shadow rounded-lg">
+    <Card className="max-md:mt-5 w-full px-5 py-5 col-span-9  bg-white dark:bg-black-100 shadow rounded-lg">
       <HeaderCard className="w-full  ">
         <div className="w-full flex items-center justify-between">
           <TitleCard title="List Order Overview" />

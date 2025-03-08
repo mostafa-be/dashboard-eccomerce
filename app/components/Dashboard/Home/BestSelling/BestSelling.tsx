@@ -105,11 +105,10 @@ const BestSelling = () => {
       purchased: 1246,
       ratings: 5,
     },
-
   ];
 
   return (
-    <Card className="w-full min-h-[200px]  px-5 py-5  col-span-1 md:col-span-9 lg:col-span-6 bg-white dark:bg-black-100 shadow rounded-lg">
+    <Card className="max-md:mt-5 w-full min-h-[200px]  px-5 py-5   md:col-span-9 lg:col-span-6 bg-white dark:bg-black-100 shadow rounded-lg">
       <HeaderCard className="flex flex-wrap gap-3 items-center justify-between">
         <TitleCard title="Best Selling products" />
       </HeaderCard>
