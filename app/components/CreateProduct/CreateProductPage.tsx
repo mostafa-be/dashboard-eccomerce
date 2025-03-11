@@ -60,8 +60,8 @@ const CreateProductPage = () => {
 
   useEffect(() => {
     if (isSuccess) {
-      redirect("/en/dashboard/products");
       toast.success("Product created successfully!");
+      redirect("/en/dashboard/products");
     } else if (isError) {
       //  toast.error("Failed to create product.");
     }

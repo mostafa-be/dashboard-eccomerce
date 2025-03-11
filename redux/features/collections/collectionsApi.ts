@@ -2,6 +2,14 @@ import { apiSlice } from "../api/apiSlice";
 
 export const collectionsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    createCollection: builder.mutation({
+      query: (data) => ({
+        url: "create-collection",
+        method: "POSt",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
     getAllCollections: builder.query({
       query: () => ({
         url: "get-collections",
@@ -19,4 +27,4 @@ export const collectionsApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllCollectionsQuery ,useDeleteCollectionMutation } = collectionsApi;
+export const { useCreateCollectionMutation,useGetAllCollectionsQuery ,useDeleteCollectionMutation } = collectionsApi;

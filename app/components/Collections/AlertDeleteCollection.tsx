@@ -1,3 +1,4 @@
+"use client";
 import { Trash2 } from "lucide-react";
 import {
   AlertDialog,
@@ -70,7 +71,7 @@ export function AlertDeleteCollection({ _id }: AlertDeleteCollectionProps) {
             Cancel
           </AlertDialogCancel>
           <AlertDialogAction
-            onClick={() => handleDeleteCollection()}
+            onClick={handleDeleteCollection}
             className="bg-blue-650 hover:bg-blue-600 dark:text-white"
             disabled={isLoading}
           >

@@ -3,7 +3,7 @@ import { apiSlice } from "../api/apiSlice";
 export const imageApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     uploadImage: builder.mutation({
-        query: (data) => ({
+        query: ({data}) => ({
             url: "upload-image",
             method: "POSt",
             body: data,
