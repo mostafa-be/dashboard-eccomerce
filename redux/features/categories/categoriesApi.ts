@@ -2,6 +2,14 @@ import { apiSlice } from "../api/apiSlice";
 
 export const categoriesApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    createCategory: builder.mutation({
+      query: (data) => ({
+        url: "create-category",
+        method: "POSt",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
     getAllCategories: builder.query({
       query: () => ({
         url: "get-categories",
@@ -19,4 +27,5 @@ export const categoriesApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllCategoriesQuery,useDeleteCategoryMutation } = categoriesApi;
+export const { useGetAllCategoriesQuery, useDeleteCategoryMutation,useCreateCategoryMutation } =
+  categoriesApi;

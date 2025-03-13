@@ -118,32 +118,3 @@ const CreateProductPage = () => {
 };
 
 export default CreateProductPage;
-/**
- *           {active === 1 && (
-            <ProductData
-              benefits={benefits}
-              setBenefits={setBenefits}
-              prerequisites={prerequisites}
-              setPrerequisites={setPrerequisites}
-              active={active}
-              setActive={setActive}
-            />
-          )}
-          {active === 2 && (
-            <ProductContent
-              productContentData={productContentData}
-              setProductContentData={setProductContentData}
-              active={active}
-              setActive={setActive}
-              handleSubmit={handleSubmit}
-            />
-          )}
-          {active === 3 && (
-            <ProductPreview
-              productData={productData}
-              active={active}
-              setActive={setActive}
-              handleProductCreate={handleProductCreate}
-            />
-          )}
- */
