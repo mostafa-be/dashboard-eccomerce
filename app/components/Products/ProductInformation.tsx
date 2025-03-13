@@ -190,7 +190,7 @@ const ProductInformation: FC<ProductInformationProps> = ({
             Collection
           </label>
           <Select
-            value={productInfo.collections.name}
+            value={productInfo.collections?.name || ""}
             onValueChange={handleCollectionChange}
           >
             <SelectTrigger>
@@ -214,7 +214,7 @@ const ProductInformation: FC<ProductInformationProps> = ({
             Category
           </label>
           <Select
-            value={productInfo.categories.name}
+            value={productInfo.categories?.name || ""}
             onValueChange={handleCategoryChange}
           >
             <SelectTrigger>
@@ -238,7 +238,7 @@ const ProductInformation: FC<ProductInformationProps> = ({
             Brand
           </label>
           <Select
-            value={productInfo.brand.name}
+            value={productInfo.brand?.name || ""}
             onValueChange={handleBrandChange}
           >
             <SelectTrigger>

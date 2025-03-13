@@ -36,7 +36,10 @@ const UserInfomation = ({ user }: UserInfomationProps) => {
   const whatsappLink = `https://api.whatsapp.com/send?phone=${mobile}`;
   const phoneLink = `tel:${mobile}`;
   // Calculate total spent
-  const totalSpent = orders.reduce((acc, order) => acc + order?.totalPrice, 0);
+  const totalSpent = orders.reduce(
+    (acc, order) => acc + (order?.totalPrice || 0),
+    0
+  );
   const formattedTotalSpent = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",

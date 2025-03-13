@@ -13,67 +13,50 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/app/components/ui/breadcrumb";
-import { Product } from "./columns";
 
+type Category = {
+  _id: string;
+  name: string;
+  isActive: boolean;
+  sales: number;
+};
 type ExportAndchangeProps = {
-  products: Array<Product>;
+  categories: Array<Category>;
 };
 
-const ExportAndchange = ({ products }: ExportAndchangeProps) => {
+const ExportAndchange = ({ categories }: ExportAndchangeProps) => {
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text("Products Report", 14, 20);
-
+    doc.text("Categories Report", 14, 20);
     autoTable(doc, {
       startY: 30,
-      head: [["Title", "Collection", "Category", "Brand", "Price", "Stock"]],
-      body: products.map((product: Product) => [
-        product.title,
-        product.collections?.name,
-        product.categories?.name,
-        product.brand?.name,
-        product.price,
-        product.quantity,
+      head: [["ID", "Name"]],
+      body: categories.map((category: Category) => [
+        category._id,
+        category.name,
       ]),
       styles: { fontSize: 10 },
       headStyles: { fillColor: [22, 160, 133] },
       alternateRowStyles: { fillColor: [240, 240, 240] },
     });
-
-    const inStock = products.filter((product:Product) => product.quantity > 0).length;
-    const outOfStock = products.filter(
-      (product) => product.quantity === 0
-    ).length;
-    const totalProducts = products.length;
-    const bestProduct = products.reduce((prev, current) =>
-      prev.sales > current.sales ? prev : current
-    );
-
-    doc.text(`In Stock: ${inStock}`, 14, doc.lastAutoTable.finalY + 10);
-    doc.text(`Out of Stock: ${outOfStock}`, 14, doc.lastAutoTable.finalY + 20);
     doc.text(
-      `Total Products: ${totalProducts}`,
+      `Total Categories: ${categories.length}`,
       14,
-      doc.lastAutoTable.finalY + 30
+      doc.lastAutoTable.finalY + 10
     );
-    doc.text(
-      `Best Selling Product: ${bestProduct.title}`,
-      14,
-      doc.lastAutoTable.finalY + 40
-    );
-
-    doc.save("products_report.pdf");
+    doc.save("categories_report.pdf");
   };
 
-  const csvData = products.map((product) => ({
-    Title: product.title,
-    Collection: product.collections?.name,
-    Category: product.categories?.name,
-    Brand: product.brand?.name,
-    Price: product.price,
-    Stock: product.quantity,
+  const csvData = categories.map((category: Category) => ({
+    ID: category._id,
+    Name: category.name,
   }));
+
+  const csvHeaders = [
+    { label: "ID", key: "ID" },
+    { label: "Name", key: "Name" },
+  ];
 
   return (
     <div className="w-full flex flex-wrap gap-2 items-center justify-between">
@@ -99,18 +82,29 @@ const ExportAndchange = ({ products }: ExportAndchangeProps) => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-sm cursor-pointer text-blue-500/90">
+              <BreadcrumbLink
+                href="/en/dashboard/products"
+                className="text-sm text-gray-700/90 dark:text-white/90 hover:text-blue-500/90 dark:hover:text-blue-500/90"
+              >
                 Products
-              </BreadcrumbPage>
+              </BreadcrumbLink>
             </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbPage className="text-sm cursor-pointer text-blue-500/90">
+              Categories
+            </BreadcrumbPage>
           </BreadcrumbList>
         </Breadcrumb>
       </div>
       <div className="flex items-center select-none gap-2.5">
-        <CSVLink data={csvData} filename={"products_report.csv"}>
+        <CSVLink
+          data={csvData}
+          headers={csvHeaders}
+          filename={"categories_report.csv"}
+        >
           <div
             title="Export CSV"
-            className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-blue-650 shadow rounded"
+            className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
           >
             <FileDown size={18} className="text-white text-sm font-semibold" />
             <span className="text-white text-sm">Export CSV</span>
@@ -118,7 +112,7 @@ const ExportAndchange = ({ products }: ExportAndchangeProps) => {
         </CSVLink>
         <div
           title="Export PDF"
-          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-blue-650 shadow rounded"
+          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
           onClick={handleExportPDF}
         >
           <CloudDownload

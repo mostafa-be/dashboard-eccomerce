@@ -10,14 +10,14 @@ import {
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal} from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 
 import { Checkbox } from "@/app/components/ui/checkbox";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import { Skeleton } from "../ui/skeleton";
-import { AlertDeleteCollection } from "./AlertDeleteCollection";
-export type Collection = {
+import { AlertDeleteCategory } from "./AlertDeleteCategory";
+export type category = {
   _id: string;
   name: string;
   image: {
@@ -39,7 +39,7 @@ const formatDate = (dateString: string) => {
   }).format(date);
 };
 
-export const columns: ColumnDef<Collection>[] = [
+export const columns: ColumnDef<category>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -62,7 +62,7 @@ export const columns: ColumnDef<Collection>[] = [
   },
   {
     accessorKey: "_id",
-    header: () => <div className="text-left">ID Collection</div>,
+    header: () => <div className="text-left">ID Category</div>,
     cell: ({ row }) => {
       const id = row.getValue("_id") as string;
       return <div className="text-left font-medium">#{id.slice(7, 10)}</div>;
@@ -70,7 +70,7 @@ export const columns: ColumnDef<Collection>[] = [
   },
   {
     accessorKey: "name",
-    header: () => <div className="text-left">Collection Name</div>,
+    header: () => <div className="text-left">Category Name</div>,
     cell: ({ row }) => {
       const name = row.original.name;
       const image = row.original.image;
@@ -115,7 +115,7 @@ export const columns: ColumnDef<Collection>[] = [
   {
     id: "action",
     cell: ({ row }) => {
-      const collection = row.original;
+      const id = row.original._id;
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
@@ -129,25 +129,23 @@ export const columns: ColumnDef<Collection>[] = [
             align="end"
           >
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(collection._id)}
-            >
-              Copy Collection ID
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>
+              Copy Category ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() =>
-                redirect(`/en/dashboard/products/collections/${collection._id}`)
+                redirect(`/en/dashboard/products/categories/${id}`)
               }
             >
-              View collection
+              View Category
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onSelect={(e) => e.preventDefault()}
               className="flex items-center gap-2 text-red-600 hover:!text-red-800 py-0"
             >
-              <AlertDeleteCollection _id={collection._id} />
+              <AlertDeleteCategory _id={id} />
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

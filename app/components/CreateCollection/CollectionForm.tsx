@@ -42,7 +42,11 @@ const CollectionForm = () => {
       }
     }
   }, [isSuccess, error]);
-
+  if (isLoading) {
+    <div className="w-full h-dvh flex items-center justufy-center">
+      <h1 className="text-xl text-black dark:text-white">Loading.....</h1>
+    </div>;
+  }
   return (
     <div className="w-full md:w-2/3 mt-10 bg-white shadow dark:bg-black-100 transition-colors py-5 px-6">
       <div className="w-full">

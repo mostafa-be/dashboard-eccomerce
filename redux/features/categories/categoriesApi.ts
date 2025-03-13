@@ -9,7 +9,14 @@ export const categoriesApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    deleteCategory: builder.mutation({
+      query: (id) => ({
+        url: `delete-category/${id}`,
+        method: "DELETE",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllCategoriesQuery } = categoriesApi;
+export const { useGetAllCategoriesQuery,useDeleteCategoryMutation } = categoriesApi;

@@ -10,7 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/app/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
-import { MoreHorizontal, Trash2 } from "lucide-react";
+import { MoreHorizontal } from "lucide-react";
 
 import { Checkbox } from "@/app/components/ui/checkbox";
 
@@ -105,7 +105,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     header: "Brand",
     cell: ({ row }) => {
-      const brand = row.original.brand.name;
+      const brand = row.original.brand?.name;
       return <div className="text-left font-medium">{brand}</div>;
     },
   },
@@ -113,7 +113,7 @@ export const columns: ColumnDef<Product>[] = [
   {
     header: "Collection",
     cell: ({ row }) => {
-      const collection = row.original.collections.name;
+      const collection = row.original.collections?.name;
       return <div className="text-left font-medium">{collection}</div>;
     },
   },
@@ -197,8 +197,7 @@ export const columns: ColumnDef<Product>[] = [
               className="flex items-center gap-2 text-red-600 hover:!text-red-800"
             >
               <AlertDeleteProduct _id={product._id} />
-              {/*<Trash2 />
-              <span className="">Delete Product</span>*/}
+
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React  from "react";
 import { Skeleton } from "../ui/skeleton";
 import { useGetAllCollectionsQuery } from "@/redux/features/collections/collectionsApi";
 import ExportAndchange from "./ExportAndchange";
@@ -12,6 +12,8 @@ const CollectionsPage = () => {
     {},
     {
       refetchOnMountOrArgChange: true,
+      refetchOnReconnect: true,
+      refetchOnFocus: true,
     }
   );
 

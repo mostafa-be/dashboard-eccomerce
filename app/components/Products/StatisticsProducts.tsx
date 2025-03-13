@@ -23,15 +23,15 @@ const StatisticsProducts = ({ products }: StatisticsProductsProps) => {
         products?.filter((product: Product) => product.quantity === 0).length) ||
       0;
     const bestProductItem =
-      products &&
+      products.length>0 &&
       products?.reduce((prev, current) =>
-        prev.sales > current.sales ? prev : current
+        prev.quantity > current.quantity ? prev : current
       );
 
     setTotalProducts(total);
     setInStock(inStockCount);
     setOutStock(outStockCount);
-    setBestProduct(bestProductItem?.title || "N/A");
+   // setBestProduct(bestProductItem?.title || "N/A");
   }, [products]);
 
   const statistics = [
@@ -47,10 +47,10 @@ const StatisticsProducts = ({ products }: StatisticsProductsProps) => {
       title: "Products Out of Stock",
       value: outStock,
     },
-    {
-      title: "Best Selling Product",
-      value: bestProduct,
-    },
+   // {
+   //   title: "Best Selling Product",
+   //   value: bestProduct,
+   // },
   ];
 
   return (

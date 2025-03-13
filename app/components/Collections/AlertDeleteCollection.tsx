@@ -12,7 +12,10 @@ import {
   AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { Button } from "../ui/button";
-import { useDeleteCollectionMutation } from "@/redux/features/collections/collectionsApi";
+import {
+  useDeleteCollectionMutation,
+  useGetAllCollectionsQuery,
+} from "@/redux/features/collections/collectionsApi";
 import toast from "react-hot-toast";
 import { useEffect } from "react";
 
@@ -23,10 +26,15 @@ type AlertDeleteCollectionProps = {
 export function AlertDeleteCollection({ _id }: AlertDeleteCollectionProps) {
   const [deleteCollection, { isLoading, isSuccess, isError, error }] =
     useDeleteCollectionMutation();
+  const { refetch } = useGetAllCollectionsQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
+  );
 
   useEffect(() => {
     if (isSuccess) {
       toast.success("Collection deleted successfully!");
+      refetch();
     }
 
     if (isError) {
@@ -37,7 +45,7 @@ export function AlertDeleteCollection({ _id }: AlertDeleteCollectionProps) {
         toast.error("Failed to delete collection.");
       }
     }
-  }, [isSuccess, isError, error]);
+  }, [isSuccess, isError, error, refetch]);
 
   const handleDeleteCollection = async () => {
     if (!isLoading) {
