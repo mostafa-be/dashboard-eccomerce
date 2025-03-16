@@ -2,6 +2,14 @@ import { apiSlice } from "../api/apiSlice";
 
 export const colorsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    createColor: builder.mutation({
+      query: (data) => ({
+        url: "create-color",
+        method: "POSt",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
     getAllColors: builder.query({
       query: () => ({
         url: "get-colors",
@@ -19,4 +27,4 @@ export const colorsApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllColorsQuery,useDeleteColorMutation } = colorsApi;
+export const { useGetAllColorsQuery,useDeleteColorMutation,useCreateColorMutation } = colorsApi;
