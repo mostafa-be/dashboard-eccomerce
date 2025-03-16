@@ -9,7 +9,14 @@ export const colorsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    deleteColor: builder.mutation({
+      query: (id) => ({
+        url: `delete-color/${id}`,
+        method: "DELETE",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllColorsQuery } = colorsApi;
+export const { useGetAllColorsQuery,useDeleteColorMutation } = colorsApi;
