@@ -63,7 +63,7 @@ const SideBarDesktop = () => {
           },
           {
             text: "Sizes List",
-            url: `${url}/products/Sizes`,
+            url: `${url}/products/sizes`,
             active: false,
           },
           {

@@ -9,7 +9,14 @@ export const sizesApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    deleteSize: builder.mutation({
+      query: (id) => ({
+        url: `delete-size/${id}`,
+        method: "DELETE",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllSizesQuery } = sizesApi;
+export const { useGetAllSizesQuery,useDeleteSizeMutation } = sizesApi;
