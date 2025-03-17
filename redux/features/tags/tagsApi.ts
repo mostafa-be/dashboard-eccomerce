@@ -9,7 +9,14 @@ export const tagsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    deleteTag: builder.mutation({
+      query: (id) => ({
+        url: `delete-tag/${id}`,
+        method: "DELETE",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
-export const { useGetAllTagsQuery } = tagsApi;
+export const { useGetAllTagsQuery,useDeleteTagMutation } = tagsApi;
