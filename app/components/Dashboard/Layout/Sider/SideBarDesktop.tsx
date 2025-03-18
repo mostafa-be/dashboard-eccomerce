@@ -47,6 +47,11 @@ const SideBarDesktop = () => {
             active: false,
           },
           {
+            text: "Brands List",
+            url: `${url}/products/brands`,
+            active: false,
+          },
+          {
             text: "Collections List",
             url: `${url}/products/collections`,
             active: false,

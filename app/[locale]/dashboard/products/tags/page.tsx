@@ -1,5 +1,3 @@
-
-
 import TagsPage from "@/app/components/tags/TagsPage";
 import Heading from "@/utils/Heading";
 import React from "react";
