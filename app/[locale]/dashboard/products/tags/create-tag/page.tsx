@@ -1,3 +1,4 @@
+import CreateTagPage from '@/app/components/CreateTag/CreateTagPage'
 import Heading from '@/utils/Heading'
 import React from 'react'
 
@@ -10,7 +11,7 @@ const page = () => {
         keywords="Create Tag"
         description="Create Tag"
       />
-     { /*<CreateTagPage />*/}
+    <CreateTagPage />
     </>
   )
 }

@@ -1,6 +1,5 @@
 import React from "react";
 import { Card, CardContent } from "../ui/card";
-
 import { columns } from "./columns";
 import { TableTags } from "./TableTags";
 

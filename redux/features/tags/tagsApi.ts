@@ -2,6 +2,14 @@ import { apiSlice } from "../api/apiSlice";
 
 export const tagsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    createTag: builder.mutation({
+      query: (data) => ({
+        url: "create-tag",
+        method: "POSt",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
     getAllTags: builder.query({
       query: () => ({
         url: "get-tags",
@@ -19,4 +27,4 @@ export const tagsApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllTagsQuery,useDeleteTagMutation } = tagsApi;
+export const { useGetAllTagsQuery,useDeleteTagMutation,useCreateTagMutation } = tagsApi;

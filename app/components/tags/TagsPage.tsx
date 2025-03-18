@@ -61,7 +61,7 @@ const TagsPage = () => {
           <span className="text-[16px] font-[500]">Create Tag</span>
         </Link>
       </div>
-       <ListTags data={tags} /> 
+      <ListTags data={tags} />
     </section>
   );
 };

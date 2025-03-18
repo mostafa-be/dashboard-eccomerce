@@ -16,25 +16,22 @@ type Image = {
   url: string;
 };
 
+
 type ProductMediaProps = {
   productImages: Image[];
   setProductImages: (images: Image[]) => void;
-  active: number;
-  setActive: (active: number) => void;
 };
 
 const ProductMedia: React.FC<ProductMediaProps> = ({
   productImages,
   setProductImages,
-  active,
-  setActive,
 }) => {
   const [image, setImage] = useState<string | ArrayBuffer | null>(null);
   const [dragging, setDragging] = useState(false);
   const [uploadImage] = useUploadImageMutation();
 
   const handleImage = async (formData: FormData) => {
-    const response = await uploadImage(formData);
+    const response = (await uploadImage(formData)) ;
     const imageData = {
       public_id: response.image.public_id,
       url: response.image.url,
@@ -85,7 +82,6 @@ const ProductMedia: React.FC<ProductMediaProps> = ({
 
   const handleNext = () => {
     // Handle next step logic here
-    setActive(active + 1);
   };
 
   return (
