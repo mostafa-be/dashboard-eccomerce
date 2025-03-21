@@ -14,50 +14,77 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/app/components/ui/breadcrumb";
-
-type Tag = {
-  _id: string;
-  name: string;
-  createdAt: Date;
-};
+import { User } from "./columns";
 
 type ExportAndchangeProps = {
-  tags: Array<Tag>;
+  customers: Array<User>;
 };
 
-const ExportAndchange = ({ tags }: ExportAndchangeProps) => {
+const ExportAndchange = ({ customers }: ExportAndchangeProps) => {
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
-    doc.text("Tags Report", 14, 20);
+    doc.text("Customers Report", 14, 20);
 
     autoTable(doc, {
       startY: 30,
-      head: [["ID", "Name", "Created At"]],
-      body: tags.map((tag) => [
-        tag._id,
-        tag.name,
-        new Intl.DateTimeFormat("en-US").format(new Date(tag.createdAt)),
+      head: [["Name", "Email", "Mobile", "Role", "Verified", "Blocked"]],
+      body: customers.map((customer: User) => [
+        customer.name,
+        customer.email,
+        customer.mobile,
+        customer.role,
+        customer.isVerified ? "Yes" : "No",
+        customer.isBlocked ? "Yes" : "No",
       ]),
       styles: { fontSize: 10 },
       headStyles: { fillColor: [22, 160, 133] },
       alternateRowStyles: { fillColor: [240, 240, 240] },
     });
 
-    doc.text(`Total Tags: ${tags.length}`, 14, doc.lastAutoTable.finalY + 10);
-    doc.save("tags_report.pdf");
+    const totalCustomers = customers.length;
+    const verifiedCustomers = customers.filter(
+      (customer) => customer.isVerified
+    ).length;
+    const blockedCustomers = customers.filter(
+      (customer) => customer.isBlocked
+    ).length;
+
+    doc.text(
+      `Total Customers: ${totalCustomers}`,
+      14,
+      doc.lastAutoTable.finalY + 10
+    );
+    doc.text(
+      `Verified Customers: ${verifiedCustomers}`,
+      14,
+      doc.lastAutoTable.finalY + 20
+    );
+    doc.text(
+      `Blocked Customers: ${blockedCustomers}`,
+      14,
+      doc.lastAutoTable.finalY + 30
+    );
+
+    doc.save("customers_report.pdf");
   };
 
-  const csvData = tags.map((tag) => ({
-    ID: tag._id,
-    Name: tag.name,
-    CreatedAt: new Intl.DateTimeFormat("en-US").format(new Date(tag.createdAt)),
+  const csvData = customers.map((customer) => ({
+    Name: customer.name,
+    Email: customer.email,
+    Mobile: customer.mobile,
+    Role: customer.role,
+    Verified: customer.isVerified ? "Yes" : "No",
+    Blocked: customer.isBlocked ? "Yes" : "No",
   }));
 
   const csvHeaders = [
-    { label: "ID", key: "ID" },
     { label: "Name", key: "Name" },
-    { label: "Created At", key: "CreatedAt" },
+    { label: "Email", key: "Email" },
+    { label: "Mobile", key: "Mobile" },
+    { label: "Role", key: "Role" },
+    { label: "Verified", key: "Verified" },
+    { label: "Blocked", key: "Blocked" },
   ];
 
   return (
@@ -85,7 +112,7 @@ const ExportAndchange = ({ tags }: ExportAndchangeProps) => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage className="text-sm cursor-pointer text-blue-500/90">
-                Tags
+                Customers
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
@@ -95,7 +122,7 @@ const ExportAndchange = ({ tags }: ExportAndchangeProps) => {
         <CSVLink
           data={csvData}
           headers={csvHeaders}
-          filename={"tags_report.csv"}
+          filename={"customers_report.csv"}
         >
           <div
             title="Export CSV"

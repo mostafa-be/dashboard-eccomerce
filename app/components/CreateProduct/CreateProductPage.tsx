@@ -1,7 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Change from "./Change";
-import ProductInformation from "../Products/ProductInformation";
+import ProductInformation from "./ProductInformation";
 //import ProductOptions from "./ProductOptions";
 import ProductMedia from "./ProductMedia";
 import { useCreateProductMutation } from "@/redux/features/products/productsApi";

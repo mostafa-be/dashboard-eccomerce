@@ -91,7 +91,7 @@ const SideBarDesktop = () => {
         text="Customers"
         active={false}
         links={false}
-        url={`${url}/users`}
+        url={`${url}/customers`}
         alert={false}
       />
       <SideBarItem
