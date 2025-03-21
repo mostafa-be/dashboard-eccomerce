@@ -57,7 +57,7 @@ const CustomersPage = () => {
       <StatisticsCustomers customers={customers} />
       <div className="w-full flex items-center justify-end my-5">
         <Link
-          href="/en/dashboard/users/create-customer"
+          href="/en/dashboard/customers/create-customer"
           title="Create Customer"
           className="px-3 py-2.5 rounded-md shadow bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white flex items-center gap-2 transition-all duration-300"
         >

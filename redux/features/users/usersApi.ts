@@ -2,7 +2,15 @@ import { apiSlice } from "../api/apiSlice";
 
 export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    /*updateAvatar: builder.mutation({
+    /*registerByAdmin: builder.mutation({
+      query: (data) => ({
+        url: "registration-by-admin",
+        method: "POSt",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
+  updateAvatar: builder.mutation({
       query: (avatar) => ({
         url: "update-user-avatar",
         method: "PUT",
@@ -59,6 +67,7 @@ export const userApi = apiSlice.injectEndpoints({
 });
 
 export const {
+  //useRegisterByAdminMutation,
   //useUpdateAvatarMutation,
   //useEditProfileMutation,
   //useUpdatePasswordMutation,

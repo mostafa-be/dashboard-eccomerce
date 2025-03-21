@@ -67,7 +67,9 @@ const StatisticsCustomers = ({ customers }: StatisticsCustomersProps) => {
           key={index}
           className={`relative w-full rounded-lg shadow-lg p-5 flex flex-col items-center justify-center overflow-hidden ${statistic.bgColor} hover:shadow-xl transition-shadow duration-300`}
         >
-          <div className={` absolute top-1 left-2 opacity-40  ${statistic.textColor}`}>
+          <div
+            className={` absolute top-1 left-2 opacity-40  ${statistic.textColor}`}
+          >
             {statistic.icon}
           </div>
           <CardContent className=" flex flex-col items-center">
