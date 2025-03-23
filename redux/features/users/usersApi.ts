@@ -47,12 +47,34 @@ export const userApi = apiSlice.injectEndpoints({
         method: "GET",
         credentials: "include" as const,
       }),
+    }),
+    getUser: builder.query({
+      query: ({id}) => ({
+        url: `get-user/${id}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
     }) /*
+    
     updateUserRole: builder.mutation({
       query: ({ email, role }) => ({
         url: "update-user-role",
         method: "PUT",
         body: { email, role },
+        creadentials: "include" as const,
+      }),
+    }),*/,
+    blockedUser: builder.mutation({
+      query: (id) => ({
+        url: `block-user/${id}`,
+        method: "PUT",
+        creadentials: "include" as const,
+      }),
+    }),
+    unblockUser: builder.mutation({
+      query: (id) => ({
+        url: `unblock-user/${id}`,
+        method: "PUT",
         creadentials: "include" as const,
       }),
     }),
@@ -62,7 +84,7 @@ export const userApi = apiSlice.injectEndpoints({
         method: "DELETE",
         credentials: "include" as const,
       }),
-    }),*/,
+    }),
   }),
 });
 
@@ -73,6 +95,9 @@ export const {
   //useUpdatePasswordMutation,
   useGetAllUsersQuery,
   useGetAllCustomersQuery,
+  useGetUserQuery,
   //useUpdateUserRoleMutation,
-  //useDeleteUserMutation,
+  useBlockedUserMutation,
+  useUnblockUserMutation,
+  useDeleteUserMutation,
 } = userApi;
