@@ -148,7 +148,7 @@ export const columns: ColumnDef<Enquiry>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onSelect={(e) => e.preventDefault()}
-              className="flex items-center gap-2 text-red-600 hover:!text-red-800"
+              className="!p-0"
             >
               <AlertDeleteEnquiry _id={enquiry._id} />
             </DropdownMenuItem>

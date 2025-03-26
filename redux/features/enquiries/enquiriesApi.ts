@@ -17,9 +17,10 @@ export const enquiriesApi = apiSlice.injectEndpoints({
       }),
     }),
     editEnquiry: builder.mutation({
-      query: (id) => ({
+      query: ({id,data}) => ({
         url: `edit-enquiry/${id}`,
         method: "PUT",
+        body:  data ,
         creadentials: "include" as const,
       }),
     }),
