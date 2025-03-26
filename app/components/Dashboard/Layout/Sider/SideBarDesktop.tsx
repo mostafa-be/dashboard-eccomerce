@@ -6,6 +6,7 @@ import {
   Box,
   ChartPie,
   LayoutDashboard,
+  MessagesSquare,
   Newspaper,
   PackageOpen,
   Settings,
@@ -32,6 +33,14 @@ const SideBarDesktop = () => {
         active={false}
         links={false}
         url={`${url}/orders`}
+        alert={false}
+      />
+      <SideBarItem
+        icon={<UsersRound size={25} />}
+        text="Customers"
+        active={false}
+        links={false}
+        url={`${url}/customers`}
         alert={false}
       />
       <SideBarItem
@@ -79,6 +88,14 @@ const SideBarDesktop = () => {
         ]}
       />
       <SideBarItem
+        icon={<MessagesSquare size={25} />}
+        text="Enquiries"
+        active={false}
+        links={false}
+        url={`${url}/enquiries`}
+        alert={false}
+      />
+      <SideBarItem
         icon={<Bell size={25} />}
         text="Notification"
         active={false}
@@ -86,14 +103,7 @@ const SideBarDesktop = () => {
         url={`${url}/notifications`}
         alert={false}
       />
-      <SideBarItem
-        icon={<UsersRound size={25} />}
-        text="Customers"
-        active={false}
-        links={false}
-        url={`${url}/customers`}
-        alert={false}
-      />
+
       <SideBarItem
         icon={<ChartPie size={25} />}
         text="Analytics"
