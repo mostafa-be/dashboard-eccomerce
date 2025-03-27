@@ -114,11 +114,27 @@ const SideBarDesktop = () => {
       />
       <SideBarItem
         icon={<Newspaper size={25} />}
-        text="News"
+        text="Blogs"
         active={false}
-        links={false}
-        url={`${url}/News`}
+        links={true}
         alert={false}
+        groupLinks={[
+          {
+            text: "Blogs List",
+            url: `${url}/blogs`,
+            active: false,
+          },
+          {
+            text: "Categories List",
+            url: `${url}/blogs/categories`,
+            active: false,
+          },
+          {
+            text: "Tags List",
+            url: `${url}/blogs/tags`,
+            active: false,
+          },
+        ]}
       />
       <SideBarItem
         icon={<Settings size={25} />}
