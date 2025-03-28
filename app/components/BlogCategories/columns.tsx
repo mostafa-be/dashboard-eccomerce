@@ -11,18 +11,16 @@ import {
 } from "@/app/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
+
 import { Checkbox } from "@/app/components/ui/checkbox";
 import { redirect } from "next/navigation";
-import {AlertDeleteBlog} from "./AlertDeleteBlog";
-export type Blog = {
+import { AlertDeleteCategory } from "./AlertDeleteCategory";
+export type category = {
   _id: string;
-  title: string;
-  author: { name: string };
-  category: { name: string };
-  numViews: number;
+  name: string;
   createdAt: Date;
+  updatedAt: Date;
 };
-
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
@@ -35,7 +33,7 @@ const formatDate = (dateString: string) => {
   }).format(date);
 };
 
-export const columns: ColumnDef<Blog>[] = [
+export const columns: ColumnDef<category>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -58,48 +56,45 @@ export const columns: ColumnDef<Blog>[] = [
   },
   {
     accessorKey: "_id",
-    header: () => <div className="text-left">ID</div>,
+    header: () => <div className="text-left">ID Category</div>,
     cell: ({ row }) => {
       const id = row.getValue("_id") as string;
       return <div className="text-left font-medium">#{id.slice(7, 10)}</div>;
     },
   },
   {
-    accessorKey: "title",
-    header: () => <div className="text-left">Title</div>,
-    cell: ({ row }) => (
-      <div className="text-left font-medium">{row.original.title}</div>
-    ),
-  },
- {
-    accessorKey: "author.name",
-    header: () => <div className="text-left">Author</div>,
-    cell: ({ row }) => (
-      <div className="text-left font-medium">{row.original?.author?.name}</div>
-    ),
-  },
-  {
-    accessorKey: "category.name",
-    header: () => <div className="text-left">Category</div>,
-    cell: ({ row }) => (
-      <div className="text-left font-medium">{row.original?.category?.name}</div>
-    ),
-  },
-  {
-    accessorKey: "numViews",
-    header: () => <div className="text-left">Views</div>,
-    cell: ({ row }) => (
-      <div className="text-left font-medium">{row.original.numViews}</div>
-    ),
+    accessorKey: "name",
+    header: () => <div className="text-left">Category Name</div>,
+    cell: ({ row }) => {
+      const name = row.original.name;
+      return (
+
+          <div className="text-left font-medium">{name}</div>
+
+      );
+    },
   },
   {
     accessorKey: "createdAt",
     header: () => <div className="text-left">Created At</div>,
-    cell: ({ row }) => (
-      <div className="text-left font-medium">
-        {formatDate(row.getValue("createdAt"))}
-      </div>
-    ),
+    cell: ({ row }) => {
+      const createdAt = row.getValue("createdAt") as string;
+
+      const formatted = formatDate(createdAt);
+
+      return <div className="text-left font-medium">{formatted}</div>;
+    },
+  },
+  {
+    accessorKey: "updatedAt",
+    header: () => <div className="text-left">Updated At</div>,
+    cell: ({ row }) => {
+      const updatedAt = row.getValue("updatedAt") as string;
+
+      const formatted = formatDate(updatedAt);
+
+      return <div className="text-left font-medium">{formatted}</div>;
+    },
   },
   {
     id: "action",
@@ -118,23 +113,24 @@ export const columns: ColumnDef<Blog>[] = [
             align="end"
           >
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(id)}
-            >
-              Copy Blog ID
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>
+              Copy Category ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => redirect(`/en/dashboard/blogs/${id}`)}
+              onClick={() =>
+                redirect(`/en/dashboard/products/categories/${id}`)
+              }
             >
-              View Blog
+              View Category
             </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onSelect={(e) => e.preventDefault()}
-                          className="py-0"
-                        >
-                          <AlertDeleteBlog blogId={id} />
-                        </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="flex items-center gap-2 text-red-600 hover:!text-red-800 py-0"
+            >
+              <AlertDeleteCategory _id={id} />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
