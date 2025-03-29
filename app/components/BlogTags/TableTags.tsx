@@ -3,18 +3,11 @@
 import React from "react";
 import {
   ColumnDef,
-  ColumnFiltersState,
   flexRender,
   getCoreRowModel,
-  getFilteredRowModel,
   getPaginationRowModel,
-  getSortedRowModel,
-  SortingState,
   useReactTable,
-  VisibilityState,
 } from "@tanstack/react-table";
-
-import { Button } from "@/app/components/ui/button";
 import {
   Table,
   TableBody,
@@ -23,42 +16,23 @@ import {
   TableHeader,
   TableRow,
 } from "@/app/components/ui/table";
-import { Search } from "lucide-react";
 import { Input } from "../ui/input";
+import { Search } from "lucide-react";
 
-interface TableBrandsProps<TData, TValue> {
+interface TableTagsProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
 
-export function TableBrands<TData, TValue>({
+export function TableTags<TData, TValue>({
   columns,
   data,
-}: TableBrandsProps<TData, TValue>) {
-  const [sorting, setSorting] = React.useState<SortingState>([]);
-  const [columnFilters, setColumnFilters] = React.useState<ColumnFiltersState>(
-    []
-  );
-  const [columnVisibility, setColumnVisibility] =
-    React.useState<VisibilityState>({});
-  const [rowSelection, setRowSelection] = React.useState({});
+}: TableTagsProps<TData, TValue>) {
   const table = useReactTable({
     data,
     columns,
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
-    onSortingChange: setSorting,
-    getSortedRowModel: getSortedRowModel(),
-    onColumnFiltersChange: setColumnFilters,
-    getFilteredRowModel: getFilteredRowModel(),
-    onColumnVisibilityChange: setColumnVisibility,
-    onRowSelectionChange: setRowSelection,
-    state: {
-      sorting,
-      columnFilters,
-      columnVisibility,
-      rowSelection,
-    },
   });
 
   return (
@@ -66,7 +40,7 @@ export function TableBrands<TData, TValue>({
       <div className="relative flex items-center gap-3 py-4">
         <Search className="absolute top-1/2 -translate-y-1/2 left-1.5 text-gray-500" />
         <Input
-          placeholder="Search Brand Name"
+          placeholder="Search Tag Name"
           value={(table.getColumn("name")?.getFilterValue() as string) ?? ""}
           onChange={(event) =>
             table.getColumn("name")?.setFilterValue(event.target.value)
@@ -94,10 +68,7 @@ export function TableBrands<TData, TValue>({
         <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-              >
+              <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
@@ -107,10 +78,7 @@ export function TableBrands<TData, TValue>({
             ))
           ) : (
             <TableRow>
-              <TableCell
-                colSpan={columns.length}
-                className="h-[400px] text-center"
-              >
+              <TableCell colSpan={columns.length} className="text-center">
                 No results.
               </TableCell>
             </TableRow>
@@ -118,22 +86,20 @@ export function TableBrands<TData, TValue>({
         </TableBody>
       </Table>
       <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
+        <button
           onClick={() => table.previousPage()}
           disabled={!table.getCanPreviousPage()}
+          className="px-4 py-2 bg-gray-300 hover:bg-gray-400 rounded-md"
         >
           Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
+        </button>
+        <button
           onClick={() => table.nextPage()}
           disabled={!table.getCanNextPage()}
+          className="px-4 py-2 bg-blue-500 hover:bg-blue-600 text-white rounded-md"
         >
           Next
-        </Button>
+        </button>
       </div>
     </div>
   );
