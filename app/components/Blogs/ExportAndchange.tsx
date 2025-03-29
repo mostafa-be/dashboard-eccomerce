@@ -45,9 +45,9 @@ const ExportAndchange = ({ blogs }: ExportAndchangeProps) => {
       head: [["Title", "Author", "Category", "Tags", "Views", "Created At"]],
       body: blogs.map((blog) => [
         blog.title,
-        blog.author.name,
-        blog.category.name,
-        blog.tags.map((tag) => tag.name).join(", "),
+        blog.author?.name,
+        blog.category?.name,
+        blog.tags.map((tag) => tag?.name).join(", "),
         blog.numViews,
         new Intl.DateTimeFormat("en-US").format(new Date(blog.createdAt)),
       ]),
@@ -61,11 +61,11 @@ const ExportAndchange = ({ blogs }: ExportAndchangeProps) => {
   };
 
   const csvData = blogs.map((blog) => ({
-    Title: blog.title,
-    Author: blog.author.name,
-    Category: blog.category.name,
-    Tags: blog.tags.map((tag) => tag.name).join(", "),
-    Views: blog.numViews,
+    Title: blog?.title,
+    Author: blog.author?.name,
+    Category: blog.category?.name,
+    Tags: blog.tags.map((tag) => tag?.name).join(", "),
+    Views: blog?.numViews,
     CreatedAt: new Intl.DateTimeFormat("en-US").format(
       new Date(blog.createdAt)
     ),
