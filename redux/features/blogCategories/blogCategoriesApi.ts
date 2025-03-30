@@ -10,6 +10,13 @@ export const blogCategoriesApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getBlogCategory: builder.query({
+      query: ({ id }) => ({
+        url: `blog/get-category/${id}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
     getAllCategoriesBlog: builder.query({
       query: () => ({
         url: "blog/get-categories",
@@ -37,6 +44,7 @@ export const blogCategoriesApi = apiSlice.injectEndpoints({
 
 export const {
   useCreateBlogCategoryMutation,
+  useGetBlogCategoryQuery,
   useGetAllCategoriesBlogQuery,
   useEditCategoryBlogMutation,
   useDeleteBlogCategoryMutation,

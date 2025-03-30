@@ -119,7 +119,7 @@ export const columns: ColumnDef<category>[] = [
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onClick={() =>
-                redirect(`/en/dashboard/products/categories/${id}`)
+                redirect(`/en/dashboard/blogs/categories/${id}`)
               }
             >
               View Category
