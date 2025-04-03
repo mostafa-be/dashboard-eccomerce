@@ -10,6 +10,13 @@ export const blogTagsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getBlogTag: builder.query({
+      query: ({ id }) => ({
+        url: `blog/get-tag/${id}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
     getAllTagsBlog: builder.query({
       query: () => ({
         url: "blog/get-tags",
@@ -37,6 +44,7 @@ export const blogTagsApi = apiSlice.injectEndpoints({
 
 export const {
   useCreateBlogTagMutation,
+  useGetBlogTagQuery,
   useGetAllTagsBlogQuery,
   useEditTagBlogMutation,
   useDeleteBlogTagMutation,

@@ -59,7 +59,7 @@ export const columns: ColumnDef<Tag>[] = [
     header: "ID Tag",
     cell: ({ row }) => (
       <div className="text-left font-medium">
-        #{row.getValue("_id").slice(7, 10)}
+        #{row.getValue("_id").slice(7, 10) }
       </div>
     ),
   },
@@ -113,7 +113,7 @@ export const columns: ColumnDef<Tag>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
-              onClick={() => redirect(`/en/dashboard/products/tags/${tag._id}`)}
+              onClick={() => redirect(`/en/dashboard/blogs/tags/${tag._id}`)}
             >
               View Tag
             </DropdownMenuItem>
