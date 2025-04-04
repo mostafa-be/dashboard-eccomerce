@@ -71,7 +71,9 @@ export function TableTags<TData, TValue>({
               <TableRow key={row.id}>
                 {row.getVisibleCells().map((cell) => (
                   <TableCell key={cell.id}>
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                    {Array.isArray(cell.column.columnDef.cell)
+                      ? cell.column.columnDef.cell.includes("value")
+                      : false}
                   </TableCell>
                 ))}
               </TableRow>
