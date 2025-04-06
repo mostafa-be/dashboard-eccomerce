@@ -1,4 +1,4 @@
-import CreateBrandPage from "@/app/components/CreateBrande/CreateBrandPage";
+import CreateBrandPage from "@/app/components/CreateBrand/CreateBrandPage";
 import Heading from "@/utils/Heading";
 import React from "react";
 

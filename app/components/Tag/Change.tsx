@@ -55,15 +55,15 @@ const Change = ({ editMode, setEditMode }: ChangeProps) => {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <BreadcrumbLink
-                      href="/en/dashboard/products"
+                      href="/en/dashboard/blogs"
                       className="text-sm text-gray-700/90 dark:text-white/90 hover:text-blue-500/90 dark:hover:text-blue-500/90"
                     >
-                      Products
+                      Blogs
                     </BreadcrumbLink>
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <BreadcrumbLink
-                      href="/en/dashboard/products/tags"
+                      href="/en/dashboard/blogs/tags"
                       className="text-sm text-gray-700/90 dark:text-white/90 hover:text-blue-500/90 dark:hover:text-blue-500/90"
                     >
                       tags

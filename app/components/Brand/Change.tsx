@@ -63,10 +63,10 @@ const Change = ({ editMode, setEditMode }: ChangeProps) => {
                   </DropdownMenuItem>
                   <DropdownMenuItem>
                     <BreadcrumbLink
-                      href="/en/dashboard/products/tags"
+                      href="/en/dashboard/products/brands"
                       className="text-sm text-gray-700/90 dark:text-white/90 hover:text-blue-500/90 dark:hover:text-blue-500/90"
                     >
-                      tags
+                      Brands
                     </BreadcrumbLink>
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -75,7 +75,7 @@ const Change = ({ editMode, setEditMode }: ChangeProps) => {
             <BreadcrumbSeparator />
             <BreadcrumbItem>
               <BreadcrumbPage className="text-sm cursor-pointer text-blue-500/90">
-                Tag
+                Brand
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>

@@ -58,6 +58,8 @@ const BrandForm = () => {
       reader.readAsDataURL(file);
     }
   };
+
+  
   const handleSubmit = async (
     values: { name: string },
     { resetForm }: { resetForm: () => void }
