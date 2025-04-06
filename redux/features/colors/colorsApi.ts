@@ -10,6 +10,21 @@ export const colorsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getColor: builder.query({
+      query: ({ id }) => ({
+        url: `get-color/${id}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    editColor: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `edit-color/${id}`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
     getAllColors: builder.query({
       query: () => ({
         url: "get-colors",
@@ -27,4 +42,10 @@ export const colorsApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllColorsQuery,useDeleteColorMutation,useCreateColorMutation } = colorsApi;
+export const {
+  useGetAllColorsQuery,
+  useEditColorMutation,
+  useGetColorQuery,
+  useDeleteColorMutation,
+  useCreateColorMutation,
+} = colorsApi;
