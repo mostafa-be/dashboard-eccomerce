@@ -10,6 +10,21 @@ export const sizesApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getSize: builder.query({
+      query: ({ id }) => ({
+        url: `get-size/${id}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    editSize: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `edit-size/${id}`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
     getAllSizes: builder.query({
       query: () => ({
         url: "get-sizes",
@@ -27,4 +42,10 @@ export const sizesApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllSizesQuery,useDeleteSizeMutation,useCreateSizeMutation } = sizesApi;
+export const {
+  useGetAllSizesQuery,
+  useGetSizeQuery,
+  useEditSizeMutation,
+  useDeleteSizeMutation,
+  useCreateSizeMutation,
+} = sizesApi;
