@@ -20,7 +20,7 @@ import { AlertDeleteCollection } from "./AlertDeleteCollection";
 export type Collection = {
   _id: string;
   name: string;
-  image: {
+  thumbnail: {
     public_id: string;
     url: string;
   };
@@ -73,7 +73,7 @@ export const columns: ColumnDef<Collection>[] = [
     header: () => <div className="text-left">Collection Name</div>,
     cell: ({ row }) => {
       const name = row.original.name;
-      const image = row.original.image;
+      const image = row.original.thumbnail;
       return (
         <div className="w-full flex items-center gap-2">
           {image ? (
@@ -81,6 +81,8 @@ export const columns: ColumnDef<Collection>[] = [
               className="w-10 h-10 object-cover rounded-sm"
               src={image.url}
               alt={image.public_id}
+              width={40}
+              height={40}
             />
           ) : (
             <Skeleton className="w-10 h-10 object-cover rounded-sm" />
