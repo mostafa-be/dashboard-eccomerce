@@ -17,7 +17,6 @@ import {
 } from "../ui/select";
 import { useGetAllTagsBlogQuery } from "@/redux/features/blogTags/blogTagsApi";
 import { useGetAllCategoriesBlogQuery } from "@/redux/features/blogCategories/blogCategoriesApi";
-import {MultiSelect} from "../ui/multi-select";
 import Image from "next/image";
 import { ImageUp } from "lucide-react";
 const BlogForm = () => {
@@ -186,11 +185,13 @@ const BlogForm = () => {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent className="dark:bg-black-100">
-                    {categories.map((category) => (
-                      <SelectItem key={category._id} value={category.name}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
+                    {categories.map(
+                      (category: { _id: string; name: string }) => (
+                        <SelectItem key={category._id} value={category.name}>
+                          {category.name}
+                        </SelectItem>
+                      )
+                    )}
                   </SelectContent>
                 </Select>
               )}
@@ -201,7 +202,7 @@ const BlogForm = () => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-{ /*         <div>
+          {/*         <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Tags
             </label>

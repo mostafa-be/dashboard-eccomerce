@@ -10,6 +10,21 @@ export const categoriesApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getCategory: builder.query({
+      query: ({ id }) => ({
+        url: `get-category/${id}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    editCategory: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `edit-category/${id}`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
     getAllCategories: builder.query({
       query: () => ({
         url: "get-categories",
@@ -27,5 +42,10 @@ export const categoriesApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllCategoriesQuery, useDeleteCategoryMutation,useCreateCategoryMutation } =
-  categoriesApi;
+export const {
+  useGetAllCategoriesQuery,
+  useGetCategoryQuery,
+  useEditCategoryMutation,
+  useDeleteCategoryMutation,
+  useCreateCategoryMutation,
+} = categoriesApi;
