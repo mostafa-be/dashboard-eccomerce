@@ -1,355 +1,392 @@
 "use client";
-import React, { FC } from "react";
+
+import React from "react";
+import { Formik, Form, Field, ErrorMessage, FieldProps } from "formik";
+import * as Yup from "yup";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { MultiSelect } from "../ui/multi-select";
 import {
-  Card,
-  CardContent,
-  HeaderCard,
-  TitleCard,
-  CardFooter,
-} from "../ui/card";
-import { Editor } from "@toast-ui/react-editor";
-import "@toast-ui/editor/dist/toastui-editor.css";
-import { useGetAllCategoriesQuery } from "@/redux/features/categories/categoriesApi";
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../ui/select";
 import { useGetAllCollectionsQuery } from "@/redux/features/collections/collectionsApi";
+import { useGetAllCategoriesQuery } from "@/redux/features/categories/categoriesApi";
 import { useGetAllBrandsQuery } from "@/redux/features/brand/brandsApi";
 import { useGetAllTagsQuery } from "@/redux/features/tags/tagsApi";
 import { useGetAllColorsQuery } from "@/redux/features/colors/colorsApi";
 import { useGetAllSizesQuery } from "@/redux/features/sizes/sizesApi";
-import {
-  Select,
-  SelectItem,
-  SelectContent,
-  SelectTrigger,
-  SelectValue,
-} from "../ui/select";
-import MultiSelect from "../ui/multi-select";
+
+type ProductInfo = {
+  price: number;
+  estimatedPrice: number;
+  quantity: number;
+  quantityOriginal: number;
+  collections: string;
+  categories: string;
+  brand: string;
+  colors: string[];
+  tags: string[];
+  sizes: string[];
+};
 
 type ProductInformationProps = {
-  productInfo: any;
-  setProductInfo: (product: any) => void;
-  active: number;
+  productInfo: ProductInfo;
+  setProductInfo: (info: ProductInfo) => void;
   setActive: (active: number) => void;
-};
-type Category = {
-  _id: string;
-  name: string;
-};
-type Collection = {
-  _id: string;
-  name: string;
-};
-type Brand = {
-  _id: string;
-  name: string;
-};
-type Tag = {
-  _id: string;
-  name: string;
-};
-type Color = {
-  _id: string;
-  name: string;
-};
-type Size = {
-  _id: string;
-  name: string;
+  active: number;
 };
 
-const ProductInformation: FC<ProductInformationProps> = ({
+const ProductInformation = ({
   productInfo,
   setProductInfo,
-  active,
   setActive,
-}) => {
-  const { data: dataCategories } = useGetAllCategoriesQuery(
+  active,
+}: ProductInformationProps) => {
+  const { data: collectionsData } = useGetAllCollectionsQuery(
     {},
-    {
-      refetchOnMountOrArgChange: true,
-    }
+    { refetchOnMountOrArgChange: true }
   );
-  const { data: dataCollections } = useGetAllCollectionsQuery(
+  const { data: categoriesData } = useGetAllCategoriesQuery(
     {},
-    {
-      refetchOnMountOrArgChange: true,
-    }
+    { refetchOnMountOrArgChange: true }
   );
-
-  const { data: dataBrands } = useGetAllBrandsQuery(
+  const { data: brandsData } = useGetAllBrandsQuery(
     {},
-    {
-      refetchOnMountOrArgChange: true,
-    }
+    { refetchOnMountOrArgChange: true }
   );
-  const { data: dataTags } = useGetAllTagsQuery(
+  const { data: tagsData } = useGetAllTagsQuery(
     {},
-    {
-      refetchOnMountOrArgChange: true,
-    }
+    { refetchOnMountOrArgChange: true }
+  );
+  const { data: colorsData } = useGetAllColorsQuery(
+    {},
+    { refetchOnMountOrArgChange: true }
   );
 
-  const { data: dataColors } = useGetAllColorsQuery(
-    {},
-    {
-      refetchOnMountOrArgChange: true,
-    }
-  );
-  const { data: dataSizes } = useGetAllSizesQuery(
+  const { data: sizesData } = useGetAllSizesQuery(
     {},
     {
       refetchOnMountOrArgChange: true,
     }
   );
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setProductInfo({ ...productInfo, [name]: value });
+  const collections = Array.isArray(collectionsData?.collections)
+    ? collectionsData.collections
+    : [];
+  const categories = Array.isArray(categoriesData?.categories)
+    ? categoriesData.categories
+    : [];
+  const brands = Array.isArray(brandsData?.brands) ? brandsData.brands : [];
+  const sizes = Array.isArray(sizesData?.sizes) ? sizesData.sizes : [];
+  const tags = Array.isArray(tagsData?.tags) ? tagsData.tags : [];
+  const colors = Array.isArray(colorsData?.colors)
+    ? colorsData.colors.map(
+        (color: { _id: string; name: string; code: string }) => ({
+          label: color.name,
+          value: color._id,
+        })
+      )
+    : [];
+
+  const initialValues = {
+    price: productInfo.price,
+    estimatedPrice: productInfo.estimatedPrice,
+    quantity: productInfo.quantity,
+    quantityOriginal: productInfo.quantity,
+    collections: productInfo.collections,
+    categories: productInfo.categories,
+    brand: productInfo.brand,
+    colors: productInfo.colors,
+    tags: productInfo.tags,
+    sizes: productInfo.sizes,
   };
 
-  const handleEditorChange = () => {
-    const editorInstance = editorRef.current?.getInstance();
-    const content = editorInstance?.getMarkdown();
-    setProductInfo({ ...productInfo, description: content || "" });
-  };
+  const validationSchema = Yup.object({
+    price: Yup.number()
+      .required("Price is required")
+      .positive("Price must be a positive number"),
+    estimatedPrice: Yup.number()
+      .required("Estimated price is required")
+      .positive("Estimated price must be a positive number"),
+    quantity: Yup.number()
+      .required("Quantity is required")
+      .integer("Quantity must be an integer")
+      .min(1, "Quantity must be at least 1"),
+    collections: Yup.string().required("Collection is required"),
+    categories: Yup.string().required("Category is required"),
+    brand: Yup.string().required("Brand is required"),
+    colors: Yup.array().min(1, "At least one color is required"),
+    sizes: Yup.array().min(1, "At least one size is required"),
+    tags: Yup.array().min(1, "At least one tag is required"),
+  });
 
-  const handleCategoryChange = (value: string) => {
-    setProductInfo({ ...productInfo, categories: value });
-  };
-
-  const handleCollectionChange = (value: string) => {
-    setProductInfo({ ...productInfo, collections: value });
-  };
-
-  const handleBrandChange = (value: string) => {
-    setProductInfo({ ...productInfo, brand: value });
-  };
-
-  const handleTagsChange = (values: string[]) => {
-    setProductInfo({ ...productInfo, tags: values });
-  };
-
-  const handleColorsChange = (values: string[]) => {
-    setProductInfo({ ...productInfo, colors: values });
-  };
-
-  const handleSizesChange = (values: string[]) => {
-    setProductInfo({ ...productInfo, sizes: values });
-  };
-
-  const handleNext = (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSubmit = (values: ProductInfo) => {
+    setProductInfo({
+      ...productInfo,
+      price: values.price,
+      estimatedPrice: values.estimatedPrice,
+      quantity: values.quantity,
+      collections: values.collections,
+      categories: values.categories,
+      brand: values.brand,
+      colors: values.colors,
+      tags: values.tags,
+      sizes: values.sizes,
+    });
     setActive(active + 1);
-    console.log(productInfo);
-    // Handle form submission logic here
   };
-
-  const editorRef = React.useRef<Editor>(null);
-  const categories = dataCategories?.categories || [];
-  const collections = dataCollections?.collections || [];
-  const brands = dataBrands?.brands || [];
-  const tags = dataTags?.tags || [];
-  const colors = dataColors?.colors || [];
-  const sizes = dataSizes?.sizes || [];
 
   return (
-    <Card className="w-full mt-5 bg-white dark:bg-black-100 p-5 rounded-lg shadow flex flex-col">
-      <HeaderCard>
-        <TitleCard title="Product Information " />
-      </HeaderCard>
-      <CardContent className="mt-5">
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
-            Title
-          </label>
-          <Input
-            type="text"
-            name="title"
-            value={productInfo.title}
-            onChange={handleChange}
-            placeholder="Enter product title"
-            className="w-full active:!border-blue-650  "
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
-            Description
-          </label>
-          <Editor
-            initialValue={productInfo.description}
-            previewStyle="vertical"
-            height="300px"
-            initialEditType="markdown"
-            useCommandShortcut={true}
-            ref={editorRef}
-            onChange={handleEditorChange}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
-            Collection
-          </label>
-          <Select
-            value={productInfo.collections?.name || ""}
-            onValueChange={handleCollectionChange}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select collection" />
-            </SelectTrigger>
-            <SelectContent>
-              {collections.map((collection: Collection) => (
-                <SelectItem
-                  key={collection._id}
-                  value={collection._id}
-                  className="capitalize"
-                >
-                  {collection.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
-            Category
-          </label>
-          <Select
-            value={productInfo.categories?.name || ""}
-            onValueChange={handleCategoryChange}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select category" />
-            </SelectTrigger>
-            <SelectContent>
-              {categories.map((category: Category) => (
-                <SelectItem
-                  key={category._id}
-                  value={category._id}
-                  className="capitalize"
-                >
-                  {category.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
-            Brand
-          </label>
-          <Select
-            value={productInfo.brand?.name || ""}
-            onValueChange={handleBrandChange}
-          >
-            <SelectTrigger>
-              <SelectValue placeholder="Select brand" />
-            </SelectTrigger>
-            <SelectContent>
-              {brands.map((brand: Brand) => (
-                <SelectItem
-                  key={brand._id}
-                  value={brand._id}
-                  className="capitalize"
-                >
-                  {brand.name}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
-            Tags
-          </label>
-          <MultiSelect
-            values={productInfo.tags}
-            onChange={handleTagsChange}
-            options={tags.map((tag: Tag) => ({
-              label: tag.name,
-              value: tag._id,
-            }))}
-            placeholder="Select tags"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
-            Colors
-          </label>
-          <MultiSelect
-            values={productInfo.colors}
-            onChange={handleColorsChange}
-            options={colors.map((color: Color) => ({
-              label: color.name,
-              value: color._id,
-            }))}
-            placeholder="Select colors"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
-            Sizes
-          </label>
-          <MultiSelect
-            values={productInfo.sizes}
-            onChange={handleSizesChange}
-            options={sizes.map((size: Size) => ({
-              label: size.name,
-              value: size._id,
-            }))}
-            placeholder="Select sizes"
-          />
-        </div>
-        <div className="mb-4 max-md:flex-col flex items-center gap-4">
-          {" "}
-          <div className="w-full">
-            <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
+    <div className="w-full  bg-white dark:bg-black-100 shadow rounded-lg p-6">
+      <h5 className="text-xl font-semibold text-black dark:text-white">
+        Product Information
+      </h5>
+      <Formik
+        initialValues={initialValues}
+        validationSchema={validationSchema}
+        onSubmit={handleSubmit}
+      >
+        <Form className="mt-5 space-y-4">
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Price
             </label>
-            <Input
-              type="number"
+            <Field
               name="price"
-              min={0}
-              value={productInfo.price}
-              onChange={handleChange}
+              type="number"
+              as={Input}
               placeholder="Enter product price"
               className="w-full"
             />
+            <ErrorMessage
+              name="price"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
           </div>
-          <div className="w-full">
-            <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Estimated Price
             </label>
-            <Input
-              type="number"
+            <Field
               name="estimatedPrice"
-              value={productInfo.estimatedPrice}
-              min={0}
-              onChange={handleChange}
+              type="number"
+              as={Input}
               placeholder="Enter estimated price"
               className="w-full"
             />
+            <ErrorMessage
+              name="estimatedPrice"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
           </div>
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 dark:text-white text-sm font-bold mb-2">
-            Quantity
-          </label>
-          <Input
-            type="number"
-            name="quantity"
-            value={productInfo.quantity}
-            onChange={handleChange}
-            placeholder="Enter product quantity"
-            className="w-full"
-          />
-        </div>
-      </CardContent>
-      <CardFooter className="flex items-center justify-end">
-        <Button onClick={handleNext} type="button" className="bg-blue-650/80">
-          Next{" "}
-        </Button>
-      </CardFooter>
-    </Card>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              Quantity
+            </label>
+            <Field
+              name="quantity"
+              type="number"
+              as={Input}
+              placeholder="Enter product quantity"
+              className="w-full"
+            />
+            <ErrorMessage
+              name="quantity"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              Collection
+            </label>
+            <Field name="collections">
+              {({ field, form }: FieldProps) => (
+                <Select
+                  value={field.value}
+                  onValueChange={(value) => {
+                    form.setFieldValue("collections", value);
+                  }}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select collection" />
+                  </SelectTrigger>
+                  <SelectContent className="dark:bg-black-100">
+                    {collections.map(
+                      (collection: { _id: string; name: string }) => (
+                        <SelectItem key={collection._id} value={collection._id}>
+                          {collection.name}
+                        </SelectItem>
+                      )
+                    )}
+                  </SelectContent>
+                </Select>
+              )}
+            </Field>
+            <ErrorMessage
+              name="collections"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              Category
+            </label>
+            <Field name="categories">
+              {({ field, form }: FieldProps) => (
+                <Select
+                  value={field.value}
+                  onValueChange={(value) =>
+                    form.setFieldValue("categories", value)
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select category" />
+                  </SelectTrigger>
+                  <SelectContent className="dark:bg-black-100">
+                    {categories.map(
+                      (category: { _id: string; name: string }) => (
+                        <SelectItem key={category._id} value={category._id}>
+                          {category.name}
+                        </SelectItem>
+                      )
+                    )}
+                  </SelectContent>
+                </Select>
+              )}
+            </Field>
+            <ErrorMessage
+              name="categories"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              Brand
+            </label>
+            <Field name="brand">
+              {({ field, form }: FieldProps) => (
+                <Select
+                  value={field.value}
+                  onValueChange={(value) => form.setFieldValue("brand", value)}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select brand" />
+                  </SelectTrigger>
+                  <SelectContent className="dark:bg-black-100">
+                    {brands.map((brand: { _id: string; name: string }) => (
+                      <SelectItem key={brand._id} value={brand._id}>
+                        {brand.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
+            </Field>
+            <ErrorMessage
+              name="brand"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              Colors
+            </label>
+            <Field name="colors">
+              {({ field, form }: FieldProps) => (
+                <MultiSelect
+                  options={colors}
+                  selected={field.value}
+                  onChange={(selectedValues) =>
+                    form.setFieldValue("colors", selectedValues)
+                  }
+                  placeholder="Select colors"
+                />
+              )}
+            </Field>
+            <ErrorMessage
+              name="colors"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              Sizes
+            </label>
+            <Field name="sizes">
+              {({ field, form }: FieldProps) => (
+                <MultiSelect
+                  options={sizes.map((size: { _id: string; name: string }) => ({
+                    label: size.name,
+                    value: size._id,
+                  }))}
+                  selected={field.value}
+                  onChange={(selectedValues) =>
+                    form.setFieldValue("sizes", selectedValues)
+                  }
+                  placeholder="Select sizes"
+                />
+              )}
+            </Field>
+            <ErrorMessage
+              name="sizes"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-sm font-medium text-gray-700 dark:text-white">
+              Tags
+            </label>
+            <Field name="tags">
+              {({ field, form }: FieldProps) => (
+                <MultiSelect
+                  options={tags.map((tag: { _id: string; name: string }) => ({
+                    label: tag.name,
+                    value: tag._id,
+                  }))}
+                  selected={field.value}
+                  onChange={(selectedValues) =>
+                    form.setFieldValue("tags", selectedValues)
+                  }
+                  placeholder="Select tags"
+                />
+              )}
+            </Field>
+            <ErrorMessage
+              name="tags"
+              component="div"
+              className="text-red-500 text-sm mt-1"
+            />
+          </div>
+          <div className="w-full flex items-center justify-between">
+            <Button
+              type="button"
+              onClick={() => setActive(active - 1)}
+              className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-md transition-all duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2"
+            >
+              Back
+            </Button>
+            <Button
+              type="submit"
+              className="bg-blue-650 hover:bg-blue-600 text-white min-w-32"
+            >
+              Next
+            </Button>
+          </div>
+        </Form>
+      </Formik>
+    </div>
   );
 };
 

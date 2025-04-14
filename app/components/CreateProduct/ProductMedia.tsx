@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   Card,
   CardContent,
@@ -7,144 +7,124 @@ import {
   TitleCard,
 } from "../ui/card";
 import { Button } from "../ui/button";
+import { ImageUp, X } from "lucide-react";
 import Image from "next/image";
-import { ImageUp } from "lucide-react";
-import { useUploadImageMutation } from "@/redux/features/image/imageApi";
-
-type Image = {
-  public_id: string;
-  url: string;
-};
-
 
 type ProductMediaProps = {
-  productImages: Image[];
-  setProductImages: (images: Image[]) => void;
+  productImages: string[];
+  setProductImages: (images: string[]) => void;
+  active: number;
+  setActive: (active: number) => void;
 };
 
 const ProductMedia: React.FC<ProductMediaProps> = ({
-  productImages,
+  productImages = [],
   setProductImages,
+  active,
+  setActive,
 }) => {
-  const [image, setImage] = useState<string | ArrayBuffer | null>(null);
-  const [dragging, setDragging] = useState(false);
-  const [uploadImage] = useUploadImageMutation();
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files) return;
 
-  const handleImage = async (formData: FormData) => {
-    const response = (await uploadImage(formData)) ;
-    const imageData = {
-      public_id: response.image.public_id,
-      url: response.image.url,
-    };
-    setProductImages([...productImages, imageData]);
-    console.log(productImages);
+    const fileReaders: Promise<string>[] = Array.from(files).map(
+      (file) =>
+        new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = reject;
+          reader.readAsDataURL(file); // Convert file to base64 string
+        })
+    );
+
+    Promise.all(fileReaders)
+      .then((base64Images) => {
+        setProductImages([...productImages, ...base64Images]);
+      })
+      .catch((error) => console.error("Error reading files:", error));
   };
 
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = async () => {
-        setImage(reader.result);
-        const formData = new FormData();
-        formData.append("file", file);
-        handleImage(formData);
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
-  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    setDragging(true);
-  };
-
-  const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    setDragging(false);
-  };
-
-  const handleDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    setDragging(false);
-    const file = e.dataTransfer.files?.[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = () => {
-        setImage(reader.result);
-        const formData = new FormData();
-        formData.append("file", file);
-        handleImage(formData);
-      };
-      reader.readAsDataURL(file);
-    }
+  const handleRemoveImage = (index: number) => {
+    const updatedImages = productImages.filter((_, i) => i !== index);
+    setProductImages(updatedImages);
   };
 
   const handleNext = () => {
-    // Handle next step logic here
+    if (productImages.length === 0) {
+      alert("Please upload at least one image.");
+      return;
+    }
+    setActive(active + 1);
   };
 
   return (
-    <Card className="w-full mt-5 bg-white dark:bg-black-100 p-5 rounded-lg shadow flex flex-col">
+    <Card className="w-full  bg-white dark:bg-black-100 shadow rounded-lg p-6">
       <HeaderCard>
         <TitleCard title="Product Media" />
       </HeaderCard>
-      <CardContent className="mt-5">
-        <div>
-          <input
-            type="file"
-            accept="image/*"
-            id="file"
-            className="hidden"
-            onChange={handleFileChange}
-          />
+      <CardContent className="w-full">
+        <div className="p-6 bg-gray-50 dark:bg-gray-800 rounded-lg shadow-md">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
+            Upload Product Media
+          </h2>
           <label
             htmlFor="file"
-            className={`w-full min-h-[10vh] dark:border-white border-[#00000026] p-3 border flex items-center justify-center ${
-              dragging ? "bg-blue-500" : "bg-transparent"
-            }`}
-            onDragOver={handleDragOver}
-            onDragLeave={handleDragLeave}
-            onDrop={handleDrop}
+            className="flex flex-col items-center justify-center w-full h-40 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg cursor-pointer hover:border-blue-500 dark:hover:border-blue-400 transition-colors duration-200"
           >
-            {image ? (
-              <Image
-                src={image as string}
-                title="selected image from clipboard..."
-                alt="Selected"
-                layout="responsive"
-                width={500}
-                height={500}
-                className="max-h-full w-full object-cover"
+            <div className="flex flex-col items-center justify-center">
+              <ImageUp
+                size={40}
+                className="text-gray-400 dark:text-gray-500 mb-2"
               />
-            ) : (
-              <div className="w-full px-5 py-5 flex flex-col items-center justify-center">
-                <ImageUp
-                  size={60}
-                  className="text-gray-800 dark:text-white rotate-180"
-                />
-                <span className="text-gray-800 dark:text-white">
-                  Drag and drop your thumbnail here or click to browse
-                </span>
-              </div>
-            )}
+              <p className="text-sm text-center text-gray-500 dark:text-gray-400">
+                Drag and drop your images here or click to browse
+              </p>
+            </div>
+            <input
+              id="file"
+              type="file"
+              accept="image/*"
+              multiple
+              className="hidden"
+              onChange={handleFileChange}
+            />
           </label>
-        </div>
-        <div className="w-full mt-5 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
-          {productImages &&
-            productImages.map((productImage, index) => (
-              <div key={index} className="w-full rounded-lg border">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-6">
+            {productImages.map((image, index) => (
+              <div key={index} className="relative group">
                 <Image
-                  src={productImage.url}
-                  alt=""
-                  className="w-full h-full object-cover"
+                  src={image}
+                  alt={`Preview ${index}`}
+                  width={500}
+                  height={500}
+                  className="w-full h-32 object-cover rounded-md shadow-md"
                 />
+                <button
+                  title="Remove Image"
+                  type="button"
+                  onClick={() => handleRemoveImage(index)}
+                  className="absolute top-2 right-2 bg-red-500 text-white rounded-full w-4 h-4 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-200"
+                >
+                  <X size={10} />
+                </button>
               </div>
             ))}
+          </div>
         </div>
       </CardContent>
-      <CardFooter className="flex items-center justify-end">
-        <Button onClick={handleNext} type="button" className="bg-blue-650/80">
+      <CardFooter className="flex items-center justify-between">
+        <Button
+          type="button"
+          onClick={() => setActive(active - 1)}
+          className="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-4 rounded-md transition-all duration-200"
+        >
+          Back
+        </Button>
+        <Button
+          type="button"
+          onClick={handleNext}
+          className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition-all duration-200"
+        >
           Next
         </Button>
       </CardFooter>

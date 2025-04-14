@@ -12,8 +12,13 @@ import {
 } from "./command";
 import { Badge } from "./badge";
 
+type Option = {
+  label: string;
+  value: string;
+};
+
 type MultiSelectProps = {
-  options: string[];
+  options: Option[];
   selected: string[];
   onChange: (selected: string[]) => void;
   placeholder?: string;
@@ -21,7 +26,7 @@ type MultiSelectProps = {
 
 /**
  * A multi-select component that allows the user to select multiple options from a list of options.
- * @param {string[]} options The list of options to select from.
+ * @param {Option[]} options The list of options to select from.
  * @param {string[]} selected The currently selected options.
  * @param {(selected: string[]) => void} onChange A callback function that is called when the user selects or unselects an option.
  * @param {string} [placeholder="Select options..."] The placeholder text that is displayed when the user has not yet selected any options.
@@ -40,17 +45,21 @@ export function MultiSelect({
     onChange(selected.filter((s) => s !== option));
   };
 
-  const selectables = options.filter((option) => !selected.includes(option));
+  const selectables = options.filter(
+    (option) => !selected.includes(option.value)
+  );
 
   return (
     <Command className="overflow-visible bg-transparent">
-      <div className="group border border-input px-3 py-2 text-sm ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
+      <div className="group border border-input px-3 py-0.5 text-sm outline-none ring-offset-background rounded-md focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
         <div className="flex gap-1 flex-wrap">
           {selected.map((option) => {
+            const selectedOption = options.find((opt) => opt.value === option);
             return (
-              <Badge key={option} variant="secondary">
-                {option}
+              <Badge key={option}  variant="secondary">
+                {selectedOption?.label || option}
                 <button
+                  title="Remove option"
                   className="ml-1 ring-offset-background rounded-full outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
                   onKeyDown={(e) => {
                     if (e.key === "Enter") {
@@ -75,11 +84,11 @@ export function MultiSelect({
             onBlur={() => setOpen(false)}
             onFocus={() => setOpen(true)}
             placeholder={placeholder}
-            className="ml-2 bg-transparent outline-none placeholder:text-muted-foreground flex-1"
+            className="ml- bg-transparent outline-none placeholder:text-muted-foreground flex-1"
           />
         </div>
       </div>
-      <div className="relative mt-2">
+      <div className="relative mt-">
         {open && selectables.length > 0 ? (
           <div className="absolute w-full z-10 top-0 rounded-md border bg-popover text-popover-foreground shadow-md outline-none animate-in">
             <CommandList>
@@ -88,24 +97,24 @@ export function MultiSelect({
                 {selectables.map((option) => {
                   return (
                     <CommandItem
-                      key={option}
+                      key={option.value}
                       onMouseDown={(e) => {
                         e.preventDefault();
                         e.stopPropagation();
                       }}
                       onSelect={() => {
                         setInputValue("");
-                        onChange([...selected, option]);
+                        onChange([...selected, option.value]);
                       }}
                       className={"cursor-pointer"}
                       onKeyDown={(e) => {
                         if (e.key === "Enter") {
-                          onChange([...selected, option]);
+                          onChange([...selected, option.value]);
                           setInputValue("");
                         }
                       }}
                     >
-                      {option}
+                      {option.label}
                     </CommandItem>
                   );
                 })}

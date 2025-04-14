@@ -36,7 +36,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   }
 
   const category = data?.category || [];
-  console.log(category);
+
   return (
     <>
       <Heading

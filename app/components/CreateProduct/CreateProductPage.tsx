@@ -2,26 +2,22 @@
 import React, { useEffect, useState } from "react";
 import Change from "./Change";
 import ProductInformation from "./ProductInformation";
-//import ProductOptions from "./ProductOptions";
 import ProductMedia from "./ProductMedia";
-import { useCreateProductMutation } from "@/redux/features/products/productsApi";
 import ProductPreview from "./ProductPreview";
-import toast from "react-hot-toast";
-import { redirect } from "next/navigation";
-
-type Image = {
-  public_id: string;
-  url: string;
-};
+import ProductDescription from "./ProductDescription";
+import SteperProduct from "./SteperProduct";
 
 const CreateProductPage = () => {
   const [active, setActive] = useState(0);
-  const [productInfo, setProductInfo] = useState({
+  const [productDescription, setProductDescription] = useState({
     title: "",
     description: "",
+  });
+  const [productInfo, setProductInfo] = useState({
     price: 0,
     estimatedPrice: 0,
     quantity: 0,
+    quantityOriginal: 0,
     categories: "",
     collections: "",
     brand: "",
@@ -29,89 +25,77 @@ const CreateProductPage = () => {
     colors: [],
     sizes: [],
   });
-  const [productImages, setProductImages] = useState<Image[]>();
-  const [productData, setProductData] = useState({});
-  const date = new Date();
-  const [createProduct, { isLoading, isSuccess, isError }] =
-    useCreateProductMutation();
+  const [productImages, setProductImages] = useState<string[]>([]);
+  const [productData, setProductData] = useState();
 
   useEffect(() => {
+    const discount =
+      productInfo.price > 0
+        ? (
+            ((productInfo.estimatedPrice - productInfo.price) /
+              (productInfo.estimatedPrice + productInfo.price)) *
+            100
+          ).toFixed(2)
+        : 0;
+
     setProductData({
-      title: productInfo.title,
-      description: productInfo.description,
-      price: productInfo.price,
-      estimatedPrice: productInfo.estimatedPrice,
-      quantityOriginal: productInfo.quantity,
-      quantity: productInfo.quantity,
-      categories: productInfo.categories,
-      collections: productInfo.collections,
-      brand: productInfo.brand,
-      discount:
-        ((productInfo.price - productInfo.price) /
-          (productInfo.price + productInfo.price)) *
-        100,
-      date: date,
-      tags: productInfo.tags,
-      colors: productInfo.colors,
-      sizes: productInfo.sizes,
-      images: [{ public_id: "string", url: "string" }],
+      ...productDescription,
+      ...productInfo,
+      images: productImages,
+      discount,
     });
-  }, [productImages, productInfo]);
+  }, [productDescription, productImages, productInfo]);
 
-  useEffect(() => {
-    if (isSuccess) {
-      toast.success("Product created successfully!");
-      redirect("/en/dashboard/products");
-    } else if (isError) {
-      //  toast.error("Failed to create product.");
-    }
-  }, [isSuccess, isError]);
-  if (isLoading) {
-    return (
-      <div className="w-flull h-dvh flex items-center justify-center">
-        <h1 className="text-xl text-black dark:text-white">Loading ...</h1>
-      </div>
-    );
-  }
-  const handleProductCreate = async () => {
-    const data = productData;
-    if (!isLoading) {
-      await createProduct(data);
+  const renderStep = () => {
+    switch (active) {
+      case 0:
+        return (
+          <ProductDescription
+            productDescription={productDescription}
+            setProductDescription={setProductDescription}
+            active={active}
+            setActive={setActive}
+          />
+        );
+      case 1:
+        return (
+          <ProductInformation
+            productInfo={productInfo}
+            setProductInfo={setProductInfo}
+            active={active}
+            setActive={setActive}
+          />
+        );
+      case 2:
+        return (
+          <ProductMedia
+            productImages={productImages}
+            setProductImages={setProductImages}
+            active={active}
+            setActive={setActive}
+          />
+        );
+      case 3:
+        return (
+          <ProductPreview
+            productData={productData}
+            active={active}
+            setActive={setActive}
+          />
+        );
+      default:
+        return null;
     }
   };
 
   return (
     <section className="w-full">
       <Change />
-      <div className="w-full  flex   flex-wrap-reverse gap-3 min-h-screen">
-        <form onSubmit={handleProductCreate} className="w-full  md:w-[75%] ">
-          {active === 0 && (
-            <ProductInformation
-              productInfo={productInfo}
-              setProductInfo={setProductInfo}
-              active={active}
-              setActive={setActive}
-            />
-          )}
-          {active === 1 && (
-            <ProductMedia
-              productImages={productImages}
-              setProductImages={setProductImages}
-              active={active}
-              setActive={setActive}
-            />
-          )}
-          {active === 2 && (
-            <ProductPreview
-              productData={productData}
-              active={active}
-              setActive={setActive}
-            />
-          )}
-        </form>
-        {/* <div className=" flex-grow ">
-          <ProductOptions active={active} />
-        </div>*/}
+      <div className="w-full mt-10 flex flex-wrap-reverse justify-between gap-3 min-h-screen">
+        <div className="w-full md:w-[75%]">{renderStep()}</div>
+        <div className="w-full md:w-[23%]">
+          <SteperProduct active={active} setActive={setActive} />
+        </div>
       </div>
     </section>
   );
