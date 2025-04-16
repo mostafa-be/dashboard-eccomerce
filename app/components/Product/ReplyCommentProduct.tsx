@@ -128,87 +128,86 @@ const ReplyCommentProduct = ({
         <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100">
           Customer Reviews
         </h3>
-        {reviews &&
-          reviews.map((review, index) => (
-            <div
-              key={index}
-              className="bg-white dark:bg-black-100 shadow rounded-lg p-6 space-y-4"
-            >
-              <div className="flex items-center justify-between">
-                <div>
-                  <h4 className="text-sm font-medium text-gray-800 dark:text-gray-100">
-                    {review.user.name}
-                  </h4>
-                  <div className="flex items-center gap-1">
-                    {[...Array(5)].map((_, i) => (
-                      <Star
-                        key={i}
-                        size={16}
-                        className={`${
-                          i < review.rating
-                            ? "text-yellow-500"
-                            : "text-gray-300 dark:text-gray-600"
-                        }`}
-                      />
-                    ))}
-                  </div>
+        {reviews.map((review) => (
+          <div
+            key={review._id}
+            className="bg-white dark:bg-black-100 shadow rounded-lg p-6 space-y-4"
+          >
+            <div className="flex items-center justify-between">
+              <div>
+                <h4 className="text-sm font-medium text-gray-800 dark:text-gray-100">
+                  {review.user.name}
+                </h4>
+                <div className="flex items-center gap-1">
+                  {[...Array(5)].map((_, i) => (
+                    <Star
+                      key={i}
+                      size={16}
+                      className={`${
+                        i < review.rating
+                          ? "text-yellow-500"
+                          : "text-gray-300 dark:text-gray-600"
+                      }`}
+                    />
+                  ))}
                 </div>
-                <span className="text-sm text-gray-500 dark:text-gray-400">
-                  {review.review}
-                </span>
               </div>
-              {/* Replies */}
-              <div className="space-y-4 pl-6 border-l border-gray-300 dark:border-gray-700">
-                {review.commentReplies.map((reply, replyIndex) => (
-                  <div
-                    key={replyIndex}
-                    className="flex items-start gap-2 bg-gray-50 dark:bg-gray-800 p-3 rounded-md"
-                  >
-                    <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
-                      {reply.user.name}:
-                    </span>
-                    <span className="text-sm text-gray-600 dark:text-gray-300">
-                      {reply.comment}
-                    </span>
-                  </div>
-                ))}
-                {/* Reply Icon */}
-                <div className="flex items-center gap-2">
-                  <MessageSquare
-                    size={20}
-                    className="cursor-pointer text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
-                    onClick={() =>
-                      setReply({ comment: "", reviewId: review._id })
-                    }
-                  />
-                  {reply.reviewId === review._id && (
-                    <div className="flex items-center gap-2 w-full">
-                      <Textarea
-                        placeholder="Write a reply..."
-                        value={reply.comment}
-                        onChange={(e) =>
-                          setReply({
-                            comment: e.target.value,
-                            reviewId: review._id,
-                          })
-                        }
-                        className="flex-1"
-                      />
-                      <Button
-                        onClick={handleAddReply}
-                        disabled={isAddingReply}
-                        className={`bg-blue-600 hover:bg-blue-700 text-white ${
-                          isAddingReply ? "cursor-progress" : "cursor-pointer"
-                        }`}
-                      >
-                        {isAddingReply ? "Replying..." : "Reply"}
-                      </Button>
-                    </div>
-                  )}
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {review.review}
+              </span>
+            </div>
+            {/* Replies */}
+            <div className="space-y-4 pl-6 border-l border-gray-300 dark:border-gray-700">
+              {review.commentReplies.map((reply) => (
+                <div
+                  key={reply._id}
+                  className="flex items-start gap-2 bg-gray-50 dark:bg-gray-800 p-3 rounded-md"
+                >
+                  <span className="text-sm font-medium text-gray-800 dark:text-gray-100">
+                    {reply.user.name}:
+                  </span>
+                  <span className="text-sm text-gray-600 dark:text-gray-300">
+                    {reply.comment}
+                  </span>
                 </div>
+              ))}
+              {/* Reply Icon */}
+              <div className="flex items-center gap-2">
+                <MessageSquare
+                  size={20}
+                  className="cursor-pointer text-gray-500 dark:text-gray-400 hover:text-blue-600 dark:hover:text-blue-400"
+                  onClick={() =>
+                    setReply({ comment: "", reviewId: review._id })
+                  }
+                />
+                {reply.reviewId === review._id && (
+                  <div className="flex items-center gap-2 w-full">
+                    <Textarea
+                      placeholder="Write a reply..."
+                      value={reply.comment}
+                      onChange={(e) =>
+                        setReply({
+                          comment: e.target.value,
+                          reviewId: review._id,
+                        })
+                      }
+                      className="flex-1"
+                    />
+                    <Button
+                      onClick={handleAddReply}
+                      disabled={isAddingReply}
+                      className={`bg-blue-600 hover:bg-blue-700 text-white ${
+                        isAddingReply ? "cursor-progress" : "cursor-pointer"
+                      }`}
+                    >
+                      {isAddingReply ? "Replying..." : "Reply"}
+                    </Button>
+                  </div>
+                )}
               </div>
             </div>
-          ))}
+          </div>
+        ))}
       </div>
     </div>
   );

@@ -193,11 +193,18 @@ export const columns: ColumnDef<Product>[] = [
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
+              onClick={() =>
+                redirect(`/en/dashboard/products/edit/${product._id}`)
+              }
+            >
+              Edit Product
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
               onSelect={(e) => e.preventDefault()}
               className="flex items-center gap-2 text-red-600 hover:!text-red-800"
             >
               <AlertDeleteProduct _id={product._id} />
-
             </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>

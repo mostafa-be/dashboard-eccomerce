@@ -19,7 +19,7 @@ const StockManagement = ({
           title="Stock Management"
         />
       </HeaderCard>
-      <CardContent className="mt-6">
+      <CardContent className="mt-6 overflow-hidden">
         <h4 className="text-sm font-medium text-gray-800 dark:text-gray-100">
           Stock Progress
         </h4>
