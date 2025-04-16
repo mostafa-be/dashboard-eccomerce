@@ -5,8 +5,15 @@ export const productsApi = apiSlice.injectEndpoints({
     createProduct: builder.mutation({
       query: (data) => ({
         url: "create-product",
-        method: "POSt",
+        method: "POST",
         body: data,
+        credentials: "include" as const,
+      }),
+    }),
+    getProduct: builder.query({
+      query: ({ id }) => ({
+        url: `get-product/${id}`,
+        method: "GET",
         credentials: "include" as const,
       }),
     }),
@@ -14,6 +21,22 @@ export const productsApi = apiSlice.injectEndpoints({
       query: () => ({
         url: "get-products",
         method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    addReview: builder.mutation({
+      query: ({ id, data }) => ({
+        url: `add-review/${id}`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
+    addReplyReview: builder.mutation({
+      query: (data) => ({
+        url: `add-reply-review`,
+        method: "PUT",
+        body: data,
         credentials: "include" as const,
       }),
     }),
@@ -38,5 +61,9 @@ export const productsApi = apiSlice.injectEndpoints({
 export const {
   useGetAllProductsQuery,
   useCreateProductMutation,
+  useGetProductQuery,
+  useAddReviewMutation,
+  useAddReplyReviewMutation,
+  useEditProductMutation,
   useDeleteProductMutation,
 } = productsApi;
