@@ -12,16 +12,44 @@ import {
   useGetEnquiriesAnalyticsQuery,
   useGetProductsAnalyticsQuery,
 } from "@/redux/features/analytics/analyticsApi";
+import LoadingAnalytics from "../Loader/LoadingAnalytics";
+import LoadingError from "../Loader/LoadingError";
 
 const AnalyticsPage = () => {
-  const { data: userData, isLoading: isLoadingUsers } =
-    useGetUserAnalyticsQuery({}, { refetchOnMountOrArgChange: true });
-  const { data: orderData, isLoading: isLoadingOrders } =
-    useGetOrderAnalyticsQuery({}, { refetchOnMountOrArgChange: true });
-  const { data: enquiryData, isLoading: isLoadingEnquiries } =
-    useGetEnquiriesAnalyticsQuery({}, { refetchOnMountOrArgChange: true });
-  const { data: productData, isLoading: isLoadingProducts } =
-    useGetProductsAnalyticsQuery({}, { refetchOnMountOrArgChange: true });
+  const {
+    data: userData,
+    isLoading: isLoadingUsers,
+    isError: isErrorUsers,
+    refetch: refetchUsers,
+  } = useGetUserAnalyticsQuery({}, { refetchOnMountOrArgChange: true });
+
+  const {
+    data: orderData,
+    isLoading: isLoadingOrders,
+    isError: isErrorOrders,
+    refetch: refetchOrders,
+  } = useGetOrderAnalyticsQuery({}, { refetchOnMountOrArgChange: true });
+
+  const {
+    data: enquiryData,
+    isLoading: isLoadingEnquiries,
+    isError: isErrorEnquiries,
+    refetch: refetchEnquiries,
+  } = useGetEnquiriesAnalyticsQuery({}, { refetchOnMountOrArgChange: true });
+
+  const {
+    data: productData,
+    isLoading: isLoadingProducts,
+    isError: isErrorProduct,
+    refetch: refetchProducts,
+  } = useGetProductsAnalyticsQuery({}, { refetchOnMountOrArgChange: true });
+
+  const onRetry = () => {
+    refetchUsers();
+    refetchOrders();
+    refetchEnquiries();
+    refetchProducts();
+  };
 
   if (
     isLoadingUsers ||
@@ -29,22 +57,23 @@ const AnalyticsPage = () => {
     isLoadingEnquiries ||
     isLoadingProducts
   ) {
-    return <div>Analytics is loading...</div>;
+    return <LoadingAnalytics />;
   }
 
-  const analyticsCustomers = Array.isArray(userData?.users?.last12Months)
-    ? userData.users.last12Months
-    : [];
-  const analyticsSales = Array.isArray(orderData?.orders?.last12Months)
-    ? orderData.orders.last12Months
-    : [];
-  const analyticsEnquiries = Array.isArray(enquiryData?.enquiries?.last12Months)
-    ? enquiryData.enquiries.last12Months
-    : [];
-  const analyticsProducts = Array.isArray(productData?.products?.last12Months)
-    ? productData.products.last12Months
-    : [];
-console.log(productData)
+  if (isErrorUsers || isErrorOrders || isErrorEnquiries || isErrorProduct) {
+    return (
+      <LoadingError
+        message="An error occurred while loading analytics."
+        onRetry={onRetry}
+      />
+    );
+  }
+
+  const analyticsCustomers = userData?.users?.last12Months || [];
+  const analyticsSales = orderData?.orders?.last12Months || [];
+  const analyticsEnquiries = enquiryData?.enquiries?.last12Months || [];
+  const analyticsProducts = productData?.products?.last12Months || [];
+
   return (
     <section className="w-full">
       <ExportAndchange />

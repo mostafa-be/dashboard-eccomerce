@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Skeleton } from "@/app/components/ui/skeleton";
 import Heading from "@/utils/Heading";
 import { useGetSizeQuery } from "@/redux/features/sizes/sizesApi";
 import SizePage from "@/app/components/Size/SizePage";
+import ViewLoading from "@/app/components/Loader/ViewLoading";
+import LoadingError from "@/app/components/Loader/LoadingError";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
@@ -23,29 +24,25 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     { id },
     { skip: !id, refetchOnMountOrArgChange: true }
   );
-
+  // Check if the data is still loading
   if (isLoading || !resolvedParams) {
-    return (
-      <section className="w-full">
-        <Skeleton className="w-full h-[500px] rounded-md" />
-      </section>
-    );
+    return <ViewLoading />;
   }
 
   if (isError) {
-    return <div>Error loading size </div>;
+    return <LoadingError message="Error loading size" onRetry={refetch} />;
   }
-
-  const size = data?.size;
-  if (!size) {
+  // Check if data is null or undefined
+  const size = data?.size ?? null;
+  if (size === null) {
     return <div>Size not found</div>;
   }
   return (
     <>
       <Heading
         title={`Size : ${size?.name}`}
-        description="Manage your blog categories here."
-        keywords="category, blog, manage"
+        description="View and manage the details of your product size."
+        keywords="product, size, management"
       />
       <SizePage size={size} refetch={refetch} />
     </>

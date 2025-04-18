@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Heading from "@/utils/Heading";
-import LodingOrder from "@/app/components/Order/LoadingOrder";
 import { useGetProductQuery } from "@/redux/features/products/productsApi";
 import ProductPage from "@/app/components/Product/ProductPage";
+import LoadingList from "@/app/components/Loader/LoadingList";
+import LoadingError from "@/app/components/Loader/LoadingError";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [unwrappedParams, setUnwrappedParams] = useState<{ id: string } | null>(
@@ -18,20 +19,25 @@ const Page = ({ params }: { params: { id: string } }) => {
   }, [params]);
 
   const id = unwrappedParams?.id;
-  const { data, error, isLoading, refetch } = useGetProductQuery(
+  const { data, isError, isLoading, refetch } = useGetProductQuery(
     { id },
     { refetchOnMountOrArgChange: true }
   );
-
+  // Handle loading state
   if (isLoading) {
-    return <LodingOrder />;
+    return <LoadingList product={true} />;
   }
-  if (error) {
-    return <div className="">Error</div>;
+  // Handle error state
+  if (isError) {
+    return (
+      <LoadingError
+        message="Failed to load the product. Please try again."
+        onRetry={refetch}
+      />
+    );
   }
+  // Handle case when data is null or undefined
   const product = data?.product;
-
-  console.log("product", product);
   return (
     <>
       <Heading

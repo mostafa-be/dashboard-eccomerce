@@ -69,7 +69,7 @@ const TableOrder = ({ orderItems }: TableOrderProps) => {
           {orderItems.map((item, index) => (
             <TableRow key={index}>
               <TableCell className="font-medium">
-                {item.product.title}
+                {item?.product?.title}
               </TableCell>
               <TableCell>{item.color.name}</TableCell>
               <TableCell>{item.size.name}</TableCell>

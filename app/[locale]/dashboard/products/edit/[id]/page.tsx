@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import Heading from "@/utils/Heading";
-import LodingOrder from "@/app/components/Order/LoadingOrder";
-import { useGetProductQuery } from "@/redux/features/products/productsApi";
 import EditProductPage from "@/app/components/EditProduct/EditProductPage";
+import ViewLoading from "@/app/components/Loader/ViewLoading";
+import LoadingError from "@/app/components/Loader/LoadingError";
+import { useGetProductQuery } from "@/redux/features/products/productsApi";
 
 const Page = ({ params }: { params: { id: string } }) => {
   const [unwrappedParams, setUnwrappedParams] = useState<{ id: string } | null>(
@@ -17,19 +18,37 @@ const Page = ({ params }: { params: { id: string } }) => {
     })();
   }, [params]);
   const id = unwrappedParams?.id;
-  const { data, error, isLoading, refetch } = useGetProductQuery(
+
+  if (!id) {
+    return (
+      <LoadingError
+        message="Invalid product ID. Please try again."
+        onRetry={() => window.location.reload()}
+      />
+    );
+  }
+
+  const { data, isError, isLoading, refetch } = useGetProductQuery(
     { id },
     { refetchOnMountOrArgChange: true }
   );
 
+  // Check if the data is still loading
   if (isLoading) {
-    return <LodingOrder />;
+    return <ViewLoading />;
   }
-  if (error) {
-    return <div className="">Error</div>;
-  }
-  const product = data?.product;
 
+  // Check if there was an error during the query
+  if (isError) {
+    return (
+      <LoadingError
+        message="Error loading product. Please try again."
+        onRetry={refetch}
+      />
+    );
+  }
+  // Check if data is null or undefined
+  const product = data?.product;
   return (
     <>
       <Heading

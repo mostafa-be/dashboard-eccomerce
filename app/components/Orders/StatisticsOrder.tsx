@@ -13,6 +13,7 @@ const StatisticsOrder = ({ period }: StatisticsOrderProps) => {
       currency: "USD",
       percent: 3.6,
       mouvement: "up",
+      bgColor: "bg-gradient-to-r from-blue-500 to-blue-700",
     },
     {
       title: "Processing",
@@ -20,6 +21,7 @@ const StatisticsOrder = ({ period }: StatisticsOrderProps) => {
       currency: "USD",
       percent: 2.4,
       mouvement: "up",
+      bgColor: "bg-gradient-to-r from-green-500 to-green-700",
     },
     {
       title: "Shipped",
@@ -27,6 +29,7 @@ const StatisticsOrder = ({ period }: StatisticsOrderProps) => {
       currency: "USD",
       percent: 1.8,
       mouvement: "up",
+      bgColor: "bg-gradient-to-r from-yellow-500 to-yellow-700",
     },
     {
       title: "Cancelled",
@@ -34,6 +37,7 @@ const StatisticsOrder = ({ period }: StatisticsOrderProps) => {
       currency: "USD",
       percent: 0.5,
       mouvement: "down",
+      bgColor: "bg-gradient-to-r from-red-500 to-red-700",
     },
     {
       title: "Delivered",
@@ -41,20 +45,14 @@ const StatisticsOrder = ({ period }: StatisticsOrderProps) => {
       currency: "USD",
       percent: 4.2,
       mouvement: "up",
+      bgColor: "bg-gradient-to-r from-purple-500 to-purple-700",
     },
   ];
+
   return (
-    <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4  mt-4">
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mt-5">
       {statistics.map((stat, index) => (
-        <CardStatisticsOrder
-          key={index}
-          title={stat.title}
-          value={stat.value}
-          currency={stat.currency}
-          period={period}
-          percent={stat.percent}
-          mouvement={stat.mouvement}
-        />
+        <CardStatisticsOrder key={index} {...stat} period={period} />
       ))}
     </div>
   );

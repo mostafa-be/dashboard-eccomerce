@@ -1,14 +1,15 @@
 "use client";
 
 import React from "react";
-import { Skeleton } from "../ui/skeleton";
 import { useGetAllTagsBlogQuery } from "@/redux/features/blogTags/blogTagsApi";
 import ExportAndchange from "./ExportAndchange";
 import ListTags from "./ListTags";
 import Link from "next/link";
 import { SquarePen } from "lucide-react";
+import LoadingList from "../Loader/LoadingList";
+import LoadingError from "../Loader/LoadingError";
 const BlogTagsPage = () => {
-  const { data, isLoading, isError } = useGetAllTagsBlogQuery(
+  const { data, isLoading, isError,refetch } = useGetAllTagsBlogQuery(
     {},
     {
       refetchOnMountOrArgChange: true,
@@ -16,37 +17,15 @@ const BlogTagsPage = () => {
       refetchOnFocus: true,
     }
   );
-
+  // Handle loading state
   if (isLoading) {
-    return (
-      <section className="w-full">
-        <div className="w-full flex flex-wrap items-center justify-between gap-4">
-          <Skeleton className="w-[200px] h-[20px] rounded-xl" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="w-[200px] h-[40px] rounded-md" />
-            <Skeleton className="w-[200px] h-[40px] rounded-md" />
-          </div>
-        </div>
-        <div className="w-full mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          <Skeleton className="h-[120px] rounded-md" />
-          <Skeleton className="h-[120px] rounded-md" />
-          <Skeleton className="h-[120px] rounded-md" />
-          <Skeleton className="h-[120px] rounded-md" />
-        </div>
-        <div className="w-full flex items-center justify-end my-5">
-          <Skeleton className="w-[200px] h-[40px] rounded-md" />
-        </div>
-        <div className="w-full">
-          <Skeleton className="w-full h-[500px] rounded-md" />
-        </div>
-      </section>
-    );
+    return <LoadingList />;
   }
-
+  // Handle error state
   if (isError) {
-    return <div>Error loading tags</div>;
+    return <LoadingError message="Error loading tags" onRetry={refetch} />;
   }
-
+  // Handle empty data state
   const tags = data?.tags || [];
 
   return (

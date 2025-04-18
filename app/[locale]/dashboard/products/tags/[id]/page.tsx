@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Skeleton } from "@/app/components/ui/skeleton";
 import Heading from "@/utils/Heading";
 import { useGetTagQuery } from "@/redux/features/tags/tagsApi";
 import TagPage from "@/app/components/Tag/TagPage";
+import ViewLoading from "@/app/components/Loader/ViewLoading";
+import LoadingError from "@/app/components/Loader/LoadingError";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
@@ -23,27 +24,23 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     { id },
     { skip: !id, refetchOnMountOrArgChange: true }
   );
-
+  // Check if the data is still loading
   if (isLoading || !resolvedParams) {
-    return (
-      <section className="w-full">
-        <Skeleton className="w-full h-[500px] rounded-md" />
-      </section>
-    );
+    return <ViewLoading />;
   }
-
+  // Check if there was an error during the query
   if (isError) {
-    return <div>Error loading tag </div>;
+    return <LoadingError message="Error loading tag" onRetry={refetch} />;
   }
-
-  const tag = data?.tag;
+  // Check if data is null or undefined
+  const tag = data?.tag || {};
 
   return (
     <>
       <Heading
-        title={`Category : ${tag?.name}`}
-        description="Manage your blog categories here."
-        keywords="category, blog, manage"
+        title={`Product Tag: ${tag?.name}`}
+        description="Manage your product tags here."
+        keywords="product, tag, manage"
       />
       <TagPage tag={tag} refetch={refetch} />
     </>

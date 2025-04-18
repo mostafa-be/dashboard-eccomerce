@@ -15,11 +15,11 @@ import {
 } from "@/app/components/ui/breadcrumb";
 import { Product } from "./columns";
 
-type ExportAndchangeProps = {
+type ExportAndChangeProps = {
   products: Array<Product>;
 };
 
-const ExportAndchange = ({ products }: ExportAndchangeProps) => {
+const ExportAndChange = ({ products }: ExportAndChangeProps) => {
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
@@ -41,7 +41,9 @@ const ExportAndchange = ({ products }: ExportAndchangeProps) => {
       alternateRowStyles: { fillColor: [240, 240, 240] },
     });
 
-    const inStock = products.filter((product:Product) => product.quantity > 0).length;
+    const inStock = products.filter(
+      (product: Product) => product.quantity > 0
+    ).length;
     const outOfStock = products.filter(
       (product) => product.quantity === 0
     ).length;
@@ -65,6 +67,15 @@ const ExportAndchange = ({ products }: ExportAndchangeProps) => {
 
     doc.save("products_report.pdf");
   };
+
+  const csvHeaders = [
+    { label: "Title", key: "Title" },
+    { label: "Collection", key: "Collection" },
+    { label: "Category", key: "Category" },
+    { label: "Brand", key: "Brand" },
+    { label: "Price", key: "Price" },
+    { label: "Stock", key: "Stock" },
+  ];
 
   const csvData = products.map((product) => ({
     Title: product.title,
@@ -107,10 +118,14 @@ const ExportAndchange = ({ products }: ExportAndchangeProps) => {
         </Breadcrumb>
       </div>
       <div className="flex items-center select-none gap-2.5">
-        <CSVLink data={csvData} filename={"products_report.csv"}>
+        <CSVLink
+          data={csvData}
+          headers={csvHeaders}
+          filename={"products_report.csv"}
+        >
           <div
             title="Export CSV"
-            className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-blue-650 shadow rounded"
+            className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
           >
             <FileDown size={18} className="text-white text-sm font-semibold" />
             <span className="text-white text-sm">Export CSV</span>
@@ -118,7 +133,7 @@ const ExportAndchange = ({ products }: ExportAndchangeProps) => {
         </CSVLink>
         <div
           title="Export PDF"
-          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-blue-650 shadow rounded"
+          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
           onClick={handleExportPDF}
         >
           <CloudDownload
@@ -132,4 +147,4 @@ const ExportAndchange = ({ products }: ExportAndchangeProps) => {
   );
 };
 
-export default ExportAndchange;
+export default ExportAndChange;

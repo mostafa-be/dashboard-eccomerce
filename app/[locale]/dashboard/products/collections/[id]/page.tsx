@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Skeleton } from "@/app/components/ui/skeleton";
 import Heading from "@/utils/Heading";
 import { useGetCollectionQuery } from "@/redux/features/collections/collectionsApi";
 import CollectionPage from "@/app/components/Collection/CollectionPage";
+import ViewLoading from "@/app/components/Loader/ViewLoading";
+import LoadingError from "@/app/components/Loader/LoadingError";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
@@ -25,15 +26,11 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   );
 
   if (isLoading || !resolvedParams) {
-    return (
-      <section className="w-full">
-        <Skeleton className="w-full h-[500px] rounded-md" />
-      </section>
-    );
+    return <ViewLoading />;
   }
 
   if (isError) {
-    return <div>Error loading collection </div>;
+    return <LoadingError message="Error loading collection" onRetry={refetch} />;
   }
 
   const collection = data?.collection;
@@ -42,7 +39,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     <>
       <Heading
         title={`Collection : ${collection?.name}`}
-        description="Manage your blog categories here."
+        description="Manage your product collections here."
         keywords="category, blog, manage"
       />
       <CollectionPage collection={collection} refetch={refetch} />

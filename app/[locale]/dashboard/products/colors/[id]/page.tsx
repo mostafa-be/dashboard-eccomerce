@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Skeleton } from "@/app/components/ui/skeleton";
 import Heading from "@/utils/Heading";
 import { useGetColorQuery } from "@/redux/features/colors/colorsApi";
 import ColorPage from "@/app/components/Color/ColorPage";
+import ViewLoading from "@/app/components/Loader/ViewLoading";
+import LoadingError from "@/app/components/Loader/LoadingError";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
@@ -25,15 +26,11 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   );
 
   if (isLoading || !resolvedParams) {
-    return (
-      <section className="w-full">
-        <Skeleton className="w-full h-[500px] rounded-md" />
-      </section>
-    );
+    return <ViewLoading />;
   }
 
   if (isError) {
-    return <div>Error loading color </div>;
+    return <LoadingError message="Error loading color" onRetry={refetch} />;
   }
 
   const color = data?.color;
@@ -44,7 +41,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     <>
       <Heading
         title={`Color : ${color?.name}`}
-        description="Manage your blog categories here."
+        description="Manage your product colors here."
         keywords="category, blog, manage"
       />
       <ColorPage color={color} refetch={refetch} />

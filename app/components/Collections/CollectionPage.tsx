@@ -1,14 +1,15 @@
 "use client";
-import React  from "react";
-import { Skeleton } from "../ui/skeleton";
+import React from "react";
 import { useGetAllCollectionsQuery } from "@/redux/features/collections/collectionsApi";
 import ExportAndchange from "./ExportAndchange";
 import Link from "next/link";
 import { SquarePen } from "lucide-react";
 import ListCollections from "./ListCollections";
+import LoadingList from "../Loader/LoadingList";
+import LoadingError from "../Loader/LoadingError";
 
 const CollectionsPage = () => {
-  const { data, isLoading, isError } = useGetAllCollectionsQuery(
+  const { data, isLoading, isError, refetch } = useGetAllCollectionsQuery(
     {},
     {
       refetchOnMountOrArgChange: true,
@@ -16,38 +17,15 @@ const CollectionsPage = () => {
       refetchOnFocus: true,
     }
   );
-
   if (isLoading) {
-    return (
-      <section className="w-full">
-        <div className="w-full flex flex-wrap items-center justify-between gap-4 ">
-          <Skeleton className="w-[200px] h-[20px]  rounded-xl" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="w-[200px] h-[40px] rounded-md" />
-            <Skeleton className="w-[200px] h-[40px] rounded-md" />
-          </div>
-        </div>
-        <div className="w-full mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          <Skeleton className="h-[120px]  rounded-md" />
-          <Skeleton className="h-[120px]  rounded-md" />{" "}
-          <Skeleton className="h-[120px]  rounded-md" />{" "}
-          <Skeleton className="h-[120px]  rounded-md" />
-        </div>
-        <div className="w-full flex items-center justify-end my-5">
-          <Skeleton className="w-[200px] h-[40px] rounded-md" />
-        </div>
-        <div className="w-full">
-          <Skeleton className="w-full h-[500px] rounded-md" />
-        </div>
-      </section>
-    );
+    return <LoadingList />;
   }
-
+  // Handle error state
   if (isError) {
-    return <div>Error loading products</div>;
+    return <LoadingError message="Error loading collections" onRetry={refetch} />;
   }
+  // Handle empty data state
   const collections = data?.collections;
-
   return (
     <section className="w-full">
       <ExportAndchange collections={collections} />

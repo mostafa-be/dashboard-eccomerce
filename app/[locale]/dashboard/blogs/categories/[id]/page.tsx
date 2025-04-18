@@ -2,9 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { useGetBlogCategoryQuery } from "@/redux/features/blogCategories/blogCategoriesApi";
-import { Skeleton } from "@/app/components/ui/skeleton";
 import Heading from "@/utils/Heading";
 import CategoryBlogPage from "@/app/components/CategoryBlog/CategoryBlogPage";
+import ViewLoading from "@/app/components/Loader/ViewLoading";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
@@ -25,11 +25,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   );
 
   if (isLoading || !resolvedParams) {
-    return (
-      <section className="w-full">
-        <Skeleton className="w-full h-[500px] rounded-md" />
-      </section>
-    );
+    return <ViewLoading />;
   }
 
   if (isError) {

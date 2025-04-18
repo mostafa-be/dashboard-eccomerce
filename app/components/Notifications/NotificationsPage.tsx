@@ -10,6 +10,8 @@ import { Input } from "../ui/input";
 import { Bell, CheckCircle, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
 import Change from "./Change";
+import LoadingNotifications from "../Loader/LoadingNotifications";
+import LoadingError from "../Loader/LoadingError";
 
 type Notification = {
   title: string;
@@ -33,13 +35,13 @@ const NotificationsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
 
   if (isLoading) {
-    return <div>Loading notifications...</div>;
+    return <LoadingNotifications />;
   }
-
+  // Handle error state
   if (isError) {
-    return <div>Error loading notifications</div>;
+    return <LoadingError message="Error loading Notifications" onRetry={refetch} />;
   }
-
+  // Handle empty data state
   const notifications = data?.notifications || [];
 
   const filteredNotifications = notifications.filter(

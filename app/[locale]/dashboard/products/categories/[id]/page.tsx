@@ -1,9 +1,10 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Skeleton } from "@/app/components/ui/skeleton";
 import Heading from "@/utils/Heading";
 import CategoryPage from "@/app/components/Category/CategoryPage";
 import { useGetCategoryQuery } from "@/redux/features/categories/categoriesApi";
+import LoadingError from "@/app/components/Loader/LoadingError";
+import ViewLoading from "@/app/components/Loader/ViewLoading";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
@@ -22,20 +23,16 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
     { id },
     { skip: !id, refetchOnMountOrArgChange: true }
   );
-
+  // Check if the data is still loading
   if (isLoading || !resolvedParams) {
-    return (
-      <section className="w-full">
-        <Skeleton className="w-full h-[500px] rounded-md" />
-      </section>
-    );
+    return <ViewLoading />;
   }
-
+  // Check if there was an error during the query
   if (isError) {
-    return <div>Error loading category </div>;
+    return <LoadingError message="Error loading category" onRetry={refetch} />;
   }
-
-  const category = data?.category || [];
+  // Check if data is null or undefined
+  const category = data?.category || {};
 
   return (
     <>

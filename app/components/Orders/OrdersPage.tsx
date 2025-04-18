@@ -7,53 +7,31 @@ import { SquarePen } from "lucide-react";
 import ListOrderGeneral from "./ListOrderGeneral";
 import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";
 import { columns } from "./columns";
-import { Skeleton } from "../ui/skeleton";
+import LoadingList from "../Loader/LoadingList";
+import LoadingError from "../Loader/LoadingError";
 const OrdersPage = () => {
   const [period, setPeriod] = React.useState<string>("weekly");
-  const { data, error, isLoading } = useGetAllOrdersQuery(
+  const { data, isLoading, isError, refetch } = useGetAllOrdersQuery(
     {},
     { refetchOnMountOrArgChange: true }
   );
 
   if (isLoading) {
-    return (
-      <section className="w-full">
-        <div className="w-full flex flex-wrap items-center justify-between gap-4 ">
-          <Skeleton className="w-[200px] h-[20px]  rounded-xl" />
-          <div className="flex items-center gap-2">
-            <Skeleton className="w-[200px] h-[40px] rounded-md" />
-            <Skeleton className="w-[200px] h-[40px] rounded-md" />
-          </div>
-        </div>
-        <div className="w-full mt-10 grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
-          <Skeleton className="h-[180px]  rounded-md" />
-          <Skeleton className="h-[180px]  rounded-md" />{" "}
-          <Skeleton className="h-[180px]  rounded-md" />{" "}
-          <Skeleton className="h-[180px]  rounded-md" />{" "}
-          <Skeleton className="h-[180px]  rounded-md" />
-        </div>
-        <div className="w-full flex items-center justify-end my-5">
-          <Skeleton className="w-[200px] h-[40px] rounded-md" />
-        </div>
-        <div className="w-full">
-          <Skeleton className="w-full h-[500px] rounded-md" />
-        </div>
-      </section>
-    );
+    return <LoadingList statistic={true} />;
   }
 
-  if (error) {
-    return <div className="w-full h-dvh flex items-center justify center ">
-      <span className="text-red-500">Error loading orders</span>
-    </div>;
+  if (isError) {
+    return <LoadingError message="Error loading orders" onRetry={refetch} />;
   }
+  // Handle empty data state
+  const orders = data?.orders || [];
 
   return (
     <section className="w-full">
       <ExportAndchange
         period={period}
         setPeriod={setPeriod}
-        tableData={data.orders}
+        tableData={orders}
         columns={columns}
       />
       <StatisticsOrder period={period} />
@@ -68,7 +46,7 @@ const OrdersPage = () => {
         </Link>
       </div>
       <div className="w-full">
-        <ListOrderGeneral data={data.orders} columns={columns} />
+        <ListOrderGeneral data={orders} columns={columns} />
       </div>
     </section>
   );

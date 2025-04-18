@@ -3,40 +3,40 @@ import React, { useEffect, useState } from "react";
 import OrderPage from "@/app/components/Order/OrderPage";
 import { useGetOrderQuery } from "@/redux/features/orders/ordersApi";
 import Heading from "@/utils/Heading";
-import PageInformation from "@/utils/PageInformation";
-import LodingOrder from "@/app/components/Order/LoadingOrder";
+import LoadingError from "@/app/components/Loader/LoadingError";
+import LoadingList from "@/app/components/Loader/LoadingList";
 
 const Page = ({ params }: { params: { id: string } }) => {
-  const [unwrappedParams, setUnwrappedParams] = useState<{ id: string } | null>(null);
+  const [unwrappedParams, setUnwrappedParams] = useState<{ id: string } | null>(
+    null
+  );
 
   useEffect(() => {
     (async () => {
       const resolvedParams = await params;
-        setUnwrappedParams(resolvedParams);
-
+      setUnwrappedParams(resolvedParams);
     })();
   }, [params]);
 
   const id = unwrappedParams?.id;
-    const { data: dataOrder, error, isLoading } = useGetOrderQuery({ id },
-        { refetchOnMountOrArgChange: true }
-  );
-
+  const {
+    data: dataOrder,
+    isError,
+    isLoading,
+    refetch,
+  } = useGetOrderQuery({ id }, { refetchOnMountOrArgChange: true });
+  // Handle loading state
   if (isLoading) {
-    return <LodingOrder/>;
+    return <LoadingList order={true} />;
   }
-  if (error) {
-    return <div className="">Error</div>;
+  // Handle loading error
+  if (isError) {
+    return <LoadingError message="Error loading order" onRetry={refetch} />;
   }
-
-  const data = {
-    title: "Orders",
-    subTitle: `Order ${dataOrder._id}`,
-  };
-    const order = dataOrder.order
+  // Handle empty data
+  const order = dataOrder.order || {};
   return (
     <>
-      <PageInformation data={data} />
       <Heading
         title={`Order Customer ${order.user.name}`}
         keywords="Orders"

@@ -1,10 +1,10 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { Skeleton } from "@/app/components/ui/skeleton";
 import Heading from "@/utils/Heading";
 import TagBlogPage from "@/app/components/TagBlog/TagBlogPage";
 import { useGetBlogTagQuery } from "@/redux/features/blogTags/blogTagsApi";
+import ViewLoading from "@/app/components/Loader/ViewLoading";
 
 const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   const [resolvedParams, setResolvedParams] = useState<{ id: string } | null>(
@@ -25,11 +25,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   );
 
   if (isLoading || !resolvedParams) {
-    return (
-      <section className="w-full">
-        <Skeleton className="w-full h-[500px] rounded-md" />
-      </section>
-    );
+    return <ViewLoading />;
   }
 
   if (isError) {
@@ -41,7 +37,7 @@ const Page = ({ params }: { params: Promise<{ id: string }> }) => {
   return (
     <>
       <Heading
-        title={`Category Blog: ${tag?.name}`}
+        title={`Tag Blog: ${tag?.name}`}
         description="Manage your blog categories here."
         keywords="category, blog, manage"
       />
