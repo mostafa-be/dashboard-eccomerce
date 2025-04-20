@@ -4,30 +4,22 @@ import { Ellipsis } from "lucide-react";
 interface CardStatisticsOrderProps {
   title: string;
   value: number;
-  currency: string;
-  period: string;
+  amount: number;
   percent: number;
   mouvement: string;
   bgColor: string;
+  period: string;
 }
 
 const CardStatisticsOrder: React.FC<CardStatisticsOrderProps> = ({
   title,
   value,
-  currency,
-  period,
+  amount,
   percent,
   mouvement,
   bgColor,
+  period,
 }) => {
-  const formatNumber = (value: number) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency,
-      notation: value >= 1000 ? "compact" : "standard",
-      compactDisplay: "short",
-    }).format(value);
-
   return (
     <div
       className={`relative w-full rounded-lg shadow-lg p-6 flex flex-col items-center justify-center ${bgColor} text-white hover:shadow-xl transition-shadow duration-300`}
@@ -37,7 +29,10 @@ const CardStatisticsOrder: React.FC<CardStatisticsOrderProps> = ({
       </div>
       <div className="text-center">
         <h4 className="text-lg font-semibold">{title}</h4>
-        <p className="text-4xl font-extrabold mt-2">{formatNumber(value)}</p>
+        <p className="text-4xl font-extrabold mt-2">{value}</p>
+        <p className="text-sm font-medium mt-1">
+          Amount: ${amount.toLocaleString()}
+        </p>
         <div className="flex items-center justify-center gap-2 mt-2">
           <span
             className={`text-sm font-semibold ${
@@ -48,11 +43,11 @@ const CardStatisticsOrder: React.FC<CardStatisticsOrderProps> = ({
           </span>
           <span className="text-sm text-gray-200">
             vs{" "}
-            {period === "weekly"
+            {period === "7d"
               ? "Last 7 Days"
-              : period === "monthly"
+              : period === "1m"
               ? "Last 30 Days"
-              : "Last 365 Days"}
+              : "Last Year"}
           </span>
         </div>
       </div>

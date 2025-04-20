@@ -30,6 +30,13 @@ export const analyticsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getOrderStatisticsPeriodically: builder.query({
+      query: ({ period }) => ({
+        url: `statistics?period=${period}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -37,5 +44,6 @@ export const {
   useGetUserAnalyticsQuery,
   useGetEnquiriesAnalyticsQuery,
   useGetOrderAnalyticsQuery,
-  useGetProductsAnalyticsQuery
+  useGetProductsAnalyticsQuery,
+  useGetOrderStatisticsPeriodicallyQuery,
 } = analyticsApi;

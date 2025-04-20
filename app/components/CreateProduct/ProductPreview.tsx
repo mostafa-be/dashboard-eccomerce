@@ -9,10 +9,7 @@ import { useGetAllColorsQuery } from "@/redux/features/colors/colorsApi";
 import { useGetAllSizesQuery } from "@/redux/features/sizes/sizesApi";
 import toast from "react-hot-toast";
 import { redirect } from "next/navigation";
-import {
-  useCreateProductMutation,
-  useEditProductMutation,
-} from "@/redux/features/products/productsApi";
+import { useCreateProductMutation } from "@/redux/features/products/productsApi";
 import Image from "next/image";
 
 type ProductPreviewProps = {
@@ -50,25 +47,8 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
 
   const validImages = Array.isArray(images) ? images : []; // Ensure images is an array
 
-  const [
-    createProduct,
-    {
-      isLoading: isCreating,
-      isSuccess: isSuccessCreate,
-      isError: isErrorCreate,
-      error: errorCreate,
-    },
-  ] = useCreateProductMutation();
-
-  const [
-    editProduct,
-    {
-      isLoading: isEditing,
-      isSuccess: isSuccessEdit,
-      isError: isErrorEdit,
-      error: errorEdit,
-    },
-  ] = useEditProductMutation();
+  const [createProduct, { isLoading, isSuccess, isError, error }] =
+    useCreateProductMutation();
 
   const { data: dataBrand } = useGetBrandQuery(
     { id: brand },
@@ -125,43 +105,22 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
   );
   const category = dataCategory?.category || {};
   useEffect(() => {
-    if (isSuccessCreate) {
+    if (isSuccess) {
       toast.success("Product created successfully!");
       redirect("/en/dashboard/products");
     }
-    if (errorCreate) {
-      if ("data" in errorCreate) {
-        const errorData = errorCreate as { data: { message: string } };
+    if (error) {
+      if ("data" in error) {
+        const errorData = error as { data: { message: string } };
         toast.error(errorData.data.message);
       }
     }
-    if (isSuccessEdit) {
-      toast.success("Product Updated successfully!");
-      redirect("/en/dashboard/products");
-    }
-    if (errorEdit) {
-      if ("data" in errorEdit) {
-        const errorData = errorEdit as { data: { message: string } };
-        toast.error(errorData.data.message);
-      }
-    }
-  }, [
-    isSuccessCreate,
-    isErrorCreate,
-    errorCreate,
-    isSuccessEdit,
-    isErrorEdit,
-    errorEdit,
-  ]);
+  }, [isSuccess, isError, error]);
 
-  const handleSubmit = async () => {
+  const handleProductCreate = async () => {
     const data = productData;
-    if (!isCreating && !isEditing) {
-      if (!isEdit) {
-        await createProduct(data);
-      } else {
-        await editProduct({ id: productId, data });
-      }
+    if (!isLoading) {
+      await createProduct(data);
     }
   };
   return (
@@ -266,13 +225,13 @@ const ProductPreview: React.FC<ProductPreviewProps> = ({
         </Button>
         <Button
           type="button"
-          onClick={handleSubmit}
+          onClick={handleProductCreate}
           className={`bg-blue-650 hover:bg-blue-600 text-white ${
-            isCreating || isEditing ? "cursor-progress" : "cursor-pointer"
+            isLoading ? "cursor-progress" : "cursor-pointer"
           } min-w-32`}
-          disabled={isCreating || isEditing}
+          disabled={isLoading}
         >
-          {isCreating || isEditing
+          {isLoading
             ? isEdit
               ? "Updating..."
               : "Creating..."

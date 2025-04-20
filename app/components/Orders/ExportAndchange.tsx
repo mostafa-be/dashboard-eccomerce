@@ -1,8 +1,10 @@
 "use client";
 import React from "react";
-import { ChevronDown, CloudDownload } from "lucide-react";
+import { CloudDownload, FileDown } from "lucide-react";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import { CSVLink } from "react-csv";
+import PeriodSelector from "../ui/PeriodSelector";
 
 import {
   Breadcrumb,
@@ -12,38 +14,99 @@ import {
   BreadcrumbPage,
   BreadcrumbSeparator,
 } from "@/app/components/ui/breadcrumb";
-import { Button } from "../ui/button";
+import { Order } from "./columns";
 
 type Props = {
   setPeriod(period: string): void;
   period: string;
-  tableData: any[];
-  columns: any[];
+  orders: Order[];
+  refetch: () => void;
 };
 
-const ExportAndchange = ({ setPeriod, period }: Props) => {
-  const timePeriods = ["weekly", "monthly", "yearly"];
-  const [isOpen, setIsOpen] = React.useState<boolean>(false);
-
-  const exportToPDF = () => {
-    alert("orders.pdf");
-  //  const doc = new jsPDF();
-//  const tableColumn = columns.map((col) => col.header);
-//  const tableRows: any[] = [];
-//
-//  tableData.forEach((row) => {
-//    const rowData = columns.map((col) => row[col.accessorKey]);
-//    tableRows.push(rowData);
-//  });
-//
-//  autoTable(doc, {
-//    head: [tableColumn],
-//    body: tableRows,
-//  });
-
-    //   doc.save("orders.pdf");
- 
+const ExportAndchange = ({ setPeriod, period, orders, refetch }: Props) => {
+  const handlePeriodChange = (value: string) => {
+    setPeriod(value);
+    refetch();
   };
+
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Orders Report", 14, 20);
+
+    autoTable(doc, {
+      startY: 30,
+      head: [
+        [
+          "Order ID",
+          "Product Title",
+          "Brand",
+          "Collection",
+          "Category",
+          "Color",
+          "Size",
+          "Quantity",
+          "Price",
+          "Total Price",
+          "Order Status",
+          "Date Created",
+        ],
+      ],
+      body: orders.flatMap((order) =>
+        order.orderItems.map((item) => [
+          order._id,
+          item.product?.title || "N/A",
+          item.product?.brand?.name || "N/A",
+          item.product?.collections?.name || "N/A",
+          item.product?.categories?.name || "N/A",
+          item.color?.name || "N/A",
+          item.size?.name || "N/A",
+          item.quantity,
+          item.product?.price || 0,
+          item.quantity * (item.product?.price || 0),
+          order.orderStatus,
+          order.createdAt,
+        ])
+      ),
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [22, 160, 133] },
+      alternateRowStyles: { fillColor: [240, 240, 240] },
+    });
+
+    doc.save("orders_report.pdf");
+  };
+
+  const csvHeaders = [
+    { label: "Order ID", key: "orderId" },
+    { label: "Product Title", key: "productTitle" },
+    { label: "Brand", key: "brand" },
+    { label: "Collection", key: "collection" },
+    { label: "Category", key: "category" },
+    { label: "Color", key: "color" },
+    { label: "Size", key: "size" },
+    { label: "Quantity", key: "quantity" },
+    { label: "Price", key: "price" },
+    { label: "Total Price", key: "totalPrice" },
+    { label: "Order Status", key: "orderStatus" },
+    { label: "Date Created", key: "dateCreated" },
+  ];
+
+  const csvData = orders.flatMap((order) =>
+    order.orderItems.map((item) => ({
+      orderId: order._id,
+      productTitle: item.product?.title || "N/A",
+      brand: item.product?.brand?.name || "N/A",
+      collection: item.product?.collections?.name || "N/A",
+      category: item.product?.categories?.name || "N/A",
+      color: item.color?.name || "N/A",
+      size: item.size?.name || "N/A",
+      quantity: item.quantity,
+      price: item.product?.price || 0,
+      totalPrice: item.quantity * (item.product?.price || 0),
+      orderStatus: order.orderStatus,
+      dateCreated: order.createdAt,
+    }))
+  );
 
   return (
     <div className="w-full flex flex-wrap gap-2 items-center justify-between">
@@ -77,38 +140,32 @@ const ExportAndchange = ({ setPeriod, period }: Props) => {
         </Breadcrumb>
       </div>
       <div className="flex items-center select-none gap-2.5">
-        <div
-          onClick={() => setIsOpen(!isOpen)}
-          className="w-32 z-10 py-2.5 px-3 flex items-center cursor-pointer justify-between relative bg-white dark:bg-black-100/90 shadow rounded border border-gray-500/90"
+        {/* Period Selector */}
+        <PeriodSelector period={period} onChange={handlePeriodChange} />
+        {/* Export CSV */}
+        <CSVLink
+          data={csvData}
+          headers={csvHeaders}
+          filename={"orders_report.csv"}
         >
-          <span className="text-sm font-normal text-gray-900 dark:text-white capitalize">
-            {period}
-          </span>
-          <ChevronDown size={15} className="text-gray-900 dark:text-white" />
-          {isOpen && (
-            <div className="absolute overflow-hidden top-14 left-0 w-full rounded-lg bg-white dark:bg-black-100/90 shadow flex-col border border-gray-500/90">
-              {timePeriods.map((time, i) => (
-                <div
-                  onClick={() => setPeriod(time)}
-                  key={i}
-                  className={`hover:bg-gray-300/50 px-3 py-2.5 ${
-                    i > 0 && "border-t border-gray-500/90"
-                  } ${period === time ? "bg-gray-300/60" : "bg-transparent"}`}
-                >
-                  <span className="text-sm text-gray-900 dark:text-white capitalize">
-                    {time}
-                  </span>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+          <div
+            title="Export CSV"
+            className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
+          >
+            <FileDown size={18} className="text-white text-sm font-semibold" />
+            <span className="text-white text-sm">Export CSV</span>
+          </div>
+        </CSVLink>
+        {/* Export PDF */}
         <div
           title="Export PDF"
-          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-blue-650 shadow rounded"
-          onClick={exportToPDF}
+          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
+          onClick={handleExportPDF}
         >
-          <CloudDownload size={18} className="text-white text-sm font-semibold" />
+          <CloudDownload
+            size={18}
+            className="text-white text-sm font-semibold"
+          />
           <span className="text-white text-sm">Export PDF</span>
         </div>
       </div>

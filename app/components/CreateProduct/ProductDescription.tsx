@@ -83,9 +83,10 @@ const ProductDescription = ({
               name="description"
               render={({ field, form }: FieldProps) => (
                 <MyEditor
-                  value={field.value}
-                  onChange={(value: string) =>
-                    form.setFieldValue(field.name, value)
+                  value={field.value || ""} // Ensure value is not undefined
+                  onChange={
+                    (value: string) =>
+                      form.setFieldValue(field.name, value || "") // Default to an empty string
                   }
                 />
               )}

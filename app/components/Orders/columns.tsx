@@ -16,6 +16,9 @@ import { Checkbox } from "@/app/components/ui/checkbox";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 import { redirect } from "next/navigation";
+import { Product } from "../Products/columns";
+import { Color } from "../Colors/columns";
+import { Size } from "../Sizes/columns";
 export type Order = {
   _id: string;
   user: {
@@ -34,7 +37,7 @@ export type Order = {
     address: [object];
     cart: [
       {
-        product: object;
+        product: Product;
         color: object;
         size: object;
         quantity: number;
@@ -49,9 +52,9 @@ export type Order = {
   paidAt: Date;
   orderItems: [
     {
-      product: object;
-      color: object;
-      size: object;
+      product: Product;
+      color: Color;
+      size: Size;
       quantity: number;
       price: number;
     }
@@ -183,11 +186,11 @@ export const columns: ColumnDef<Order>[] = [
     },
   },
   {
-    accessorKey: "paided",
-    header: () => <div className="text-right">Paided</div>,
+    accessorKey: "paid",
+    header: () => <div className="text-right">Paid</div>,
     cell: ({ row }) => {
-      const paided = row.getValue("paided") as string;
-      const formatted = formatDate(paided);
+      const paid = row.getValue("paid") as string;
+      const formatted = formatDate(paid);
       return <div className="text-right font-medium">{formatted}</div>;
     },
   },
@@ -219,14 +222,15 @@ export const columns: ColumnDef<Order>[] = [
     cell: ({ row }) => {
       const orderStatus = row.getValue("orderStatus") as string;
       return (
-        <div className="w-full  flex items-center justify-sart">
+        <div className="w-full  flex items-center justify-start">
           {" "}
           <div
             className={`px-3 py-2 ${
               (orderStatus === "Delivered" && "bg-green-400/65 text-white") ||
               (orderStatus === "Processing" && "bg-yellow-400/65 text-white") ||
               (orderStatus === "Cancelled" && "bg-red-400/65 text-white") ||
-              (orderStatus === "Shipped" && "bg-blue-400/65 text-white") ||
+            (orderStatus === "Shipped" && "bg-blue-400/65 text-white") ||
+              
               "bg-gray-400/65 text-white"
             } rounded-full`}
           >

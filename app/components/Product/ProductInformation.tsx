@@ -4,6 +4,7 @@ import React from "react";
 import { Card, CardContent, HeaderCard, TitleCard } from "../ui/card";
 import Image from "next/image";
 import { Star } from "lucide-react";
+
 type IComment = {
   user: {
     name: string;
@@ -14,6 +15,7 @@ type IComment = {
   commentReplies?: IComment[];
   _id: string;
 };
+
 type ProductInformationProps = {
   product: {
     title: string;
@@ -155,7 +157,14 @@ const ProductInformation = ({ product }: ProductInformationProps) => {
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 <strong>Colors:</strong>{" "}
-                {colors.map((color) => color.name).join(", ")}
+                {colors.map((color) => (
+                  <span
+                    key={color.name}
+                    className="inline-block w-4 h-4 rounded-full mr-1"
+                    style={{ backgroundColor: color.code }}
+                    title={color.name}
+                  ></span>
+                ))}
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 <strong>Sizes:</strong>{" "}

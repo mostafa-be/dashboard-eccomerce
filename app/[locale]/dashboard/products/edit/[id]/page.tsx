@@ -19,6 +19,11 @@ const Page = ({ params }: { params: { id: string } }) => {
   }, [params]);
   const id = unwrappedParams?.id;
 
+  const { data, isError, isLoading, refetch } = useGetProductQuery(
+    { id: id || "" },
+    { skip: !id, refetchOnMountOrArgChange: true }
+  );
+
   if (!id) {
     return (
       <LoadingError
@@ -27,11 +32,6 @@ const Page = ({ params }: { params: { id: string } }) => {
       />
     );
   }
-
-  const { data, isError, isLoading, refetch } = useGetProductQuery(
-    { id },
-    { refetchOnMountOrArgChange: true }
-  );
 
   // Check if the data is still loading
   if (isLoading) {
