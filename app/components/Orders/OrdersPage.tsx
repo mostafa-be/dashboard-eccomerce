@@ -7,7 +7,6 @@ import { SquarePen } from "lucide-react";
 import ListOrderGeneral from "./ListOrderGeneral";
 import { useGetAllOrdersQuery } from "@/redux/features/orders/ordersApi";
 import { useGetOrderStatisticsPeriodicallyQuery } from "@/redux/features/analytics/analyticsApi";
-import { columns } from "./columns";
 import LoadingList from "../Loader/LoadingList";
 import LoadingError from "../Loader/LoadingError";
 
@@ -49,14 +48,17 @@ const OrdersPage = () => {
       />
     );
   }
-
+  const handleRefetch = () => {
+    refetchOrders();
+    refetchStatistics();
+  };
   const orders = ordersData?.orders || [];
   const statistics = statisticsData?.statistics || {};
 
   return (
     <section className="w-full">
       <ExportAndchange
-        refetch={refetchStatistics}
+        refetch={handleRefetch}
         period={period}
         setPeriod={setPeriod}
         orders={orders}
@@ -66,14 +68,15 @@ const OrdersPage = () => {
         <Link
           href="/en/dashboard/orders/create-order"
           title="Create Order"
-          className="px-3 py-2.5 rounded-md shadow bg-blue-650 text-white flex items-center gap-2"
+          className="px-3 py-2.5 rounded-md shadow bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white flex items-center gap-2 transition-all duration-300"
         >
           <SquarePen size={20} />
           <span className="text-[16px] font-[500]">Create Order</span>
         </Link>
       </div>
       <div className="w-full">
-        <ListOrderGeneral data={orders} columns={columns} />
+        <ListOrderGeneral data={orders} />
+        {/* Ensure ListOrderGeneral handles column layouts internally or via other props */}
       </div>
     </section>
   );

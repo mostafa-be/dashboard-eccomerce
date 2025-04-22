@@ -1,11 +1,18 @@
 import React from "react";
-import { Card, HeaderCard, CardContent } from "../ui/card";
-import { Skeleton } from "../ui/skeleton";
+import { Card, CardContent } from "../ui/card";
+import Image from "next/image";
 
 type CardOrderItemProps = {
   item: {
     product: {
       title: string;
+      images: { url: string; public_id: string }[];
+      price: number;
+      estimatedPrice: number;
+      discount: number;
+      categories: { name: string };
+      collections: { name: string };
+      brand: { name: string };
     };
     color: {
       name: string;
@@ -25,59 +32,77 @@ const CardOrderItem = ({ item }: CardOrderItemProps) => {
     currency: "USD",
   }).format(item?.price || 0);
 
+  const totalPrice = new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+  }).format(item?.quantity * item?.price || 0);
+
   return (
-    <Card className="w-full min-h-32 bg-white dark:bg-black-100 rounded-t-lg drop-shadow-sm overflow-hidden">
-      <HeaderCard className="w-full h-[250px]">
-        <Skeleton className="w-full h-full rounded-none" />
-      </HeaderCard>
-      <CardContent className="w-full flex-col gap-1.5 p-2">
-        <h5 className="text-lg text-gray-900 dark:text-white">
+    <Card className="w-full bg-white dark:bg-black-100 rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+      {/* Product Image */}
+      <div className="relative w-full h-48">
+        {item?.product?.images?.[0]?.url ? (
+          <Image
+            src={item.product.images[0].url}
+            alt={item.product.title}
+            layout="fill"
+            objectFit="cover"
+            className="rounded-t-lg"
+          />
+        ) : (
+          <div className="w-full h-full bg-gray-200 dark:bg-gray-700 flex items-center justify-center">
+            <span className="text-gray-500 dark:text-gray-400">
+              No Image Available
+            </span>
+          </div>
+        )}
+      </div>
+
+      {/* Product Details */}
+      <CardContent className="p-4 space-y-3">
+        <h5 className="text-lg font-semibold text-gray-800 dark:text-white">
           {item?.product?.title}
         </h5>
-        <div className="w-full flex gap-1 items-center">
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white w-16">
-            Price
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Price:
           </span>
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white">
-            :
-          </span>
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white">
+          <span className="text-sm font-medium text-gray-800 dark:text-white">
             {formattedPrice}
           </span>
         </div>
-        <div className="w-full flex gap-1 items-center">
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white w-16">
-            Color
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Quantity:
           </span>
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white">
-            :
-          </span>
-          <div
-            title={`Color ${item?.color?.name}`}
-            style={{ backgroundColor: item?.color?.code }}
-            className="rounded-full p-2"
-          />
-        </div>
-        <div className="w-full flex gap-1 items-center">
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white w-16">
-            Quantity
-          </span>
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white">
-            :
-          </span>
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white">
+          <span className="text-sm font-medium text-gray-800 dark:text-white">
             {item?.quantity}
           </span>
         </div>
-        <div className="w-full flex gap-1 items-center">
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white w-16">
-            Size
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Color:
           </span>
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white">
-            :
+          <div
+            title={item?.color?.name}
+            style={{ backgroundColor: item?.color?.code }}
+            className="w-5 h-5 rounded-full border border-gray-300 dark:border-gray-600"
+          />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Size:
           </span>
-          <span className="text-gray-900 text-[16px] font-normal dark:text-white capitalize">
+          <span className="text-sm font-medium text-gray-800 dark:text-white capitalize">
             {item?.size?.name}
+          </span>
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-gray-500 dark:text-gray-400">
+            Total Price:
+          </span>
+          <span className="text-sm font-medium text-gray-800 dark:text-white">
+            {totalPrice}
           </span>
         </div>
       </CardContent>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Select,
   SelectItem,
@@ -6,7 +6,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
-
 import toast from "react-hot-toast";
 import { useEditStatusOrderMutation } from "@/redux/features/orders/ordersApi";
 
@@ -17,7 +16,7 @@ type ChangeStatusProps = {
 
 const ChangeStatus = ({ orderId, currentStatus }: ChangeStatusProps) => {
   const [status, setStatus] = useState(currentStatus);
-  const [editStatusOrder, { isSuccess, isError }] =
+  const [editStatusOrder, { isSuccess, isError,error }] =
     useEditStatusOrderMutation();
 
   const handleChange = async (newStatus: string) => {
@@ -25,20 +24,28 @@ const ChangeStatus = ({ orderId, currentStatus }: ChangeStatusProps) => {
     await editStatusOrder({ id: orderId, data: { status: newStatus } });
   };
 
-  if (isSuccess) {
-    toast.success("Order status updated successfully!");
-  }
-
-  if (isError) {
-    toast.error("Failed to update order status.");
-  }
+  useEffect(() => {
+    if (isSuccess) {
+      toast.success("Order status updated successfully!");
+    }
+    if (isError) {
+      if (error && "data" in error) { 
+        const errorData = error as { data: { message: string } };
+        toast.error(errorData.data.message);
+      } else {
+        toast.error("An unexpected error occurred.");
+      }
+    }
+  }, [isSuccess, isError, error]);
 
   return (
-    <div className="w-full  flex gap-4 items-center justify-end mt-5">
+    <div className="w-full flex gap-4 items-center justify-end mt-5">
       <div className="max-w-[400px]">
         <Select value={status} onValueChange={handleChange}>
           <SelectTrigger>
-            <SelectValue className=" uppercase" placeholder="Select status">{status}</SelectValue>
+            <SelectValue className="uppercase" placeholder="Select status">
+              {status}
+            </SelectValue>
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="Pending">Pending</SelectItem>
@@ -46,6 +53,7 @@ const ChangeStatus = ({ orderId, currentStatus }: ChangeStatusProps) => {
             <SelectItem value="Shipped">Shipped</SelectItem>
             <SelectItem value="Delivered">Delivered</SelectItem>
             <SelectItem value="Cancelled">Cancelled</SelectItem>
+            <SelectItem value="Refunded">Refunded</SelectItem>
           </SelectContent>
         </Select>
       </div>

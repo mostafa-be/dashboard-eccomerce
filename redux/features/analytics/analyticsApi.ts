@@ -3,29 +3,29 @@ import { apiSlice } from "../api/apiSlice";
 export const analyticsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     getUserAnalytics: builder.query({
-      query: () => ({
-        url: "users-analytics",
+      query: ({ period }) => ({
+        url: `users-analytics?period=${period}`,
         method: "GET",
         credentials: "include" as const,
       }),
     }),
     getEnquiriesAnalytics: builder.query({
-      query: () => ({
-        url: "enquiries-analytics",
+      query: ({ period }) => ({
+        url: `enquiries-analytics?period=${period}`,
         method: "GET",
         credentials: "include" as const,
       }),
     }),
     getOrderAnalytics: builder.query({
-      query: () => ({
-        url: "orders-analytics",
+      query: ({ period }) => ({
+        url: `orders-analytics?period=${period}`,
         method: "GET",
         credentials: "include" as const,
       }),
     }),
     getProductsAnalytics: builder.query({
-      query: () => ({
-        url: "products-analytics",
+      query: ({ period }) => ({
+        url: `products-analytics?period=${period}`,
         method: "GET",
         credentials: "include" as const,
       }),

@@ -12,11 +12,12 @@ import {
 
 type Analytic = {
   count: number;
-  month: string;
+  date: string;
 };
 
 type SalesAnalyticsProps = {
   analyticsSales: Array<Analytic>;
+  period: string; // Added period prop
 };
 
 const chartConfig = {
@@ -26,8 +27,23 @@ const chartConfig = {
   },
 } satisfies ChartConfig;
 
-const SalesAnalytics = ({ analyticsSales }: SalesAnalyticsProps) => {
+const SalesAnalytics = ({ analyticsSales, period }: SalesAnalyticsProps) => {
   const validAnalytics = Array.isArray(analyticsSales) ? analyticsSales : [];
+
+  const formatDate = (value: string) => {
+    const date = new Date(value);
+    if (period === "7d") {
+      return date.toLocaleDateString("en-US", { weekday: "short" }); // e.g., Mon, Tue
+    } else if (period === "1m") {
+      return date.toLocaleDateString("en-US", {
+        day: "2-digit",
+        month: "2-digit",
+      }); // e.g., 01/12
+    } else if (period === "1y") {
+      return date.toLocaleDateString("en-US", { month: "short" }); // e.g., Jan, Feb
+    }
+    return value;
+  };
 
   return (
     <Card className="w-full bg-white dark:bg-black-100 shadow rounded-lg">
@@ -48,12 +64,13 @@ const SalesAnalytics = ({ analyticsSales }: SalesAnalyticsProps) => {
           >
             <CartesianGrid vertical={false} />
             <XAxis
-              dataKey="month"
+              dataKey="date"
               tickLine={false}
               axisLine={false}
               tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              tickFormatter={formatDate}
             />
+
             <ChartTooltip cursor={false} content={<ChartTooltipContent />} />
             <Bar
               dataKey="count"

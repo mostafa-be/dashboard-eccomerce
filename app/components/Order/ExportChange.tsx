@@ -13,7 +13,7 @@ type Props = {
   onExportPDF: () => void;
 };
 
-const ExportChange = ({onExportPDF}: Props) => {
+const ExportChange = ({ onExportPDF }: Props) => {
   return (
     <div className="w-full flex flex-wrap gap-2 items-center justify-between">
       <div className="flex flex-col justify-start gap-0.5">
@@ -38,8 +38,17 @@ const ExportChange = ({onExportPDF}: Props) => {
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage className="text-sm cursor-pointer text-blue-500/90">
+              <BreadcrumbLink
+                href="/en/dashboard/orders"
+                className="text-sm text-gray-700/90 dark:text-white/90 hover:text-blue-500/90 dark:hover:text-blue-500/90"
+              >
                 Orders
+              </BreadcrumbLink>
+            </BreadcrumbItem>
+            <BreadcrumbSeparator />
+            <BreadcrumbItem>
+              <BreadcrumbPage className="text-sm cursor-pointer text-blue-500/90">
+                Order
               </BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
@@ -48,7 +57,7 @@ const ExportChange = ({onExportPDF}: Props) => {
       <div className="flex items-center select-none gap-2.5">
         <div
           title="Export PDF"
-          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-blue-650 shadow rounded"
+          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
           onClick={onExportPDF}
         >
           <CloudDownload

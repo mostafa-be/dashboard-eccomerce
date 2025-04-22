@@ -39,11 +39,11 @@ const Page = ({ params }: { params: { id: string } }) => {
     <>
       <Heading
         title={`Order Customer ${order.user.name}`}
-        keywords="Orders"
-        description="Orders"
+        keywords="Order"
+        description="Order"
       />
-      <OrderPage order={order} />
-    </>
+    <OrderPage order={order} />
+  </>
   );
 };
 
