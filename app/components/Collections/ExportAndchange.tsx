@@ -18,7 +18,7 @@ type ExportAndchangeProps = {
   collections: Collection[];
 };
 
-const ExportAndchange = ({ collections }: ExportAndchangeProps) => {
+const ExportAndChange = ({ collections }: ExportAndchangeProps) => {
   const handleExportPDF = () => {
     const doc = new jsPDF();
     doc.setFontSize(18);
@@ -100,15 +100,15 @@ const ExportAndchange = ({ collections }: ExportAndchangeProps) => {
         >
           <div
             title="Export CSV"
-            className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-blue-650 shadow rounded"
-          >
+            className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
+            >
             <FileDown size={18} className="text-white text-sm font-semibold" />
             <span className="text-white text-sm">Export CSV</span>
           </div>
         </CSVLink>
         <div
           title="Export PDF"
-          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-blue-650 shadow rounded"
+          className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
           onClick={handleExportPDF}
         >
           <CloudDownload
@@ -122,4 +122,4 @@ const ExportAndchange = ({ collections }: ExportAndchangeProps) => {
   );
 };
 
-export default ExportAndchange;
+export default ExportAndChange;

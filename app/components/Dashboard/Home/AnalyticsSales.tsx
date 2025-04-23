@@ -7,38 +7,20 @@ import {
   Line,
   XAxis,
   YAxis,
+  ResponsiveContainer,
+  Tooltip,
 } from "recharts";
 import {
   ChartContainer,
   ChartConfig,
-  ChartTooltip,
   ChartTooltipContent,
 } from "../../ui/chart";
-import {
-  Card,
-  CardContent,
-  HeaderCard,
-  SelectorPeriod,
-  TitleCard,
-} from "../../ui/card";
+import { Card, CardContent, HeaderCard, TitleCard } from "../../ui/card";
 import { ChevronDown, TrendingUp } from "lucide-react";
-const chartData = [
-  { month: "January", order: 189.5, sales: "80" },
-  { month: "February", order: 305, sales: 200 },
-  { month: "March", order: 237, sales: 120 },
-  { month: "April", order: 73, sales: 190 },
-  { month: "May", order: 209, sales: 130 },
-  { month: "June", order: 214, sales: 140 },
-  { month: "January", order: 186, sales: 80 },
-  { month: "August", order: 305, sales: 200 },
-  { month: "September", order: 237, sales: 120 },
-  { month: "October", order: 73, sales: 190 },
-  { month: "November", order: 209, sales: 130 },
-  { month: "December", order: 214, sales: 140 },
-];
+import PeriodSelector from "../../ui/PeriodSelector";
 
 const chartConfig = {
-  order: {
+  orders: {
     label: "Order",
     color: "#0561fc",
   },
@@ -47,49 +29,69 @@ const chartConfig = {
     color: "#F5B400",
   },
 } satisfies ChartConfig;
+
+type Analytics = {
+  date: string;
+  amount: number;
+}[];
+
 type Props = {
-  setPeriod(period: string): void;
   period: string;
+  analyticsSales: Analytics;
+  analyticsOrders: Analytics;
+  handlePeriodChange: (value: string) => void;
 };
-export function AnalyticsSales({ setPeriod, period }: Props) {
-  /*
-  const dataWekly = [
-    { month: "Monday", order: 10, sales: 6 },
-    { month: "Tuesday", order: 305, sales: 200 },
-    { month: "Wednesday", order: 237, sales: 120 },
-    { month: "Thursday", order: 73, sales: 70 },
-    { month: "Thursday", order: 29, sales: 28 },
-    { month: "Saturday", order: 24, sales: 23 },
-    { month: "Sunday", order: 16, sales: 15 },
-  ];
-  const dataYearly = [
-    { month: "January", order: 189.5, sales: "80" },
-    { month: "February", order: 305, sales: 200 },
-    { month: "March", order: 237, sales: 120 },
-    { month: "April", order: 73, sales: 190 },
-    { month: "May", order: 209, sales: 130 },
-    { month: "June", order: 214, sales: 140 },
-    { month: "January", order: 186, sales: 80 },
-    { month: "August", order: 305, sales: 200 },
-    { month: "September", order: 237, sales: 120 },
-    { month: "October", order: 73, sales: 190 },
-    { month: "November", order: 209, sales: 130 },
-    { month: "December", order: 214, sales: 140 },
-  ];
-*/
+
+export function AnalyticsSales({
+  period,
+  analyticsSales,
+  analyticsOrders,
+  handlePeriodChange,
+}: Props) {
+  // Combine sales and orders data into a single dataset
+  const chartData = analyticsSales.map((sale) => {
+    const matchingOrder = analyticsOrders.find(
+      (order) => order.date === sale.date
+    );
+    return {
+      date: sale.date,
+      sales: sale.amount,
+      orders: matchingOrder ? matchingOrder.amount : 0,
+    };
+  });
+
+  // Format date based on the selected period
+  const formatDate = (date: string) => {
+    const parsedDate = new Date(date);
+    if (period === "7d") {
+      return parsedDate.toLocaleDateString("en-US", { weekday: "short" }); // e.g., Mon, Tue
+    } else if (period === "1m") {
+      return parsedDate.toLocaleDateString("en-GB", {
+        day: "2-digit",
+        month: "2-digit",
+      }); // e.g., 01/12
+    } else if (period === "1y") {
+      return parsedDate.toLocaleDateString("en-US", { month: "long" }); // e.g., April, March
+    }
+    return new Date(date).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }); // e.g., Jan 1, 2023
+  };
 
   return (
-    <Card className="w-full min-h-[200px]   md:col-span-5 lg:col-span-6 bg-white dark:bg-black-100 shadow rounded-lg">
+    <Card className="w-full min-h-[200px] md:col-span-5 lg:col-span-6 bg-white dark:bg-black-100 shadow rounded-lg">
       <HeaderCard className="w-full px-5 py-5 border-b border-b-gray-300/90 dark:border-b-white-100 border-dashed">
         <div className="w-full flex items-center justify-between">
           <TitleCard title="Order and Sales Overview" />
-          <SelectorPeriod setPeriod={setPeriod} period={period} />
+          <PeriodSelector onChange={handlePeriodChange} period={period} />
         </div>
         <div className="w-full mt-1.5 flex items-center justify-between">
           <div className="flex flex-col gap-1.5">
             <div className="flex items-center gap-2">
-              <p className="text-sm text-gray-700/90 dark:text-white capitalize ">
-                total revenue
+              <p className="text-sm text-gray-700/90 dark:text-white capitalize">
+                Total Revenue
               </p>
               <ChevronDown
                 size={15}
@@ -98,29 +100,27 @@ export function AnalyticsSales({ setPeriod, period }: Props) {
             </div>
             <div className="w-full select-none flex items-center gap-2">
               <h1 className="text-lg font-semibold text-black-100 dark:text-white">
-                {" "}
                 $182.1k
               </h1>
-              <div className="w-max flex items-center gap-1 rounded-full bg-green-400/40 px-1 py-1 ">
+              <div className="w-max flex items-center gap-1 rounded-full bg-green-400/40 px-1 py-1">
                 <TrendingUp
                   size={10}
-                  className="text-[12px]  proportional-nums text-green-600 "
+                  className="text-[12px] proportional-nums text-green-600"
                 />
-                <p className="text-[12px]  proportional-nums text-green-600 ">
+                <p className="text-[12px] proportional-nums text-green-600">
                   30.5%
-                </p>{" "}
+                </p>
               </div>
               <p className="text-[12px] text-gray-700/70 dark:text-white">
                 vs last 7 days
               </p>
             </div>
           </div>
-
           <div className="flex items-center gap-2">
             <div className="flex items-center gap-1">
               <div className="p-1 shadow bg-blue-650 rounded-full" />
               <span className="text-gray-900 dark:text-white text-sm font-[500]">
-                Order
+                Orders
               </span>
             </div>
             <div className="flex items-center gap-1">
@@ -133,35 +133,83 @@ export function AnalyticsSales({ setPeriod, period }: Props) {
         </div>
       </HeaderCard>
       <CardContent className="w-full h-[300px]">
-        <ChartContainer lang="ar" config={chartConfig} className="w-full h-full">
-          <ComposedChart accessibilityLayer data={chartData}>
-            <CartesianGrid vertical={false} />
-            <XAxis
-              dataKey="month"
-              tickLine={false}
-              tickMargin={10}
-              axisLine={false}
-              tickFormatter={(value) => value.slice(0, 3)}
-            />
-            <YAxis />
-            <ChartTooltip content={<ChartTooltipContent />} />
-            {/*<ChartLegend content={<ChartLegendContent />} />*/}
-            <Area
-              dataKey="order"
-              type="natural"
-              fill="#0561fc" //var(--color-desktop)
-              fillOpacity={0.4}
-              stroke="#0561fc" //var(--color-desktop)
-              stackId="fillOrder"
-            />
-            <Line
-              dataKey="sales"
-              type="natural"
-              stroke="#F5B400" //var(--color-desktop)
-              strokeWidth={2}
-              dot={false}
-            />
-          </ComposedChart>
+        <ChartContainer
+          lang="ar"
+          config={chartConfig}
+          className="w-full h-full"
+        >
+          <ResponsiveContainer>
+            <ComposedChart data={chartData}>
+              <defs>
+                <linearGradient id="gradientOrders" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="5%" stopColor="#0561fc" stopOpacity={0.8} />
+                  <stop offset="95%" stopColor="#0561fc" stopOpacity={0.1} />
+                </linearGradient>
+              </defs>
+              <CartesianGrid vertical={false} />
+              <XAxis
+                dataKey="date"
+                tickLine={false}
+                tickMargin={10}
+                axisLine={false}
+                tickFormatter={formatDate}
+              />
+              <YAxis
+                tickFormatter={(value) => {
+                  if (value >= 1_000_000) {
+                    return `$${(value / 1_000_000).toFixed(1)}M`; // e.g., $1.2M
+                  } else if (value >= 1_000) {
+                    return `$${(value / 1_000).toFixed(1)}K`; // e.g., $1.2K
+                  }
+                  return new Intl.NumberFormat("en-US", {
+                    style: "currency",
+                    currency: "USD",
+                    maximumFractionDigits: 0,
+                  }).format(value); // e.g., $123
+                }}
+              />
+              <Tooltip
+                content={
+                  <ChartTooltipContent
+                    className="dark:bg-black-100"
+                    config={chartConfig}
+                    formatter={(value: number, name: string) => (
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`inline-block w-3 h-3 rounded-full ${
+                            name === "orders" ? "bg-blue-500" : "bg-yellow-500"
+                          }`}
+                        ></span>
+                        <p className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          {name === "orders" ? "Orders" : "Sales"}:{" "}
+                          <span className="font-semibold text-blue-600 dark:text-blue-400">
+                            {new Intl.NumberFormat("en-US", {
+                              style: "currency",
+                              currency: "USD",
+                            }).format(value)}
+                          </span>
+                        </p>
+                      </div>
+                    )}
+                  />
+                }
+              />
+              <Area
+                dataKey="orders"
+                type="natural"
+                fill="url(#gradientOrders)"
+                stroke="#0561fc"
+                strokeWidth={2}
+              />
+              <Line
+                dataKey="sales"
+                type="natural"
+                stroke="#F5B400"
+                strokeWidth={2}
+                dot={false}
+              />
+            </ComposedChart>
+          </ResponsiveContainer>
         </ChartContainer>
       </CardContent>
     </Card>

@@ -1,12 +1,12 @@
 "use client";
 import React from "react";
 import { useGetAllCollectionsQuery } from "@/redux/features/collections/collectionsApi";
-import ExportAndchange from "./ExportAndchange";
 import Link from "next/link";
 import { SquarePen } from "lucide-react";
 import ListCollections from "./ListCollections";
 import LoadingList from "../Loader/LoadingList";
 import LoadingError from "../Loader/LoadingError";
+import ExportAndChange from "./ExportAndchange";
 
 const CollectionsPage = () => {
   const { data, isLoading, isError, refetch } = useGetAllCollectionsQuery(
@@ -28,7 +28,7 @@ const CollectionsPage = () => {
   const collections = data?.collections;
   return (
     <section className="w-full">
-      <ExportAndchange collections={collections} />
+      <ExportAndChange collections={collections} />
       <div className="w-full flex items-center justify-end my-5">
         <Link
           href={"/en/dashboard/products/collections/create-collection"}
