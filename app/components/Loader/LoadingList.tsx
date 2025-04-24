@@ -57,9 +57,6 @@ const LoadingList = ({ statistic, product, order }: LoadingListProps) => {
             <Skeleton key={index} className="w-[100px] h-10 rounded-lg" />
           ))}
         </div>
-        <div className="w-full flex justify-end">
-          <Skeleton className="w-[100px] h-10 rounded-lg" />
-        </div>
       </div>
       {/* Cards Skeleton */}
       {statistic && (
@@ -69,6 +66,9 @@ const LoadingList = ({ statistic, product, order }: LoadingListProps) => {
           ))}
         </div>
       )}
+      <div className="w-full flex justify-end">
+        <Skeleton className="w-[100px] h-10 rounded-lg" />
+      </div>
       {/* Footer Skeleton */}
       <Skeleton className="w-full h-[450px]" />
     </section>

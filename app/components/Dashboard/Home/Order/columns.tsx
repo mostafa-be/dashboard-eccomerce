@@ -11,25 +11,10 @@ import {
 } from "@/app/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronsUpDown, MoreHorizontal, PhoneCall } from "lucide-react";
-import Image from "next/image";
-import AvatarGenerator from "../AvatarGenerator";
 import { Checkbox } from "@/app/components/ui/checkbox"
-export type Product = {
-  _id: string;
-  avatar: {
-    url: string;
-    public_id: string;
-  };
-  user: {
-    name: string;
-    email: string;
-    whatsapp: string;
-  };
-  method: string;
-  paidAt: Date;
-  orderStatus: string;
-  totalPrice: number;
-};
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar";
+import { Order } from "@/app/components/Orders/columns";
+
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
@@ -41,7 +26,7 @@ const formatDate = (dateString: string) => {
     day: "numeric",
   }).format(date);
 };
-export const columns: ColumnDef<Product>[] = [
+export const columns: ColumnDef<Order>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -69,18 +54,18 @@ export const columns: ColumnDef<Product>[] = [
       const avatar = order?.avatar?.url;
       return (
         <div className="flex items-center">
-          {avatar ? (
-            <Image
-              src={order?.avatar?.url}
-              alt={order.user.name}
-              width={40}
-              height={40}
-              className="h-10 w-10 rounded-full object-cover"
-            />
-          ) : (
-            <AvatarGenerator name={order.user.name} />
-          )}
-
+          <Avatar>
+            {avatar ? (
+              <AvatarImage
+                src={order?.user?.avatar?.url}
+                alt={order.user.name}
+              />
+            ) : (
+              <AvatarFallback>
+                {order.user.name.toUpperCase().slice(0, 1)}
+              </AvatarFallback>
+            )}
+          </Avatar>
           <div className="ml-2">
             <p className="text-sm font-medium">{order.user.name}</p>
             <p className="text-xs text-gray-500">{order.user.email}</p>
@@ -96,7 +81,7 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <div className="flex items-center">
           <a
-            href={`https://api.whatsapp.com/send?phone=${order.user.whatsapp}`}
+            href={`https://api.whatsapp.com/send?phone=${order.user.mobile}`}
             target="_blank"
             rel="noreferrer"
             className="text-blue-500"
@@ -104,7 +89,7 @@ export const columns: ColumnDef<Product>[] = [
           >
             <PhoneCall className="h-5 w-5" />
           </a>
-          <p className="ml-2 text-xs font-medium">{order.user.whatsapp}</p>
+          <p className="ml-2 text-xs font-medium">{order.user.mobile}</p>
         </div>
       );
 
@@ -168,7 +153,7 @@ export const columns: ColumnDef<Product>[] = [
     cell: ({ row }) => {
       const orderStatus = row.getValue("orderStatus") as string;
       return (
-        <div className="w-full  flex items-center justify-sart">
+        <div className="w-full  flex items-center justify-start">
           {" "}
           <div
             className={`px-3 py-2 ${
@@ -207,7 +192,7 @@ export const columns: ColumnDef<Product>[] = [
               Copy Order ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>View Order details</DropdownMenuItem>
+            <DropdownMenuItem >View Order details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

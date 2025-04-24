@@ -15,19 +15,41 @@ import { ChevronsUpDown, MoreHorizontal } from "lucide-react";
 export type Product = {
   _id: string;
   title: string;
+  description: string;
   price: number;
+  estimatedPrice: number;
   quantityOriginal: number;
   quantity: number;
-  purchased: number;
+  categories: {
+    _id: string;
+    name: string;
+  };
+  collections: {
+    _id: string;
+    name: string;
+  };
+  brand: {
+    _id: string;
+    name: string;
+  };
+  discount: number;
   date: Date;
+  tags: [object];
+  colors: [object];
+  sizes: [object];
   images: [object];
   ratings?: number;
+  purchases: number;
 };
 
 export const columns: ColumnDef<Product>[] = [
   {
     accessorKey: "_id",
-    header: "ID",
+    header: () => <div className="text-left">ID</div>,
+    cell: ({ row }) => {
+      const id = row.getValue("_id") as string;
+      return <div className="text-left font-medium">#{id.slice(4, 9)}</div>;
+    },
   },
   {
     accessorKey: "title",
@@ -40,6 +62,14 @@ export const columns: ColumnDef<Product>[] = [
           Product Name
           <ChevronsUpDown className="ml-2 h-4 w-4" />
         </Button>
+      );
+    },
+    cell: ({ row }) => {
+      const product = row.original;
+      return (
+        <div className="text-left font-medium line-clamp-2">
+          {product.title}
+        </div>
       );
     },
   },
@@ -57,10 +87,10 @@ export const columns: ColumnDef<Product>[] = [
     },
   },
   {
-    accessorKey: "purchased",
-    header: () => <div className="text-right">Purchased</div>,
+    accessorKey: "purchases",
+    header: () => <div className="text-right">Purchases</div>,
     cell: ({ row }) => {
-      const purchased = parseFloat(row.getValue("purchased"));
+      const purchased = parseFloat(row.getValue("purchases"));
       const formatted = new Intl.NumberFormat("en-US", {
         style: "decimal",
         minimumFractionDigits: 0,
@@ -81,7 +111,9 @@ export const columns: ColumnDef<Product>[] = [
           {" "}
           <div
             className={`px-3 py-2 ${
-              quantity ? "bg-green-400/65 text-white" : "bg-red-400/65 text-white"
+              quantity > 0
+                ? "bg-green-400/65 text-white"
+                : "bg-red-400/65 text-white"
             } rounded-full`}
           >
             <span className="text-center text-nowrap text-sm font-medium">
@@ -99,12 +131,15 @@ export const columns: ColumnDef<Product>[] = [
       return (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" className="h-8 w-8 p-0 outline-none">
+            <Button
+              variant="ghost"
+              className="h-8 w-8 p-0 !outline-none dark:bg-black-100"
+            >
               <span className="sr-only">Open menu</span>
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent className="dark:bg-black-100" align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(product._id)}

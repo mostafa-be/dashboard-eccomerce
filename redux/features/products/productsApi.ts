@@ -24,6 +24,13 @@ export const productsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getBestSellingProducts: builder.query({
+      query: () => ({
+        url: "get-best-selling-products",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
     addReview: builder.mutation({
       query: ({ id, data }) => ({
         url: `add-review/${id}`,
@@ -66,4 +73,5 @@ export const {
   useAddReplyReviewMutation,
   useEditProductMutation,
   useDeleteProductMutation,
+  useGetBestSellingProductsQuery,
 } = productsApi;

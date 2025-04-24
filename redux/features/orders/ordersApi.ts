@@ -9,9 +9,16 @@ export const ordersApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+    getOrdersByStatus: builder.query({
+      query: ({ status }) => ({
+        url: `get-orders-by-status/${status}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
     editStatusOrder: builder.mutation({
       query: ({ id, data }) => ({
-        url: `upadte-staus-order/${id}`,
+        url: `update-status-order/${id}`,
         method: "PUT",
         body: data,
         credentials: "include" as const,
@@ -27,4 +34,9 @@ export const ordersApi = apiSlice.injectEndpoints({
   }),
 });
 
-export const { useGetAllOrdersQuery,useGetOrderQuery,useEditStatusOrderMutation } = ordersApi;
+export const {
+  useGetAllOrdersQuery,
+  useGetOrderQuery,
+  useEditStatusOrderMutation,
+  useGetOrdersByStatusQuery,
+} = ordersApi;
