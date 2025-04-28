@@ -3,11 +3,11 @@ import OrderItems from "./OrderItems";
 import UserInfomation from "./UserInfomation";
 import OrderInformation from "./OrderInformation";
 import AddressShop from "./AddressShop";
-import ExportChange from "./ExportChange";
 import TableOrder from "./TableOrder";
 import ChangeStatus from "./ChangeStatus";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import ChangerExporter from "../ui/ChangerExporter";
 
 interface OrderPageProps {
   order: {
@@ -59,9 +59,10 @@ interface OrderPageProps {
     orderStatus: string;
     totalPrice: number;
   };
+  refetch: () => void;
 }
 
-const OrderPage: React.FC<OrderPageProps> = ({ order }) => {
+const OrderPage: React.FC<OrderPageProps> = ({ order,refetch }) => {
   const { orderItems, user, shippingInfo, _id, orderStatus } = order;
 
   const handleExportPDF = () => {
@@ -175,11 +176,35 @@ const OrderPage: React.FC<OrderPageProps> = ({ order }) => {
 
     doc.save(`invoice_${order._id}.pdf`);
   };
-
+  const links = [
+    {
+      name: "Home",
+      url: "/en",
+    },
+    {
+      name: "Dashboard",
+      url: "/en/dashboard",
+    },
+    {
+      name: "Orders",
+      url: "/en/orders",
+    },
+  ];
+  const dataPDF = {
+    title: "Invoice",
+    handleExportPDF,
+  } as { title: string; handleExportPDF: () => void };
   return (
     <section className="w-full ">
-      <ExportChange onExportPDF={handleExportPDF} />
-      <ChangeStatus orderId={_id} currentStatus={orderStatus} />
+      <ChangerExporter
+        links={links}
+        active="Order Details"
+        isPDF={true}
+        dataPDF={dataPDF}
+        isCSV={false}
+        isPeriod={false}
+      />
+      <ChangeStatus orderId={_id} refetch={refetch} currentStatus={orderStatus} />
       <div className="w-full mt-5 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <UserInfomation user={user} />
         <OrderInformation order={order} />

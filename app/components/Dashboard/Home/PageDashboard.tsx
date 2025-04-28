@@ -1,6 +1,5 @@
 "use client";
 import React from "react";
-import ExportAndchange from "./ExportAndchange";
 import Statistic from "./Statistic";
 import { AnalyticsSales } from "./AnalyticsSales";
 import RecentAndSales from "./RecentAndSales";
@@ -16,6 +15,7 @@ import {
 } from "@/redux/features/orders/ordersApi";
 import CardLoading from "../../Loader/CardLoading";
 import CardError from "../../Loader/CardError";
+import ChangerExporter from "../../ui/ChangerExporter";
 
 const PageDashboard = () => {
   const [period, setPeriod] = React.useState<string>("7d");
@@ -90,10 +90,33 @@ const PageDashboard = () => {
     }
     return <Component {...props} />;
   };
-  
+  const links = [{ name: "Home", url: "/" }];
+  const handleExportPDF = () => {
+    import("jspdf").then(({ default: jsPDF }) => {
+      const doc = new jsPDF();
+      doc.text("Dashboard Report", 10, 10);
+      doc.save("dashboard-report.pdf");
+    });
+  };
+  const dataPDF = {
+    title: "Export PDF",
+    handleExportPDF,
+  } as { title: string; handleExportPDF: () => void };
+  const dataPeriod = {
+    period,
+    handlePeriodChange,
+  }
   return (
     <section className="w-full">
-      <ExportAndchange period={period} setPeriod={setPeriod} />
+      <ChangerExporter
+        links={links}
+        active="Dashboard"
+        isCSV={false}
+        isPDF={true}
+        dataPDF={dataPDF}
+        isPeriod={true}
+        dataPeriod={dataPeriod}
+      />
       <Statistic period={period} />
       <div className="max-w-full md:grid lg:grid-cols-9 gap-5 mt-10">
         {renderCard(

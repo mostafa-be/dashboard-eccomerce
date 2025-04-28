@@ -104,12 +104,12 @@ export function TableOrder<TData, TValue>({
         </Select>
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="outline" className="ml-auto">
+            <Button variant="outline" className="ml-auto dark:bg-black-100">
               <SlidersHorizontal />
               Filtter
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent className="dark:bg-black-100" align="end">
             {table
               .getAllColumns()
               .filter((column) => column.getCanHide())

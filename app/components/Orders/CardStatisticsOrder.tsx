@@ -39,7 +39,7 @@ const CardStatisticsOrder: React.FC<CardStatisticsOrderProps> = ({
               mouvement === "up" ? "text-green-400" : "text-red-400"
             }`}
           >
-            {mouvement === "up" ? "▲" : "▼"} {percent}%
+            {mouvement === "up" ? "▲" : "▼"} {Math.abs(percent).toFixed(2)}%
           </span>
           <span className="text-sm text-gray-200">
             vs{" "}

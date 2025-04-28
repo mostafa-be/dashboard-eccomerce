@@ -1,11 +1,22 @@
 import React from "react";
-import Change from "./Change";
 import CustomerForm from "./CustomerForm";
+import ChangerExporter from "../ui/ChangerExporter";
 
 const CreateCustomerPage = () => {
+  const links = [
+    { name: "Home", url: "/" },
+    { name: "Dashboard", url: "/en/dashboard" },
+    { name: "Customers", url: "/en/dashboard/customers" },
+  ];
   return (
     <section className="w-full">
-      <Change />
+      <ChangerExporter
+        links={links}
+        active="Create Customer"
+        isCSV={false}
+        isPDF={false}
+        isPeriod={false}
+      />
       <CustomerForm />
     </section>
   );

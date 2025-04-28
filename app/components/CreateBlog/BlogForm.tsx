@@ -1,11 +1,10 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FieldProps } from "formik";
 import * as Yup from "yup";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
-import { Textarea } from "../ui/textarea";
 import toast from "react-hot-toast";
 import { useCreateBlogMutation } from "@/redux/features/blogs/blogsApi";
 import {
@@ -19,6 +18,15 @@ import { useGetAllTagsBlogQuery } from "@/redux/features/blogTags/blogTagsApi";
 import { useGetAllCategoriesBlogQuery } from "@/redux/features/blogCategories/blogCategoriesApi";
 import Image from "next/image";
 import { ImageUp } from "lucide-react";
+import MyEditor from "../MyEditor";
+
+import { Textarea } from "../ui/textarea";
+import { MultiSelect } from "../ui/multi-select";
+
+/**
+ * BlogForm Component
+ * Handles the creation of a new blog post with fields for title, description, category, tags, and thumbnail.
+ */
 const BlogForm = () => {
   const [thumbnail, setThumbnail] = React.useState<string | ArrayBuffer | null>(
     null
@@ -55,6 +63,12 @@ const BlogForm = () => {
     tags: Yup.array().min(1, "At least one tag is required"),
   });
 
+  /**
+   * Handles form submission to create a new blog.
+   *
+   * @param {typeof initialValues} values - The form values.
+   * @param {object} actions - Formik actions for resetting the form.
+   */
   const handleSubmit = async (
     values: typeof initialValues,
     { resetForm }: { resetForm: () => void }
@@ -65,6 +79,11 @@ const BlogForm = () => {
     }
   };
 
+  /**
+   * Handles file input change to set the blog thumbnail.
+   *
+   * @param {React.ChangeEvent<HTMLInputElement>} e - The file input change event.
+   */
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -76,16 +95,31 @@ const BlogForm = () => {
     }
   };
 
+  /**
+   * Handles drag-over event for the thumbnail drop area.
+   *
+   * @param {React.DragEvent<HTMLLabelElement>} e - The drag-over event.
+   */
   const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     setDragging(true);
   };
 
+  /**
+   * Handles drag-leave event for the thumbnail drop area.
+   *
+   * @param {React.DragEvent<HTMLLabelElement>} e - The drag-leave event.
+   */
   const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     setDragging(false);
   };
 
+  /**
+   * Handles drop event for the thumbnail drop area.
+   *
+   * @param {React.DragEvent<HTMLLabelElement>} e - The drop event.
+   */
   const handleDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     setDragging(false);
@@ -110,7 +144,7 @@ const BlogForm = () => {
   }, [isSuccess, error]);
 
   return (
-    <div className="w-full md:w-2/3 mt-10 bg-white dark:bg-black-100 shadow rounded-lg p-6">
+    <div className="w-full md:w-2/3 bg-white dark:bg-black-100 shadow rounded-lg p-6">
       <h5 className="text-xl font-semibold text-black dark:text-white">
         Create Blog
       </h5>
@@ -120,7 +154,8 @@ const BlogForm = () => {
         onSubmit={handleSubmit}
       >
         <Form className="mt-5 space-y-4">
-          <div>
+          {/* Title Field */}
+          <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Title
             </label>
@@ -137,15 +172,22 @@ const BlogForm = () => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div>
+
+          {/* Description Field */}
+          <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Description
             </label>
             <Field
               name="description"
-              as={Textarea}
-              placeholder="Enter blog description"
-              className="w-full"
+              render={({ field, form }: FieldProps) => (
+                <MyEditor
+                  value={field.value || ""}
+                  onChange={(value: string) =>
+                    form.setFieldValue(field.name, value || "")
+                  }
+                />
+              )}
             />
             <ErrorMessage
               name="description"
@@ -153,7 +195,9 @@ const BlogForm = () => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div>
+
+          {/* Sub-description Field */}
+          <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Sub-description
             </label>
@@ -169,7 +213,9 @@ const BlogForm = () => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          <div>
+
+          {/* Category Field */}
+          <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Category
             </label>
@@ -202,21 +248,24 @@ const BlogForm = () => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-          {/*         <div>
+
+          {/* Tags Field */}
+          <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
               Tags
             </label>
             <Field name="tags">
-              {({ field, form }: any) => (
+              {({ field, form }: FieldProps) => (
                 <MultiSelect
-                selected={Array.isArray(field.value) ? field.value : []} // Ensure field.value is an array
-                  onChange={(selectedValues) =>
-                    form.setFieldValue("tags", selectedValues)
-                  }
                   options={tags.map((tag) => ({
                     label: tag.name,
                     value: tag._id,
                   }))}
+                  selected={field.value}
+                  onChange={(selectedValues) =>
+                    form.setFieldValue("tags", selectedValues)
+                  }
+                  placeholder="Select tags"
                 />
               )}
             </Field>
@@ -225,7 +274,9 @@ const BlogForm = () => {
               component="div"
               className="text-red-500 text-sm mt-1"
             />
-          </div>*/}
+          </div>
+
+          {/* Thumbnail Upload */}
           <div>
             <input
               type="file"
@@ -246,7 +297,7 @@ const BlogForm = () => {
               {thumbnail ? (
                 <Image
                   src={thumbnail as string}
-                  title="selected image from clipboard..."
+                  title="Selected image from clipboard..."
                   alt="Selected"
                   layout="responsive"
                   width={500}
@@ -266,6 +317,8 @@ const BlogForm = () => {
               )}
             </label>
           </div>
+
+          {/* Submit Button */}
           <div className="w-full flex items-center justify-end">
             <Button
               type="submit"

@@ -11,7 +11,7 @@ type ListBrandsProps = {
 
 const ListBlogs = ({ data }: ListBrandsProps) => {
   return (
-    <Card className="w-full mt-10 px-5 py-5 col-span-9 bg-white dark:bg-black-100 shadow rounded-lg">
+    <Card className="w-full  px-5 py-5 col-span-9 bg-white dark:bg-black-100 shadow rounded-lg">
       <CardContent className="w-full">
         <TableBlogs data={data} columns={columns} />
       </CardContent>

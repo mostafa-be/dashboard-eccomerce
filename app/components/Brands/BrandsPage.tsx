@@ -3,13 +3,15 @@ import React from "react";
 import Link from "next/link";
 import { SquarePen } from "lucide-react";
 import { useGetAllBrandsQuery } from "@/redux/features/brand/brandsApi";
-import ExportAndchange from "./ExportAndchange";
 import ListBrands from "./ListBrands";
 import LoadingList from "../Loader/LoadingList";
 import LoadingError from "../Loader/LoadingError";
+import ChangerExporter from "../ui/ChangerExporter";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const BrandsPage = () => {
-  const { data, isLoading, isError,refetch } = useGetAllBrandsQuery(
+  const { data, isLoading, isError, refetch } = useGetAllBrandsQuery(
     {},
     {
       refetchOnMountOrArgChange: true,
@@ -27,10 +29,76 @@ const BrandsPage = () => {
   }
   // Handle empty data state
   const brands = data?.brands || [];
+  const handleExportPDF = () => {
+    const doc = new jsPDF();
+    doc.setFontSize(18);
+    doc.text("Brands Report", 14, 20);
+    autoTable(doc, {
+      startY: 30,
+      head: [["ID", "Name", "Active"]],
+      body: brands.map((brand) => [
+        brand._id,
+        brand.name,
+        brand.isActive ? "Yes" : "No",
+      ]),
+      styles: { fontSize: 10 },
+      headStyles: { fillColor: [22, 160, 133] },
+      alternateRowStyles: { fillColor: [240, 240, 240] },
+    });
+    doc.text(
+      `Total Brands: ${brands.length}`,
+      14,
+      doc.lastAutoTable.finalY + 10
+    );
+    doc.save("brands_report.pdf");
+  };
 
+  const csvData = brands.map((brand) => ({
+    ID: brand._id,
+    Name: brand.name,
+    Active: brand.isActive ? "Yes" : "No",
+  }));
+
+  const csvHeaders = [
+    { label: "ID", key: "ID" },
+    { label: "Name", key: "Name" },
+    { label: "Active", key: "Active" },
+  ];
+  const dataPDF = {
+    title: "Export PDF",
+    handleExportPDF,
+  };
+  const dataCSV = {
+    title: "Export CSV",
+    data: csvData,
+    headers: csvHeaders,
+    filename: "brands_report.csv",
+  };
+  const links = [
+    {
+      name: "Home",
+      url: "/en",
+    },
+    {
+      name: "Dashboard",
+      url: "/en/dashboard",
+    },
+    {
+      name: "Products",
+      url: "/en/dashboard/products",
+    },
+  ];
   return (
     <section className="w-full">
-      <ExportAndchange brands={brands} />
+      <ChangerExporter
+        links={links}
+        active="Brands"
+        isPDF
+        isCSV
+        isPeriod={false}
+        dataPDF={dataPDF}
+        dataCSV={dataCSV}
+      />
       <div className="w-full flex items-center justify-end my-5">
         <Link
           href="/en/dashboard/products/brands/create-brand"

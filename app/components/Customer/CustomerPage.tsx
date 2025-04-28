@@ -12,8 +12,9 @@ import {
 import toast from "react-hot-toast";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import ExportAndchange from "./ExportAndchange";
+import ChangerExporter from "../ui/ChangerExporter";
 import { Order } from "../Orders/columns";
+
 type CustomerPageProps = {
   user: User;
 };
@@ -27,8 +28,10 @@ const CustomerPage = ({ user }: CustomerPageProps) => {
       try {
         await blockUser(user._id).unwrap();
         toast.success("Customer blocked successfully!");
-      } catch (err: any) {
-        const errorMessage = err?.data?.message || "Failed to block customer.";
+      } catch (err: unknown) {
+        const errorMessage =
+          (err as { data?: { message?: string } })?.data?.message ||
+          "Failed to block customer.";
         toast.error(errorMessage);
       }
     }
@@ -39,9 +42,10 @@ const CustomerPage = ({ user }: CustomerPageProps) => {
       try {
         await unblockUser(user._id).unwrap();
         toast.success("Customer unblocked successfully!");
-      } catch (err: any) {
+      } catch (err: unknown) {
         const errorMessage =
-          err?.data?.message || "Failed to unblock customer.";
+          (err as { data?: { message?: string } })?.data?.message ||
+          "Failed to unblock customer.";
         toast.error(errorMessage);
       }
     }
@@ -52,19 +56,24 @@ const CustomerPage = ({ user }: CustomerPageProps) => {
     doc.setFontSize(18);
     doc.text("Customer Profile and Information", 14, 20);
 
-    doc.setFontSize(12);
-    doc.text(`Name: ${user.name}`, 14, 30);
-    doc.text(`Email: ${user.email}`, 14, 40);
-    doc.text(`Mobile: ${user.mobile}`, 14, 50);
-    doc.text(`Role: ${user.role}`, 14, 60);
-    doc.text(`Functionality: ${user.functionality}`, 14, 70);
-    doc.text(`Verified: ${user.isVerified ? "Yes" : "No"}`, 14, 80);
-    doc.text(`Blocked: ${user.isBlocked ? "Yes" : "No"}`, 14, 90);
+    const customerDetails = [
+      `Name: ${user.name}`,
+      `Email: ${user.email}`,
+      `Mobile: ${user.mobile}`,
+      `Role: ${user.role}`,
+      `Functionality: ${user.functionality}`,
+      `Verified: ${user.isVerified ? "Yes" : "No"}`,
+      `Blocked: ${user.isBlocked ? "Yes" : "No"}`,
+    ];
+
+    customerDetails.forEach((detail, index) => {
+      doc.text(detail, 14, 30 + index * 10);
+    });
 
     autoTable(doc, {
       startY: 100,
       head: [["Order ID", "Total Price"]],
-      body: user.orders.map((order: Order) => [
+      body: user.orders.map((order:Order) => [
         order._id,
         new Intl.NumberFormat("en-US", {
           style: "currency",
@@ -79,9 +88,24 @@ const CustomerPage = ({ user }: CustomerPageProps) => {
     doc.save(`customer_${user._id}_profile.pdf`);
   };
 
+  const links = [
+    { name: "Home", url: "/en" },
+    { name: "Dashboard", url: "/en/dashboard" },
+    { name: "Customers", url: "/en/dashboard/customers" },
+  ];
+
+  const dataPDF = { title: "Export PDF", handleExportPDF };
+
   return (
     <section className="w-full">
-      <ExportAndchange handleExportPDF={handleExportPDF} />
+      <ChangerExporter
+        links={links}
+        active="Customer Details"
+        isPDF
+        isCSV={false}
+        isPeriod={false}
+        dataPDF={dataPDF}
+      />
       <div className="w-full grid grid-cols-1 lg:grid-cols-2 gap-6 mt-5">
         <CustomerCardProfile user={user} />
         <CustomerCardInformation user={user} />

@@ -42,7 +42,7 @@ const Page = ({ params }: { params: { id: string } }) => {
         keywords="Order"
         description="Order"
       />
-    <OrderPage order={order} />
+    <OrderPage order={order} refetch={refetch} />
   </>
   );
 };

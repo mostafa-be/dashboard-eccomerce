@@ -19,6 +19,7 @@ import { redirect } from "next/navigation";
 import { Product } from "../Products/columns";
 import { Color } from "../Colors/columns";
 import { Size } from "../Sizes/columns";
+
 export type Order = {
   _id: string;
   user: {
@@ -63,6 +64,13 @@ export type Order = {
   orderStatus: string;
   totalPrice: number;
 };
+
+/**
+ * Formats a date string into a readable format.
+ *
+ * @param {string} dateString - The date string to format.
+ * @returns {string} - The formatted date string.
+ */
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) {
@@ -75,7 +83,10 @@ const formatDate = (dateString: string) => {
   }).format(date);
 };
 
-
+/**
+ * Column definitions for the Orders table.
+ * Each column defines how data is displayed and interacted with in the table.
+ */
 export const columns: ColumnDef<Order>[] = [
   {
     id: "select",
@@ -229,8 +240,7 @@ export const columns: ColumnDef<Order>[] = [
               (orderStatus === "Delivered" && "bg-green-400/65 text-white") ||
               (orderStatus === "Processing" && "bg-yellow-400/65 text-white") ||
               (orderStatus === "Cancelled" && "bg-red-400/65 text-white") ||
-            (orderStatus === "Shipped" && "bg-blue-400/65 text-white") ||
-              
+              (orderStatus === "Shipped" && "bg-blue-400/65 text-white") ||
               "bg-gray-400/65 text-white"
             } rounded-full`}
           >
@@ -242,7 +252,8 @@ export const columns: ColumnDef<Order>[] = [
       );
     },
   },
-  {id:"action",
+  {
+    id: "action",
     cell: ({ row }) => {
       const order = row.original;
       return (
@@ -253,7 +264,7 @@ export const columns: ColumnDef<Order>[] = [
               <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
+          <DropdownMenuContent className="dark:bg-black-100" align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
             <DropdownMenuItem
               onClick={() => navigator.clipboard.writeText(order._id)}

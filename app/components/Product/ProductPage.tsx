@@ -1,8 +1,8 @@
 import React from "react";
 import ProductInformation from "./ProductInformation";
-import Change from "./Change";
 import ReplyCommentProduct from "./ReplyCommentProduct";
 import StockManagement from "./StockManagement";
+import ChangerExporter from "../ui/ChangerExporter";
 
 type IComment = {
   user: {
@@ -45,12 +45,25 @@ type ProductProps = {
 };
 
 const ProductPage = ({ product, refetch }: ProductProps) => {
-
+  const links = [
+    { name: "Home", url: "/" },
+    { name: "Dashboard", url: "/en/dashboard" },
+    { name: "Products", url: "/en/products" },
+  ];
   return (
     <section className="w-full space-y-10">
-      <Change />
+      <ChangerExporter
+        links={links}
+        active="Product Details"
+        isPDF={false}
+        isCSV={false}
+        isPeriod={false}
+      />
       <ProductInformation product={product} />
-      <StockManagement quantity={product.quantity} quantityOriginal={product.quantityOriginal} />
+      <StockManagement
+        quantity={product.quantity}
+        quantityOriginal={product.quantityOriginal}
+      />
       <ReplyCommentProduct
         reviews={product.reviews}
         ratings={product.ratings}

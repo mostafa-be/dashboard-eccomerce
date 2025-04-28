@@ -54,7 +54,7 @@ const ColorForm = () => {
   }
 
   return (
-    <div className="w-full md:w-2/3 mt-10 bg-white shadow dark:bg-black-100 transition-colors py-5 px-6">
+    <div className="w-full md:w-2/3  bg-white shadow dark:bg-black-100 transition-colors py-5 px-6">
       <div className="w-full">
         <h5 className="text-xl font-semibold font-Poppins text-black dark:text-white">
           Create Color

@@ -9,7 +9,7 @@ import { Card, CardContent, HeaderCard, TitleCard } from "../ui/card";
 import { Input } from "../ui/input";
 import { Bell, CheckCircle, XCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import Change from "./Change";
+import ChangerExporter from "../ui/ChangerExporter";
 import LoadingNotifications from "../Loader/LoadingNotifications";
 import LoadingError from "../Loader/LoadingError";
 
@@ -21,6 +21,10 @@ type Notification = {
   _id: string;
 };
 
+/**
+ * NotificationsPage Component
+ * Displays a list of notifications with search and status update functionality.
+ */
 const NotificationsPage = () => {
   const { data, isLoading, isError, refetch } = useGetAllNotificationsQuery(
     {},
@@ -34,21 +38,24 @@ const NotificationsPage = () => {
   const [updateNotificationStatus] = useUpdateNotificationStatusMutation();
   const [searchTerm, setSearchTerm] = useState("");
 
-  if (isLoading) {
-    return <LoadingNotifications />;
-  }
-  // Handle error state
-  if (isError) {
-    return <LoadingError message="Error loading Notifications" onRetry={refetch} />;
-  }
-  // Handle empty data state
+  if (isLoading) return <LoadingNotifications />;
+  if (isError)
+    return (
+      <LoadingError message="Error loading notifications" onRetry={refetch} />
+    );
+
   const notifications = data?.notifications || [];
 
-  const filteredNotifications = notifications.filter(
-    (notification: Notification) =>
-      notification.title.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredNotifications = notifications.filter((notification:Notification) =>
+    notification.title.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  /**
+   * Handles toggling the status of a notification between "read" and "unread".
+   *
+   * @param {string} id - The ID of the notification.
+   * @param {string} status - The new status of the notification.
+   */
   const handleToggleStatus = async (id: string, status: string) => {
     try {
       await updateNotificationStatus({ id, data: { status } });
@@ -61,9 +68,17 @@ const NotificationsPage = () => {
     }
   };
 
+  const links = [
+    { name: "Home", url: "/en/" },
+    { name: "Dashboard", url: "/en/dashboard" },
+  ];
+
   return (
     <section className="w-full">
-      <Change />
+      {/* Navigation and Export Options */}
+      <ChangerExporter links={links} active="Notifications" />
+
+      {/* Notifications List */}
       <Card className="w-full mt-10 bg-white dark:bg-black-100 shadow rounded-lg">
         <HeaderCard className="w-full p-5 flex items-center justify-between">
           <TitleCard

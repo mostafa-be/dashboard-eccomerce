@@ -163,13 +163,13 @@ export const columns: ColumnDef<User>[] = [
               View Customer
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+            <DropdownMenuItem className="py-0 m-0" onSelect={(e) => e.preventDefault()}>
               <AlertBlockedCustomer _id={user._id} isBlocked={user.isBlocked} />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem
               onSelect={(e) => e.preventDefault()}
-              className="flex items-center gap-2 text-red-600 hover:!text-red-800"
+              className="py-0 m-0"
             >
               <AlertDeleteCustomer _id={user._id} />
             </DropdownMenuItem>

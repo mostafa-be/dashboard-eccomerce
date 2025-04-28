@@ -11,7 +11,7 @@ const Statistic = ({ period }: Props) => {
       title: "total sales",
       amount: { value: 16738296372, current: "usd" },
       static: {
-        wekly: {
+        weekly: {
           percent: 3.6,
           mouvement: "up",
         },
@@ -29,7 +29,7 @@ const Statistic = ({ period }: Props) => {
       title: "total purchase",
       amount: { value: 873892, current: "usd" },
       static: {
-        wekly: {
+        weekly: {
           percent: 36.6,
           mouvement: "up",
         },
@@ -47,7 +47,7 @@ const Statistic = ({ period }: Props) => {
       title: "total return",
       amount: { value: 9382753999, current: "usd" },
       static: {
-        wekly: {
+        weekly: {
           percent: 79.6,
           mouvement: "up",
         },
@@ -80,6 +80,7 @@ const Statistic = ({ period }: Props) => {
       },
     },
   ];
+  
   return (
     <div className="w-full mt-10">
       <div className="w-full flex items-center justify-between">
@@ -87,7 +88,7 @@ const Statistic = ({ period }: Props) => {
           Sales Overflow
         </h5>
         <Link
-          href={"/en/dashboard/order"}
+          href={"/en/dashboard/orders"}
           className="text-sm text-orange-600 dark:text-orange-400 underline"
         >
           See More Details
