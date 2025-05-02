@@ -1,22 +1,27 @@
 import dynamic from "next/dynamic";
 import "react-quill-new/dist/quill.snow.css";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 
 // Dynamically import the image resize module
-// @ts-ignore
 const ImageResize = dynamic(() => import("quill-image-resize-module-react"), {
   ssr: false,
 });
 const ReactQuill = dynamic(() => import("react-quill-new"), { ssr: false });
 
-const MyEditor = ({
-  value,
-  onChange
-}:{
+type MyEditorProps = {
   value: string;
   onChange: (value: string) => void;
-}) => {
+};
 
+/**
+ * MyEditor Component
+ * A rich text editor with image resizing functionality.
+ *
+ * @param {MyEditorProps} props - The props for the component.
+ * @param {string} props.value - The current value of the editor.
+ * @param {function} props.onChange - Callback to handle changes in the editor.
+ */
+const MyEditor = ({ value, onChange }: MyEditorProps) => {
   const quillRef = useRef(null);
 
   useEffect(() => {
@@ -42,8 +47,6 @@ const MyEditor = ({
     ],
     imageResize: {}, // Enable the image resize module
   };
-
-
 
   return (
     <ReactQuill

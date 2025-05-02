@@ -15,7 +15,7 @@ export const ExportPDF = ({
   return (
     <div
       title={title}
-      className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
+      className="font-Poppins py-2 px-2 md:py-2.5 md:px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
       onClick={handleExportPDF}
     >
       <CloudDownload size={18} className="text-white text-sm font-semibold" />
@@ -40,7 +40,7 @@ export const ExportCSV = ({
     <CSVLink data={data} headers={headers} filename={filename}>
       <div
         title={title}
-        className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
+        className="font-Poppins py-2 px-2 md:py-2.5 md:px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
       >
         <FileDown size={18} className="text-white text-sm font-semibold" />
         <span className="text-white text-sm">{title}</span>
@@ -58,7 +58,7 @@ export const EditMode = ({ editMode, setEditMode }: EditModeProps) => {
     <div
       title={editMode ? "Disable Edit" : "Enable Edit"}
       onClick={() => setEditMode(!editMode)}
-      className="font-Poppins py-2.5 px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
+      className="font-Poppins py-2 px-2 md:py-2.5 md:px-3.5 flex items-center cursor-pointer gap-2 bg-gradient-to-r from-blue-500 to-blue-700 hover:from-blue-600 hover:to-blue-800 shadow-lg rounded-lg transition-all duration-300"
     >
       <Pencil className="text-white" size={20} />
       <span className="text-white text-sm">

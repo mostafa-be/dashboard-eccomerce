@@ -11,7 +11,9 @@ import {
   PackageOpen,
   Settings,
   UsersRound,
+  HandCoins
 } from "lucide-react";
+
 
 const SideBarDesktop = () => {
   const [expanded, setExpanded] = React.useState<boolean>(true);
@@ -36,6 +38,14 @@ const SideBarDesktop = () => {
         alert={false}
       />
       <SideBarItem
+        icon={<HandCoins size={25} />}
+        text="Expenses"
+        active={false}
+        links={false}
+        url={`${url}/expenses`}
+        alert={false}
+      />
+      <SideBarItem
         icon={<UsersRound size={25} />}
         text="Customers"
         active={false}
@@ -43,6 +53,14 @@ const SideBarDesktop = () => {
         url={`${url}/customers`}
         alert={false}
       />
+      {/*   <SideBarItem
+        icon={<UsersRound size={25} />}
+        text="Suppliers"
+        active={false}
+        links={false}
+        url={`${url}/suppliers`}
+        alert={false}
+      />*/}
       <SideBarItem
         icon={<Box size={25} />}
         text="Products"
@@ -97,7 +115,7 @@ const SideBarDesktop = () => {
       />
       <SideBarItem
         icon={<Bell size={25} />}
-        text="Notification"
+        text="Notifications"
         active={false}
         links={false}
         url={`${url}/notifications`}
