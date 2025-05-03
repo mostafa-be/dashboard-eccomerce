@@ -10,6 +10,7 @@ import {
   useGetUserAnalyticsQuery,
   useGetEnquiriesAnalyticsQuery,
   useGetProductsAnalyticsQuery,
+  useGetAnalyticsExpensesQuery,
 } from "@/redux/features/analytics/analyticsApi";
 import LoadingAnalytics from "../Loader/LoadingAnalytics";
 import LoadingError from "../Loader/LoadingError";
@@ -17,7 +18,7 @@ import ChangerExporter from "../ui/ChangerExporter";
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
 import { generateChartImage } from "./generateChartImage";
-
+import ExpensesAnalytics from "./ExpensesAnalytics"
 /**
  * AnalyticsPage Component
  * Displays analytics for sales, customers, enquiries, and products with export options.
@@ -42,7 +43,15 @@ const AnalyticsPage = () => {
     { period },
     { refetchOnMountOrArgChange: true }
   );
-
+  const {
+    data: expensesData,
+    isLoading: isLoadingexpenses,
+    isError: isErrorexpenses,
+    refetch: refetchexpenses,
+  } = useGetAnalyticsExpensesQuery(
+    { period },
+    { refetchOnMountOrArgChange: true }
+  );
   const {
     data: enquiryData,
     isLoading: isLoadingEnquiries,
@@ -65,14 +74,20 @@ const AnalyticsPage = () => {
 
   const isLoading =
     isLoadingUsers ||
+    isLoadingexpenses ||
     isLoadingOrders ||
     isLoadingEnquiries ||
     isLoadingProducts;
   const isError =
-    isErrorUsers || isErrorOrders || isErrorEnquiries || isErrorProducts;
+    isErrorUsers ||
+    isErrorexpenses ||
+    isErrorOrders ||
+    isErrorEnquiries ||
+    isErrorProducts;
 
   const onRetry = () => {
     refetchUsers();
+    refetchexpenses();
     refetchOrders();
     refetchEnquiries();
     refetchProducts();
@@ -88,6 +103,7 @@ const AnalyticsPage = () => {
     );
 
   const analyticsCustomers = userData?.analytics?.data || [];
+  const analyticsExpenses = expensesData?.analytics?.timeline || [];
   const analyticsSales = orderData?.analytics?.data || [];
   const analyticsEnquiries = enquiryData?.analytics?.data || [];
   const analyticsProducts = productData?.analytics?.data || [];
@@ -243,6 +259,10 @@ const AnalyticsPage = () => {
         <CustomersAnalytics
           period={period}
           analyticsCustomers={analyticsCustomers}
+        />
+        <ExpensesAnalytics
+          period={period}
+          analyticsExpenses={analyticsExpenses || []}
         />
         <EnquiriesAnalytics
           period={period}

@@ -3,121 +3,90 @@ import React from "react";
 import StatisticCard from "./StatisticCard";
 
 type Props = {
-  period: string;
+  statistics: {
+    period: string;
+    totalOrders: {
+      current: number;
+      currentAmount: number;
+      previous: number;
+      percentageChange: number;
+    };
+    totalSales: {
+      current: number;
+      previous: number;
+      percentageChange: number;
+    };
+    totalExpenses: {
+      current: number;
+      previous: number;
+      percentageChange: number;
+    };
+    totalProfit: {
+      current: number;
+      previous: number;
+      percentageChange: number;
+    };
+  };
 };
-const Statistic = ({ period }: Props) => {
-  const statistics = [
+
+/**
+ * Statistic Component
+ * Displays a summary of key statistics with cards for each metric.
+ *
+ * @param {Props} props - The props for the component.
+ * @param {object} props.statistics - The statistics data.
+ * @returns {JSX.Element} The Statistic component.
+ */
+const Statistic = ({ statistics }: Props) => {
+  const cards = [
     {
-      title: "total sales",
-      amount: { value: 16738296372, current: "usd" },
-      static: {
-        weekly: {
-          percent: 3.6,
-          mouvement: "up",
-        },
-        monthly: {
-          percent: 1.6,
-          mouvement: "down",
-        },
-        yearly: {
-          percent: 1.6,
-          mouvement: "down",
-        },
-      },
+      title: "Total Orders",
+      amount: { value: statistics.totalOrders.currentAmount, current: "usd" },
+      percent: statistics.totalOrders.percentageChange,
+      mouvement: statistics.totalOrders.percentageChange >= 0 ? "up" : "down",
+    },
+
+    {
+      title: "Total Sales",
+      amount: { value: statistics.totalSales.current, current: "usd" },
+      percent: statistics.totalSales.percentageChange,
+      mouvement: statistics.totalSales.percentageChange >= 0 ? "up" : "down",
     },
     {
-      title: "total purchase",
-      amount: { value: 873892, current: "usd" },
-      static: {
-        weekly: {
-          percent: 36.6,
-          mouvement: "up",
-        },
-        monthly: {
-          percent: 11.6,
-          mouvement: "down",
-        },
-        yearly: {
-          percent: 18.6,
-          mouvement: "up",
-        },
-      },
+      title: "Total Expenses",
+      amount: { value: statistics.totalExpenses.current, current: "usd" },
+      percent: statistics.totalExpenses.percentageChange,
+      mouvement: statistics.totalExpenses.percentageChange >= 0 ? "up" : "down",
     },
     {
-      title: "total return",
-      amount: { value: 9382753999, current: "usd" },
-      static: {
-        weekly: {
-          percent: 79.6,
-          mouvement: "up",
-        },
-        monthly: {
-          percent: 18.6,
-          mouvement: "down",
-        },
-        yearly: {
-          percent: 16.6,
-          mouvement: "down",
-        },
-      },
-    },
-    {
-      title: "total marketing",
-      amount: { value: 7298267819, current: "usd" },
-      static: {
-        wekly: {
-          percent: 3.6,
-          mouvement: "up",
-        },
-        monthly: {
-          percent: 1.6,
-          mouvement: "up",
-        },
-        yearly: {
-          percent: 1.6,
-          mouvement: "down",
-        },
-      },
+      title: "Total Revenue",
+      amount: { value: statistics.totalProfit.current, current: "usd" },
+      percent: statistics.totalProfit.percentageChange,
+      mouvement: statistics.totalProfit.percentageChange >= 0 ? "up" : "down",
     },
   ];
-  
+
   return (
     <div className="w-full mt-10">
       <div className="w-full flex items-center justify-between">
         <h5 className="text-xl font-semibold text-black dark:text-white">
-          Sales Overflow
+          Sales Overview
         </h5>
         <Link
-          href={"/en/dashboard/orders"}
+          href="/en/dashboard/orders"
           className="text-sm text-orange-600 dark:text-orange-400 underline"
         >
           See More Details
         </Link>
       </div>
-      <div className="w-full mt-6 grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {statistics &&
-          statistics.map(
-            (
-              statistic: {
-                title: string;
-                amount: { value: number; current: string };
-                static: {
-                  wekly: { percent: number; mouvement: string };
-                  monthly: { percent: number; mouvement: string };
-                  yearly: { percent: number; mouvement: string };
-                };
-              },
-              index
-            ) => {
-              return (
-                <StatisticCard
-                  period={period}
-                  statistic={statistic}
-                  key={index}
-                />
-              );
-            }
-          )}
+      <div className="w-full mt-5  grid grid-cols-2 lg:grid-cols-4 gap-3">
+        {cards.map((statistic, index) => (
+          <StatisticCard
+            key={index}
+            period={statistics.period}
+            statistic={statistic}
+          />
+        ))}
       </div>
     </div>
   );

@@ -7,7 +7,10 @@ import BestSelling from "./BestSelling/BestSelling";
 import { VisitorByBrowser } from "./VisitorByBrowser";
 import { VisitorByDevice } from "./VisitorByDevice";
 import ListOrder from "./Order/ListOrder";
-import { useGetOrderSalesPeriodicallyQuery } from "@/redux/features/analytics/analyticsApi";
+import {
+  useGetGeneralStatisticsQuery,
+  useGetOrderSalesPeriodicallyQuery,
+} from "@/redux/features/analytics/analyticsApi";
 import { useGetBestSellingProductsQuery } from "@/redux/features/products/productsApi";
 import {
   useGetOrdersByStatusQuery,
@@ -19,6 +22,16 @@ import ChangerExporter from "../../ui/ChangerExporter";
 
 const PageDashboard = () => {
   const [period, setPeriod] = React.useState<string>("7d");
+  const {
+    data: dataGeneralStatics,
+    isLoading: isLoadingGeneralStatics,
+    isError: isErrorGeneralStatics,
+    error: errorGeneralStatics,
+    refetch: refetchGeneralStatics,
+  } = useGetGeneralStatisticsQuery(
+    { period: period },
+    { refetchOnMountOrArgChange: true }
+  );
 
   const {
     data: dataOrdersSales,
@@ -57,7 +70,7 @@ const PageDashboard = () => {
     error: errorOrdersData,
     refetch: refetchOrdersData,
   } = useGetAllOrdersQuery({}, { refetchOnMountOrArgChange: true });
-
+  const statistics = dataGeneralStatics?.statistics || {};
   const orders = dataOrdersSales?.analytics?.orders || [];
   const sales = dataOrdersSales?.analytics?.sales || {};
   const bestSellingProducts = dataBestSellingProducts?.products || [];
@@ -67,6 +80,7 @@ const PageDashboard = () => {
   const handlePeriodChange = (value: string) => {
     setPeriod(value);
     refetchOrdersSales();
+    refetchGeneralStatics();
   };
 
   const renderCard = (
@@ -105,9 +119,10 @@ const PageDashboard = () => {
   const dataPeriod = {
     period,
     handlePeriodChange,
-  }
+  };
+  console.log(statistics)
   return (
-    <section className="w-full">
+    <section className="w-full space-y-10">
       <ChangerExporter
         links={links}
         active="Dashboard"
@@ -117,8 +132,20 @@ const PageDashboard = () => {
         isPeriod={true}
         dataPeriod={dataPeriod}
       />
-      <Statistic period={period} />
-      <div className="max-w-full md:grid lg:grid-cols-9 gap-5 mt-10">
+      {renderCard(
+        isLoadingGeneralStatics,
+        isErrorGeneralStatics,
+        errorGeneralStatics,
+        refetchGeneralStatics,
+        Statistic,
+        {
+          statistics,
+          period,
+        },
+        "w-full min-h-[150px]"
+      )}
+
+      <div className="max-w-full md:grid lg:grid-cols-9 gap-5">
         {renderCard(
           isLoadingOrdersSales,
           isErrorOrdersSales,
@@ -128,6 +155,7 @@ const PageDashboard = () => {
           {
             analyticsOrders: orders,
             analyticsSales: sales,
+            revenue: statistics.totalProfit,
             period,
             handlePeriodChange,
           },

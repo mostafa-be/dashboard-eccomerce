@@ -2,7 +2,7 @@ import { apiSlice } from "../api/apiSlice";
 
 /**
  * Analytics API
- * Provides endpoints for fetching analytics data for users, enquiries, orders, products, and expenses.
+ * Provides endpoints for fetching analytics data for users, enquiries, orders, products, expenses, and general statistics.
  */
 export const analyticsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
@@ -103,6 +103,20 @@ export const analyticsApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+
+    /**
+     * Fetches general statistics for a given period.
+     *
+     * @param {Object} params - Query parameters.
+     * @param {string} params.period - The period for which to fetch general statistics (e.g., "7d", "1m", "1y").
+     */
+    getGeneralStatistics: builder.query({
+      query: ({ period }) => ({
+        url: `general-statistics?period=${period}`,
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
   }),
 });
 
@@ -114,4 +128,5 @@ export const {
   useGetOrderStatisticsPeriodicallyQuery,
   useGetOrderSalesPeriodicallyQuery,
   useGetAnalyticsExpensesQuery,
+  useGetGeneralStatisticsQuery,
 } = analyticsApi;

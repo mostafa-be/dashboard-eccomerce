@@ -40,12 +40,18 @@ type Props = {
   analyticsSales: Analytics;
   analyticsOrders: Analytics;
   handlePeriodChange: (value: string) => void;
+  revenue: {
+    current: number;
+    previous: number;
+    percentageChange: number;
+  };
 };
 
 export function AnalyticsSales({
   period,
   analyticsSales,
   analyticsOrders,
+  revenue,
   handlePeriodChange,
 }: Props) {
   // Combine sales and orders data into a single dataset
@@ -79,6 +85,7 @@ export function AnalyticsSales({
       day: "numeric",
     }); // e.g., Jan 1, 2023
   };
+  const { current, percentageChange } = revenue;
 
   return (
     <Card className="w-full min-h-[200px] md:col-span-5 lg:col-span-6 bg-white dark:bg-black-100 shadow rounded-lg">
@@ -100,19 +107,38 @@ export function AnalyticsSales({
             </div>
             <div className="w-full select-none flex items-center gap-2">
               <h1 className="text-lg font-semibold text-black-100 dark:text-white">
-                $182.1k
+                {new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(current)}
               </h1>
-              <div className="w-max flex items-center gap-1 rounded-full bg-green-400/40 px-1 py-1">
-                <TrendingUp
-                  size={10}
-                  className="text-[12px] proportional-nums text-green-600"
-                />
-                <p className="text-[12px] proportional-nums text-green-600">
-                  30.5%
+              <div
+                className={`w-max flex items-center gap-1 rounded-full ${
+                  percentageChange >= 0 ? "bg-green-400/40" : "bg-red-400/40"
+                }  px-1 py-1`}
+              >
+                {percentageChange >= 0 ? (
+                  <TrendingUp size={15} className="text-green-600" />
+                ) : (
+                  <TrendingUp size={15} className="text-red-600 rotate-180" />
+                )}
+
+                <p
+                  className={`text-[12px] proportional-nums ${
+                    percentageChange >= 0 ? "text-green-600" : "text-red-600"
+                  }`}
+                >
+                  {Math.abs(percentageChange).toFixed(2)}%
                 </p>
               </div>
               <p className="text-[12px] text-gray-700/70 dark:text-white">
-                vs last 7 days
+                {period === "7d"
+                  ? "Last 7 days"
+                  : period === "1m"
+                  ? "Last 30 days"
+                  : period === "1y"
+                  ? "Last 12 months"
+                  : "Last 3 months"}
               </p>
             </div>
           </div>
