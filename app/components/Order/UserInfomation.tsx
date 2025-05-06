@@ -1,25 +1,9 @@
 import React from "react";
 import { Card, CardContent, HeaderCard, TitleCard } from "../ui/card";
+import { User } from "@/app/@types/types";
 
 type UserInfomationProps = {
-  user: {
-    name: string;
-    email: string;
-    mobile: string;
-    avatar: {
-      public_id: string;
-      url: string;
-    };
-    role: string;
-    functionality: string;
-    isVerified: boolean;
-    isBlocked: boolean;
-    orders: [
-      {
-        totalPrice: number;
-      }
-    ];
-  };
+  user:User;
 };
 
 const UserInfomation = ({ user }: UserInfomationProps) => {

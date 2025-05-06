@@ -33,6 +33,10 @@ const Page = ({ params }: { params: { id: string } }) => {
   if (isError) {
     return <LoadingError message="Error loading order" onRetry={refetch} />;
   }
+  // Handle undefined data
+  if (!dataOrder) {
+    return <LoadingError message="Order not found" onRetry={refetch} />;
+  }
   // Handle empty data
   const order = dataOrder.order || {};
   return (

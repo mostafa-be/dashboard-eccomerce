@@ -1,31 +1,164 @@
+/**
+ * Represents an image with a public ID and URL.
+ */
+export type Image = {
+  public_id: string;
+  url: string;
+};
+
+/**
+ * Represents a product category.
+ */
+export type category = {
+  _id: string;
+  name: string;
+  thumbnail: Image;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Represents a product collection.
+ */
+export type Collection = {
+  _id: string;
+  name: string;
+  thumbnail: Image;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Represents a product tag.
+ */
+export type Tag = {
+  _id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Represents a product brand.
+ */
+export type Brand = {
+  _id: string;
+  name: string;
+  logo: Image;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Represents a color option for a product.
+ */
+export type Color = {
+  _id: string;
+  name: string;
+  code: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Represents a size option for a product.
+ */
+export type Size = {
+  _id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Represents a product with its details.
+ */
+export type Product = {
+  _id: string;
+  title: string;
+  description: string;
+  price: number;
+  estimatedPrice: number;
+  quantityOriginal: number;
+  quantity: number;
+  categories: category;
+  collections: Collection;
+  brand: Brand;
+  discount: number;
+  date: Date;
+  tags: Tag[];
+  colors: Color[];
+  sizes: Size[];
+  images: Image[];
+  ratings?: number;
+};
+
+/**
+ * Represents a user with their details.
+ */
 export type User = {
   _id: string;
   name: string;
   email: string;
   mobile: string;
-  avatar: {
-    public_id: string;
-    url: string;
-  };
+  avatar: Image;
   role: string;
   functionality: string;
   isVerified: boolean;
   isBlocked: boolean;
-  address: [];
-  cart: [];
-  wishlist: [];
-  compared: [];
-  orders: [];
+  address: object[];
+  cart: {
+    product: Product;
+    color: object;
+    size: object;
+    quantity: number;
+    price: number;
+  }[];
+  wishlist: object[];
+  compared: object[];
+  orders: Order[];
 };
 
+/**
+ * Represents an expense with its details.
+ */
 export type Expense = {
-  _id: string; // Unique identifier for the expense
-  title: string; // Expense title (e.g., "Office Rent")
-  amount: number; // Expense amount
-  category: string; // Category (e.g., Rent, Utilities, Supplies)
-  date: Date; // Date of the expense
-  department: string; // Department responsible for the expense (e.g., HR, IT)
-  user: User; // User who created the expense
-  notes?: string; // Additional notes (optional)
-  status: string; // Status of the expense (e.g., Pending, Approved, Rejected)
+  _id: string;
+  title: string;
+  amount: number;
+  category: string;
+  date: Date;
+  department: string;
+  user: User;
+  notes?: string;
+  status: string;
+};
+
+/**
+ * Represents an order with its details.
+ */
+export type Order = {
+  _id: string;
+  invoiceId: string;
+  user: User;
+  method: string;
+  paidAt: Date;
+  orderItems: {
+    product: Product;
+    color: Color;
+    size: Size;
+    quantity: number;
+    price: number;
+  }[];
+  shippingInfo: {
+    street: string;
+    city: string;
+    state: string;
+    postalCode: string;
+    country: string;
+  };
+  createdAt: Date;
+  orderStatus: string;
+  totalPrice: number;
+  createBy: User;
 };

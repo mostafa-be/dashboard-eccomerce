@@ -112,7 +112,7 @@ const EnquiryPage = ({ enquiry }: { enquiry: Props["enquiry"] }) => {
   ];
 
   return (
-    <section className="w-full">
+    <section className="w-full space-y-10">
       {/* Navigation and Export Options */}
       <ChangerExporter
         links={links}
@@ -122,7 +122,7 @@ const EnquiryPage = ({ enquiry }: { enquiry: Props["enquiry"] }) => {
       />
 
       {/* Enquiry Information */}
-      <div className="w-full mt-10 grid grid-cols-1 lg:grid-cols-2">
+      <div className="w-full grid grid-cols-1 lg:grid-cols-2">
         <Card className="w-full bg-white dark:bg-black-100 shadow rounded-lg">
           <HeaderCard className="w-full p-5">
             <TitleCard

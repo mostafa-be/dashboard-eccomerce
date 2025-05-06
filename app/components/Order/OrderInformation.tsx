@@ -1,21 +1,28 @@
 import React from "react";
 import { Card, CardContent, HeaderCard, TitleCard } from "../ui/card";
+import { Order } from "@/app/@types/types";
 
 type OrderInformationProps = {
-  order: {
-    _id: string;
-    method: string;
-    paidAt: Date;
-    createdAt: Date;
-    orderStatus: string;
-    totalPrice: number;
-  };
+  order: Order;
 };
 
 const OrderInformation = ({ order }: OrderInformationProps) => {
-  const { _id, method, paidAt, createdAt, orderStatus, totalPrice } = order;
-  const formattedPaidAt = new Intl.DateTimeFormat("en-US").format(new Date(paidAt));
-  const formattedCreatedAt = new Intl.DateTimeFormat("en-US").format(new Date(createdAt));
+  const { _id, invoiceId, method, paidAt, createdAt, orderStatus, totalPrice } =
+    order;
+  const formattedPaidAt = new Intl.DateTimeFormat("en-US").format(
+    new Date(paidAt)
+  );
+  const formattedCreatedAt = new Intl.DateTimeFormat("en-US",
+    {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    }
+  ).format(
+    new Date(createdAt)
+  );
   const formattedTotalPrice = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",
@@ -35,7 +42,7 @@ const OrderInformation = ({ order }: OrderInformationProps) => {
             :
           </span>
           <span className="text-gray-900 dark:text-white text-[16px] font-normal">
-            {_id}
+            {invoiceId ? invoiceId : _id.slice(0, 8)}
           </span>
         </div>
         <div className="w-full flex gap-1.5 items-center justify-start">
@@ -97,5 +104,6 @@ const OrderInformation = ({ order }: OrderInformationProps) => {
     </Card>
   );
 };
+
 
 export default OrderInformation;

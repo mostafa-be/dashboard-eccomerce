@@ -19,6 +19,7 @@ import { redirect } from "next/navigation";
 import { Product } from "../Products/columns";
 import { Color } from "../Colors/columns";
 import { Size } from "../Sizes/columns";
+import { User } from "@/app/@types/types";
 
 export type Order = {
   _id: string;
@@ -63,6 +64,7 @@ export type Order = {
   createdAt: Date;
   orderStatus: string;
   totalPrice: number;
+  createBy:User
 };
 
 /**

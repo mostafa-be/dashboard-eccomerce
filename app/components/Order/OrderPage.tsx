@@ -8,62 +8,16 @@ import ChangeStatus from "./ChangeStatus";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import ChangerExporter from "../ui/ChangerExporter";
+import { Order } from "@/app/@types/types";
 
 interface OrderPageProps {
-  order: {
-    _id: string;
-    user: {
-      name: string;
-      email: string;
-      mobile: string;
-      avatar: {
-        public_id: string;
-        url: string;
-      };
-      role: string;
-      functionality: string;
-      isVerified: boolean;
-      isBlocked: boolean;
-      orders: [
-        {
-          totalPrice: number;
-        }
-      ];
-    };
-    method: string;
-    paidAt: Date;
-    shippingInfo: {
-      street: string;
-      city: string;
-      state: string;
-      postalCode: string;
-      country: string;
-    };
-    orderItems: [
-      {
-        product: {
-          title: string;
-        };
-        color: {
-          name: string;
-          code: string;
-        };
-        size: {
-          name: string;
-        };
-        quantity: number;
-        price: number;
-      }
-    ];
-    createdAt: Date;
-    orderStatus: string;
-    totalPrice: number;
-  };
+  order: Order;
   refetch: () => void;
 }
 
-const OrderPage: React.FC<OrderPageProps> = ({ order,refetch }) => {
-  const { orderItems, user, shippingInfo, _id, orderStatus } = order;
+const OrderPage: React.FC<OrderPageProps> = ({ order, refetch }) => {
+  const { orderItems, user, shippingInfo, _id, orderStatus, invoiceId } =
+    (order && order) || {};
 
   const handleExportPDF = () => {
     const doc = new jsPDF();
@@ -89,7 +43,7 @@ const OrderPage: React.FC<OrderPageProps> = ({ order,refetch }) => {
     // Order Details
     doc.setFontSize(12);
     doc.setTextColor(40);
-    doc.text(`Order ID: ${order._id}`, 14, 60);
+    doc.text(`Order ID: ${invoiceId ? invoiceId : _id.slice(0, 8)}`, 14, 60);
     doc.text(
       `Order Date: ${new Date(order.createdAt).toLocaleDateString()}`,
       14,
@@ -112,19 +66,20 @@ const OrderPage: React.FC<OrderPageProps> = ({ order,refetch }) => {
       14,
       110
     );
-
     // Table Header
     autoTable(doc, {
       startY: 120,
       head: [["Product", "Color", "Size", "Quantity", "Price", "Total"]],
-      body: orderItems.map((item) => [
-        item.product.title,
-        item.color.name,
-        item.size.name,
-        item.quantity,
-        `$${item.price.toFixed(2)}`,
-        `$${(item.quantity * item.price).toFixed(2)}`,
-      ]),
+      body:
+        orderItems &&
+        orderItems.map((item) => [
+          item.product.title,
+          item.color.name,
+          item.size.name,
+          item.quantity,
+          `$${item.price.toFixed(2)}`,
+          `$${(item.quantity * item.price).toFixed(2)}`,
+        ]),
       styles: { fontSize: 10 },
       headStyles: { fillColor: [22, 160, 133], textColor: [255, 255, 255] },
       alternateRowStyles: { fillColor: [240, 240, 240] },
@@ -174,7 +129,7 @@ const OrderPage: React.FC<OrderPageProps> = ({ order,refetch }) => {
       }
     );
 
-    doc.save(`invoice_${order._id}.pdf`);
+    doc.save(`invoice_${invoiceId ? invoiceId : _id.slice(0, 8)}.pdf`);
   };
   const links = [
     {
@@ -187,7 +142,7 @@ const OrderPage: React.FC<OrderPageProps> = ({ order,refetch }) => {
     },
     {
       name: "Orders",
-      url: "/en/orders",
+      url: "/en/dashboard/orders",
     },
   ];
   const dataPDF = {
@@ -204,7 +159,11 @@ const OrderPage: React.FC<OrderPageProps> = ({ order,refetch }) => {
         isCSV={false}
         isPeriod={false}
       />
-      <ChangeStatus orderId={_id} refetch={refetch} currentStatus={orderStatus} />
+      <ChangeStatus
+        orderId={_id}
+        refetch={refetch}
+        currentStatus={orderStatus}
+      />
       <div className="w-full mt-5 grid grid-cols-1 lg:grid-cols-3 gap-4">
         <UserInfomation user={user} />
         <OrderInformation order={order} />

@@ -2,6 +2,14 @@ import { apiSlice } from "../api/apiSlice";
 
 export const ordersApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
+    createOrder: builder.mutation({
+      query: (data) => ({
+        url: "create-order-by-member",
+        method: "POST",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
     getAllOrders: builder.query({
       query: () => ({
         url: "get-orders",
@@ -35,8 +43,10 @@ export const ordersApi = apiSlice.injectEndpoints({
 });
 
 export const {
+  useCreateOrderMutation,
   useGetAllOrdersQuery,
   useGetOrderQuery,
   useEditStatusOrderMutation,
   useGetOrdersByStatusQuery,
 } = ordersApi;
+
