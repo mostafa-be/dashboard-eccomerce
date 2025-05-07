@@ -56,13 +56,13 @@ const Statistic = ({ statistics }: Props) => {
       title: "Total Expenses",
       amount: { value: statistics.totalExpenses.current, current: "usd" },
       percent: statistics.totalExpenses.percentageChange,
-      mouvement: statistics.totalExpenses.percentageChange >= 0 ? "up" : "down",
+      mouvement: statistics.totalExpenses.percentageChange < 0 ? "up" : "down",
     },
     {
       title: "Total Revenue",
       amount: { value: statistics.totalProfit.current, current: "usd" },
       percent: statistics.totalProfit.percentageChange,
-      mouvement: statistics.totalProfit.percentageChange >= 0 ? "up" : "down",
+      mouvement: statistics.totalProfit.percentageChange <= 0 ? "up" : "down",
     },
   ];
 

@@ -1,26 +1,13 @@
 import React from "react";
 import { Card, CardContent } from "../ui/card";
 import Image from "next/image";
+import { Color, Product, Size } from "@/app/@types/types";
 
 type CardOrderItemProps = {
   item: {
-    product: {
-      title: string;
-      images: { url: string; public_id: string }[];
-      price: number;
-      estimatedPrice: number;
-      discount: number;
-      categories: { name: string };
-      collections: { name: string };
-      brand: { name: string };
-    };
-    color: {
-      name: string;
-      code: string;
-    };
-    size: {
-      name: string;
-    };
+    product:Product;
+    color:Color;
+    size: Size;
     quantity: number;
     price: number;
   };

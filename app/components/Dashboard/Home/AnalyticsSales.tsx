@@ -114,10 +114,10 @@ export function AnalyticsSales({
               </h1>
               <div
                 className={`w-max flex items-center gap-1 rounded-full ${
-                  percentageChange >= 0 ? "bg-green-400/40" : "bg-red-400/40"
+                  percentageChange < 0 ? "bg-green-400/40" : "bg-red-400/40"
                 }  px-1 py-1`}
               >
-                {percentageChange >= 0 ? (
+                {percentageChange < 0 ? (
                   <TrendingUp size={15} className="text-green-600" />
                 ) : (
                   <TrendingUp size={15} className="text-red-600 rotate-180" />
@@ -125,7 +125,7 @@ export function AnalyticsSales({
 
                 <p
                   className={`text-[12px] proportional-nums ${
-                    percentageChange >= 0 ? "text-green-600" : "text-red-600"
+                    percentageChange < 0 ? "text-green-600" : "text-red-600"
                   }`}
                 >
                   {Math.abs(percentageChange).toFixed(2)}%

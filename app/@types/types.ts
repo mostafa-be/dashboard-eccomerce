@@ -162,3 +162,46 @@ export type Order = {
   totalPrice: number;
   createBy: User;
 };
+
+/**
+ * Represents a tag blog post with its details.
+ */
+
+export type TagBlog = {
+  _id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Represents a tag blog post with its details.
+ */
+
+export type CategoryBlog = {
+  _id: string;
+  name: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
+
+/**
+ * Represents a blog post with its details.
+ */
+export type Blog = {
+  _id: string;
+  title: string;
+  subDescription: string;
+  description: string;
+  category: CategoryBlog;
+  tags: TagBlog[];
+  numViews: number;
+  isLiked: boolean;
+  isDisliked: boolean;
+  likes: User[];
+  dislikes: User[];
+  thumbnail: Image;
+  author: User;
+  createdAt: Date;
+  updatedAt: Date;
+}

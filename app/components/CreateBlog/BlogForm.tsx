@@ -22,6 +22,7 @@ import MyEditor from "../MyEditor";
 
 import { Textarea } from "../ui/textarea";
 import { MultiSelect } from "../ui/multi-select";
+import { redirect } from "next/navigation";
 
 /**
  * BlogForm Component
@@ -74,7 +75,7 @@ const BlogForm = () => {
     { resetForm }: { resetForm: () => void }
   ) => {
     if (!isLoading) {
-      await createBlog(values).unwrap();
+      await createBlog({ ...values, thumbnail }).unwrap();
       resetForm();
     }
   };
@@ -136,6 +137,7 @@ const BlogForm = () => {
   useEffect(() => {
     if (isSuccess) {
       toast.success("Blog created successfully!");
+      redirect("/en/dashboard/blogs");
     }
     if (error && "data" in error) {
       const errorData = error as { data: { message: string } };
@@ -172,7 +174,6 @@ const BlogForm = () => {
               className="text-red-500 text-sm mt-1"
             />
           </div>
-
           {/* Description Field */}
           <div className="space-y-2">
             <label className="block text-sm font-medium text-gray-700 dark:text-white">
@@ -233,7 +234,7 @@ const BlogForm = () => {
                   <SelectContent className="dark:bg-black-100">
                     {categories.map(
                       (category: { _id: string; name: string }) => (
-                        <SelectItem key={category._id} value={category.name}>
+                        <SelectItem key={category._id} value={category._id}>
                           {category.name}
                         </SelectItem>
                       )

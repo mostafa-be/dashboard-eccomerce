@@ -7,18 +7,12 @@ import {
   CarouselPrevious,
 } from "../ui/carousel";
 import CardOrderItem from "./CardOrderItem";
+import { Color, Product, Size } from "@/app/@types/types";
 
 type OrderItem = {
-  product: {
-    title: string;
-  };
-  color: {
-    name: string;
-    code: string;
-  };
-  size: {
-    name: string;
-  };
+  product:Product;
+  color: Color;
+  size: Size;
   quantity: number;
   price: number;
 };

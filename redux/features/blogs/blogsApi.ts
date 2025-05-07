@@ -5,7 +5,7 @@ export const blogsApi = apiSlice.injectEndpoints({
     createBlog: builder.mutation({
       query: (data) => ({
         url: "create-blog",
-        method: "POSt",
+        method: "POST",
         body: data,
         credentials: "include" as const,
       }),
@@ -13,6 +13,13 @@ export const blogsApi = apiSlice.injectEndpoints({
     getAllBlogs: builder.query({
       query: () => ({
         url: "get-blogs",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    getSingleBlog: builder.query({
+      query: ({id}) => ({
+        url: `get-blog/${id}`,
         method: "GET",
         credentials: "include" as const,
       }),
@@ -37,6 +44,7 @@ export const blogsApi = apiSlice.injectEndpoints({
 
 export const {
   useCreateBlogMutation,
+  useGetSingleBlogQuery,
   useGetAllBlogsQuery,
   useEditBlogMutation,
   useDeleteBlogMutation,
