@@ -1,12 +1,15 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Formik, Form, Field, ErrorMessage, FieldProps } from "formik";
 import * as Yup from "yup";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import toast from "react-hot-toast";
-import { useCreateBlogMutation } from "@/redux/features/blogs/blogsApi";
+import {
+  useCreateBlogMutation,
+  useEditBlogMutation,
+} from "@/redux/features/blogs/blogsApi";
 import {
   Select,
   SelectContent,
@@ -19,21 +22,40 @@ import { useGetAllCategoriesBlogQuery } from "@/redux/features/blogCategories/bl
 import Image from "next/image";
 import { ImageUp } from "lucide-react";
 import MyEditor from "../MyEditor";
-
 import { Textarea } from "../ui/textarea";
 import { MultiSelect } from "../ui/multi-select";
 import { redirect } from "next/navigation";
+import { Blog } from "@/app/@types/types";
 
 /**
  * BlogForm Component
- * Handles the creation of a new blog post with fields for title, description, category, tags, and thumbnail.
+ * Handles the creation or editing of a blog post with fields for title, description, category, tags, and thumbnail.
+ *
+ * @param {BlogFormProps} props - The component props.
+ * @param {Blog} [props.blog] - The blog data for editing.
+ * @param {boolean} [props.isEdit] - Indicates if the form is in edit mode.
  */
-const BlogForm = () => {
-  const [thumbnail, setThumbnail] = React.useState<string | ArrayBuffer | null>(
-    null
+type BlogFormProps = {
+  blog?: Blog;
+  isEdit?: boolean;
+};
+
+const BlogForm = ({ blog, isEdit }: BlogFormProps) => {
+  const _id = blog?._id || null;
+  const [thumbnail, setThumbnail] = useState<string | ArrayBuffer | null>(
+    blog?.thumbnail?.url || null
   );
-  const [dragging, setDragging] = React.useState(false);
-  const [createBlog, { isLoading, isSuccess, error }] = useCreateBlogMutation();
+  const [dragging, setDragging] = useState(false);
+
+  const [
+    createBlog,
+    { isLoading: isCreating, isSuccess: isCreateSuccess, error: createError },
+  ] = useCreateBlogMutation();
+  const [
+    editBlog,
+    { isLoading: isEditing, isSuccess: isEditSuccess, error: editError },
+  ] = useEditBlogMutation();
+
   const { data: tagsData } = useGetAllTagsBlogQuery(
     {},
     { refetchOnMountOrArgChange: true }
@@ -43,17 +65,15 @@ const BlogForm = () => {
     { refetchOnMountOrArgChange: true }
   );
 
-  const tags = Array.isArray(tagsData?.tags) ? tagsData.tags : [];
-  const categories = Array.isArray(categoriesData?.categories)
-    ? categoriesData.categories
-    : [];
+  const tags = tagsData?.tags || [];
+  const categories = categoriesData?.categories || [];
 
   const initialValues = {
-    title: "",
-    description: "",
-    subDescription: "",
-    category: "",
-    tags: [],
+    title: blog?.title || "",
+    description: blog?.description || "",
+    subDescription: blog?.subDescription || "",
+    category: blog?.category?._id || "",
+    tags: blog?.tags?.map((tag) => tag._id) || [],
   };
 
   const validationSchema = Yup.object({
@@ -64,91 +84,64 @@ const BlogForm = () => {
     tags: Yup.array().min(1, "At least one tag is required"),
   });
 
-  /**
-   * Handles form submission to create a new blog.
-   *
-   * @param {typeof initialValues} values - The form values.
-   * @param {object} actions - Formik actions for resetting the form.
-   */
   const handleSubmit = async (
     values: typeof initialValues,
     { resetForm }: { resetForm: () => void }
   ) => {
-    if (!isLoading) {
-      await createBlog({ ...values, thumbnail }).unwrap();
+    const payload = { ...values, thumbnail };
+    if (isEdit) {
+      await editBlog({ id: _id, data: payload }).unwrap();
+    } else {
+      await createBlog(payload).unwrap();
       resetForm();
     }
   };
 
-  /**
-   * Handles file input change to set the blog thumbnail.
-   *
-   * @param {React.ChangeEvent<HTMLInputElement>} e - The file input change event.
-   */
-  const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = async () => {
-        setThumbnail(reader.result);
-      };
+      reader.onload = () => setThumbnail(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
-  /**
-   * Handles drag-over event for the thumbnail drop area.
-   *
-   * @param {React.DragEvent<HTMLLabelElement>} e - The drag-over event.
-   */
-  const handleDragOver = (e: React.DragEvent<HTMLLabelElement>) => {
+  const handleDragEvents = (
+    e: React.DragEvent<HTMLLabelElement>,
+    isOver: boolean
+  ) => {
     e.preventDefault();
-    setDragging(true);
+    setDragging(isOver);
   };
 
-  /**
-   * Handles drag-leave event for the thumbnail drop area.
-   *
-   * @param {React.DragEvent<HTMLLabelElement>} e - The drag-leave event.
-   */
-  const handleDragLeave = (e: React.DragEvent<HTMLLabelElement>) => {
-    e.preventDefault();
-    setDragging(false);
-  };
-
-  /**
-   * Handles drop event for the thumbnail drop area.
-   *
-   * @param {React.DragEvent<HTMLLabelElement>} e - The drop event.
-   */
-  const handleDrop = async (e: React.DragEvent<HTMLLabelElement>) => {
+  const handleDrop = (e: React.DragEvent<HTMLLabelElement>) => {
     e.preventDefault();
     setDragging(false);
     const file = e.dataTransfer.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = () => {
-        setThumbnail(reader.result);
-      };
+      reader.onload = () => setThumbnail(reader.result);
       reader.readAsDataURL(file);
     }
   };
 
   useEffect(() => {
-    if (isSuccess) {
-      toast.success("Blog created successfully!");
+    if (isCreateSuccess || isEditSuccess) {
+      toast.success(
+        isEdit ? "Blog updated successfully!" : "Blog created successfully!"
+      );
       redirect("/en/dashboard/blogs");
     }
+    const error = createError || editError;
     if (error && "data" in error) {
-      const errorData = error as { data: { message: string } };
-      toast.error(errorData.data.message);
+      toast.error((error as { data: { message: string } }).data.message);
     }
-  }, [isSuccess, error]);
+  }, [isCreateSuccess, isEditSuccess, createError, editError]);
 
   return (
     <div className="w-full md:w-2/3 bg-white dark:bg-black-100 shadow rounded-lg p-6">
       <h5 className="text-xl font-semibold text-black dark:text-white">
-        Create Blog
+        {isEdit ? "Edit Blog" : "Create Blog"}
       </h5>
       <Formik
         initialValues={initialValues}
@@ -157,71 +150,66 @@ const BlogForm = () => {
       >
         <Form className="mt-5 space-y-4">
           {/* Title Field */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-white">
-              Title
-            </label>
-            <Field
-              name="title"
-              type="text"
-              as={Input}
-              placeholder="Enter blog title"
-              className="w-full"
-            />
-            <ErrorMessage
-              name="title"
-              component="div"
-              className="text-red-500 text-sm mt-1"
-            />
-          </div>
+          <Field name="title">
+            {({ field }: FieldProps) => (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                  Title
+                </label>
+                <Input {...field} placeholder="Enter blog title" />
+                <ErrorMessage
+                  name="title"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+            )}
+          </Field>
+
           {/* Description Field */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-white">
-              Description
-            </label>
-            <Field
-              name="description"
-              render={({ field, form }: FieldProps) => (
+          <Field name="description">
+            {({ field, form }: FieldProps) => (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                  Description
+                </label>
                 <MyEditor
                   value={field.value || ""}
-                  onChange={(value: string) =>
-                    form.setFieldValue(field.name, value || "")
-                  }
+                  onChange={(value) => form.setFieldValue(field.name, value)}
                 />
-              )}
-            />
-            <ErrorMessage
-              name="description"
-              component="div"
-              className="text-red-500 text-sm mt-1"
-            />
-          </div>
+                <ErrorMessage
+                  name="description"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+            )}
+          </Field>
 
           {/* Sub-description Field */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-white">
-              Sub-description
-            </label>
-            <Field
-              name="subDescription"
-              as={Textarea}
-              placeholder="Enter blog sub-description"
-              className="w-full"
-            />
-            <ErrorMessage
-              name="subDescription"
-              component="div"
-              className="text-red-500 text-sm mt-1"
-            />
-          </div>
+          <Field name="subDescription">
+            {({ field }: FieldProps) => (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                  Sub-description
+                </label>
+                <Textarea {...field} placeholder="Enter blog sub-description" />
+                <ErrorMessage
+                  name="subDescription"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+            )}
+          </Field>
 
           {/* Category Field */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-white">
-              Category
-            </label>
-            <Field name="category">
-              {({ field, form }: any) => (
+          <Field name="category">
+            {({ field, form }: FieldProps) => (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                  Category
+                </label>
                 <Select
                   value={field.value}
                   onValueChange={(value) =>
@@ -232,31 +220,29 @@ const BlogForm = () => {
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent className="dark:bg-black-100">
-                    {categories.map(
-                      (category: { _id: string; name: string }) => (
-                        <SelectItem key={category._id} value={category._id}>
-                          {category.name}
-                        </SelectItem>
-                      )
-                    )}
+                    {categories.map((category) => (
+                      <SelectItem key={category._id} value={category._id}>
+                        {category.name}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
-              )}
-            </Field>
-            <ErrorMessage
-              name="category"
-              component="div"
-              className="text-red-500 text-sm mt-1"
-            />
-          </div>
+                <ErrorMessage
+                  name="category"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+            )}
+          </Field>
 
           {/* Tags Field */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700 dark:text-white">
-              Tags
-            </label>
-            <Field name="tags">
-              {({ field, form }: FieldProps) => (
+          <Field name="tags">
+            {({ field, form }: FieldProps) => (
+              <div className="space-y-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-white">
+                  Tags
+                </label>
                 <MultiSelect
                   options={tags.map((tag) => ({
                     label: tag.name,
@@ -268,14 +254,14 @@ const BlogForm = () => {
                   }
                   placeholder="Select tags"
                 />
-              )}
-            </Field>
-            <ErrorMessage
-              name="tags"
-              component="div"
-              className="text-red-500 text-sm mt-1"
-            />
-          </div>
+                <ErrorMessage
+                  name="tags"
+                  component="div"
+                  className="text-red-500 text-sm mt-1"
+                />
+              </div>
+            )}
+          </Field>
 
           {/* Thumbnail Upload */}
           <div>
@@ -291,8 +277,8 @@ const BlogForm = () => {
               className={`w-full min-h-[10vh] dark:border-white border-[#00000026] p-3 border flex items-center justify-center ${
                 dragging ? "bg-blue-500" : "bg-transparent"
               }`}
-              onDragOver={handleDragOver}
-              onDragLeave={handleDragLeave}
+              onDragOver={(e) => handleDragEvents(e, true)}
+              onDragLeave={(e) => handleDragEvents(e, false)}
               onDrop={handleDrop}
             >
               {thumbnail ? (
@@ -324,11 +310,17 @@ const BlogForm = () => {
             <Button
               type="submit"
               className={`bg-blue-650 hover:bg-blue-600 text-white ${
-                isLoading ? "cursor-progress" : "cursor-pointer"
+                isCreating || isEditing ? "cursor-progress" : "cursor-pointer"
               } min-w-32`}
-              disabled={isLoading}
+              disabled={isCreating || isEditing}
             >
-              {isLoading ? "Creating..." : "Create Blog"}
+              {isCreating || isEditing
+                ? isEdit
+                  ? "Updating..."
+                  : "Creating..."
+                : isEdit
+                ? "Update Blog"
+                : "Create Blog"}
             </Button>
           </div>
         </Form>

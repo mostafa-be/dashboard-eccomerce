@@ -13,7 +13,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { MoreHorizontal } from "lucide-react";
 import { Checkbox } from "@/app/components/ui/checkbox";
 import { redirect } from "next/navigation";
-import {AlertDeleteBlog} from "./AlertDeleteBlog";
+import { AlertDeleteBlog } from "./AlertDeleteBlog";
 export type Blog = {
   _id: string;
   title: string;
@@ -71,7 +71,7 @@ export const columns: ColumnDef<Blog>[] = [
       <div className="text-left font-medium">{row.original.title}</div>
     ),
   },
- {
+  {
     accessorKey: "author.name",
     header: () => <div className="text-left">Author</div>,
     cell: ({ row }) => (
@@ -82,7 +82,9 @@ export const columns: ColumnDef<Blog>[] = [
     accessorKey: "category.name",
     header: () => <div className="text-left">Category</div>,
     cell: ({ row }) => (
-      <div className="text-left font-medium">{row.original?.category?.name}</div>
+      <div className="text-left font-medium">
+        {row.original?.category?.name}
+      </div>
     ),
   },
   {
@@ -118,9 +120,7 @@ export const columns: ColumnDef<Blog>[] = [
             align="end"
           >
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem
-              onClick={() => navigator.clipboard.writeText(id)}
-            >
+            <DropdownMenuItem onClick={() => navigator.clipboard.writeText(id)}>
               Copy Blog ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
@@ -129,12 +129,18 @@ export const columns: ColumnDef<Blog>[] = [
             >
               View Blog
             </DropdownMenuItem>
-                        <DropdownMenuItem
-                          onSelect={(e) => e.preventDefault()}
-                          className="py-0"
-                        >
-                          <AlertDeleteBlog blogId={id} />
-                        </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem
+              onClick={() => redirect(`/en/dashboard/blogs/edit/${id}`)}
+            >
+              Edit Blog
+            </DropdownMenuItem>
+            <DropdownMenuItem
+              onSelect={(e) => e.preventDefault()}
+              className="py-0"
+            >
+              <AlertDeleteBlog blogId={id} />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
