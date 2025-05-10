@@ -11,9 +11,9 @@ import {
   PackageOpen,
   Settings,
   UsersRound,
-  HandCoins
+  HandCoins,
+  Origami,
 } from "lucide-react";
-
 
 const SideBarDesktop = () => {
   const [expanded, setExpanded] = React.useState<boolean>(true);
@@ -150,6 +150,67 @@ const SideBarDesktop = () => {
           {
             text: "Tags List",
             url: `${url}/blogs/tags`,
+            active: false,
+          },
+        ]}
+      />
+      <SideBarItem
+        icon={<ChartPie size={25} />}
+        text="Reports"
+        active={false}
+        links={false}
+        url={`${url}/reports`}
+        alert={false}
+      />
+      <SideBarItem
+        icon={<Origami size={25} />}
+        text="Layout"
+        active={false}
+        links={true}
+        alert={false}
+        groupLinks={[
+          {
+            text: "Banners",
+            url: `${url}/layout/banners`,
+            active: false,
+          },
+          {
+            text: "Policies",
+            url: `${url}/layout/policies`,
+            active: false,
+          },
+          {
+            text: "FAQs",
+            url: `${url}/layout/faqs`,
+            active: false,
+          },
+        ]}
+      />
+      <SideBarItem
+        icon={<Settings size={25} />}
+        text="Settings"
+        active={false}
+        links={true}
+        alert={false}
+        groupLinks={[
+          {
+            text: "General Settings",
+            url: `${url}/settings/general`,
+            active: false,
+          },
+          {
+            text: "Payment Settings",
+            url: `${url}/settings/payment`,
+            active: false,
+          },
+          {
+            text: "Shipping Settings",
+            url: `${url}/settings/shipping`,
+            active: false,
+          },
+          {
+            text: "Tax Settings",
+            url: `${url}/settings/tax`,
             active: false,
           },
         ]}

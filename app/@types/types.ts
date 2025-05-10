@@ -204,4 +204,20 @@ export type Blog = {
   author: User;
   createdAt: Date;
   updatedAt: Date;
-}
+};
+
+/**
+ * Represents a Banner post with its details.
+ */
+export type Banner = {
+  _id: string;
+  title: string;
+  subDescription?: string;
+  product: Product;
+  imageDesktop: Image;
+  imageMobile: Image;
+  isActive: boolean;
+  isHomePage: boolean;
+  createdAt: Date;
+  updatedAt: Date;
+};

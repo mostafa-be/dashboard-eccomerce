@@ -62,7 +62,7 @@ const Statistic = ({ statistics }: Props) => {
       title: "Total Revenue",
       amount: { value: statistics.totalProfit.current, current: "usd" },
       percent: statistics.totalProfit.percentageChange,
-      mouvement: statistics.totalProfit.percentageChange <= 0 ? "up" : "down",
+      mouvement: statistics.totalProfit.percentageChange  >= 0 ? "up" : "down",
     },
   ];
 

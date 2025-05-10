@@ -12,6 +12,7 @@ import LoadingError from "../Loader/LoadingError";
 import { Product } from "./columns";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { ButtonCreate } from "../ui/export";
 
 /**
  * ProductsPage Component
@@ -102,7 +103,7 @@ const ProductsPage = () => {
   };
 
   return (
-    <section className="w-full space-y-6">
+    <section className="w-full space-y-10">
       {/* Export Options */}
       <ChangerExporter
         links={links}
@@ -118,16 +119,10 @@ const ProductsPage = () => {
       <StatisticsProducts products={products} />
 
       {/* Create Product Button */}
-      <div className="w-full flex items-center justify-end">
-        <Link
-          href="/en/dashboard/products/create-product"
-          title="Create Product"
-          className="px-3 py-2.5 rounded-md shadow bg-gradient-to-r from-blue-400 to-blue-500 hover:from-blue-500 hover:to-blue-600 text-white flex items-center gap-2 transition-all duration-300"
-        >
-          <SquarePen size={20} />
-          <span className="text-[16px] font-[500]">Create Product</span>
-        </Link>
-      </div>
+      <ButtonCreate
+        url="/en/dashboard/products/create-product"
+        title="Create Product"
+      />
 
       {/* Product List */}
       <ListProducts data={products} />
