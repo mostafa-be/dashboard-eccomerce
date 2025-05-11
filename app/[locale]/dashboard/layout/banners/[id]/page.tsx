@@ -49,7 +49,7 @@ const Page = ({ params }: { params: { id: string } }) => {
   return (
     <>
       <Heading
-        title={`Banner: ${banner?.name}`}
+        title={`Banner: ${banner?.title}`}
         keywords="banner, banner management, dashboard"
         description="an existing banner in the dashboard."
       />

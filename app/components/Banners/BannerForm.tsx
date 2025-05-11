@@ -55,7 +55,7 @@ const BannerForm = ({ products, banner, isEdit }: BannerFormProps) => {
   ] = useEditBannerMutation();
 
   const initialValues = {
-    product: banner?.product || "",
+    product: banner?.product._id || "",
     title: banner?.title || "",
     subdescription: banner?.subdescription || "",
   };

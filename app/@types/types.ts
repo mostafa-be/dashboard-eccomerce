@@ -212,7 +212,7 @@ export type Blog = {
 export type Banner = {
   _id: string;
   title: string;
-  subDescription?: string;
+  subdescription: string;
   product: Product;
   imageDesktop: Image;
   imageMobile: Image;
@@ -221,3 +221,14 @@ export type Banner = {
   createdAt: Date;
   updatedAt: Date;
 };
+
+/**
+ * Represents a FAQ (Frequently Asked Question) with its details.
+ */
+export type Faq = {
+  _id: string;
+  question: string;
+  answer: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

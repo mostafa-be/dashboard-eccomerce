@@ -17,7 +17,7 @@ type Props = {
 const BannerDetails = ({ banner }: Props) => {
   const { title, subdescription, imageDesktop, imageMobile, product } =
     banner || {};
-
+  console.log("Banner Details:", banner);
   return (
     <div className="w-full bg-white dark:bg-black-100 shadow rounded-lg p-6 space-y-6">
       <h2 className="text-2xl font-semibold text-gray-800 dark:text-gray-100">
