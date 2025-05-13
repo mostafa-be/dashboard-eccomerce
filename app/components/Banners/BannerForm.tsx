@@ -83,11 +83,15 @@ const BannerForm = ({ products, banner, isEdit }: BannerFormProps) => {
     { resetForm }: { resetForm: () => void }
   ) => {
     const payload = { ...values, imageMobile, imageDesktop };
-    if (isEdit) {
-      await editBanner({ id: banner?._id, data: payload }).unwrap();
-    } else {
-      await createBanner(payload).unwrap();
-      resetForm();
+    try {
+      if (isEdit) {
+        await editBanner({ id: banner?._id, data: payload }).unwrap();
+      } else {
+        await createBanner(payload).unwrap();
+        resetForm();
+      }
+    } catch (error) {
+      console.error("Failed to submit banner:", error);
     }
   };
 

@@ -231,4 +231,17 @@ export type Faq = {
   answer: string;
   createdAt: Date;
   updatedAt: Date;
-}
+};
+
+/**
+ * Represents a policy with its details.
+ */
+
+export type Policy = {
+  _id: string;
+  type: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
