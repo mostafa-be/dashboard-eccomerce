@@ -1,4 +1,4 @@
-import { NavBar } from "@/app/components/Dashboard/Layout/Sider/NavBar";
+import { NavBar } from "@/app/components/Dashboard/Layout/NavBar/NavBar";
 import { ThemeProvider } from "@/utils/theme-provider";
 import "./Dashboard.css";
 import SideBarDesktop from "@/app/components/Dashboard/Layout/Sider/SideBarDesktop";

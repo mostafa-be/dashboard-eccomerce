@@ -186,7 +186,7 @@ const SideBarDesktop = () => {
           },
         ]}
       />
-      <SideBarItem
+      {/*      <SideBarItem
         icon={<Settings size={25} />}
         text="Settings"
         active={false}
@@ -214,7 +214,7 @@ const SideBarDesktop = () => {
             active: false,
           },
         ]}
-      />
+      />*/}
       <SideBarItem
         icon={<Settings size={25} />}
         text="Settings"

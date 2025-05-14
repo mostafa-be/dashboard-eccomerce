@@ -245,3 +245,15 @@ export type Policy = {
   createdAt: Date;
   updatedAt: Date;
 };
+/**
+ * Represents a notification with its details.
+ */
+
+export type Notification = {
+  _id: string;
+  title: string;
+  message: string;
+  status: string;
+  createdAt: Date;
+  updatedAt: Date;
+};
