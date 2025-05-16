@@ -51,9 +51,9 @@ const Languages = () => {
           role="listbox"
           aria-label="Select language"
         >
-          {LANGUAGES.map((lang) => (
+          {LANGUAGES.map((lang,index) => (
             <li
-              key={lang.code}
+              key={index}
               className={`flex items-center gap-2 px-4 py-2 cursor-pointer hover:bg-blue-50 dark:hover:bg-blue-900 transition ${
                 selected === lang.code
                   ? "bg-blue-100 dark:bg-blue-800 font-semibold"

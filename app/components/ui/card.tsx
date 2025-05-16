@@ -2,13 +2,21 @@ import { ChevronDown } from "lucide-react";
 import React from "react";
 
 export const Card = ({
+  id,
+  ref,
   className,
   children,
 }: {
+  id?: string;
+  ref?: React.Ref<HTMLDivElement>;
   className?: string;
   children: React.ReactNode;
 }) => {
-  return <section className={` ${className} `}>{children}</section>;
+  return (
+    <section id={id} ref={ref} className={` ${className} `}>
+      {children}
+    </section>
+  );
 };
 export const HeaderCard = ({
   className,

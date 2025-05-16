@@ -2,38 +2,6 @@ import { apiSlice } from "../api/apiSlice";
 
 export const userApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
-    /*registerByAdmin: builder.mutation({
-      query: (data) => ({
-        url: "registration-by-admin",
-        method: "POSt",
-        body: data,
-        credentials: "include" as const,
-      }),
-    }),
-  updateAvatar: builder.mutation({
-      query: (avatar) => ({
-        url: "update-user-avatar",
-        method: "PUT",
-        body: avatar,
-        credentials: "include" as const,
-      }),
-    }),
-    editProfile: builder.mutation({
-      query: ({ name }) => ({
-        url: "updateUser",
-        method: "PUT",
-        body: { name },
-        creadentials: "include" as const,
-      }),
-    }),
-    updatePassword: builder.mutation({
-      query: ({ oldPassword, newPassword }) => ({
-        url: `update-user-password`,
-        method: "PUT",
-        body: { oldPassword, newPassword },
-        credentials: "include" as const,
-      }),
-    }),*/
     getAllUsers: builder.query({
       query: () => ({
         url: "get-all-users",
@@ -49,26 +17,65 @@ export const userApi = apiSlice.injectEndpoints({
       }),
     }),
     getUser: builder.query({
-      query: ({id}) => ({
+      query: ({ id }) => ({
         url: `get-user/${id}`,
         method: "GET",
         credentials: "include" as const,
       }),
-    }) /*
-    
-    updateUserRole: builder.mutation({
-      query: ({ email, role }) => ({
-        url: "update-user-role",
-        method: "PUT",
-        body: { email, role },
-        creadentials: "include" as const,
-      }),
-    }),*/,
+    }),
     blockedUser: builder.mutation({
       query: (id) => ({
         url: `block-user/${id}`,
         method: "PUT",
         creadentials: "include" as const,
+      }),
+    }),
+    updateProfileUser: builder.mutation({
+      query: (data) => ({
+        url: `updateUser`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
+    updateSettingsUser: builder.mutation({
+      query: (data) => ({
+        url: `update-user-settings`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
+    updateSecurityUser: builder.mutation({
+      query: (data) => ({
+        url: `update-user-settings`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
+    updatePrivacyUser: builder.mutation({
+      query: (data) => ({
+        url: `update-user-privacy`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
+    updateNotificationOptionUser: builder.mutation({
+      query: (data) => ({
+        url: `update-notification-options`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
+      }),
+    }),
+    updatePasswordUser: builder.mutation({
+      query: (data) => ({
+        url: `update-user-password`,
+        method: "PUT",
+        body: data,
+        credentials: "include" as const,
       }),
     }),
     unblockUser: builder.mutation({
@@ -89,14 +96,15 @@ export const userApi = apiSlice.injectEndpoints({
 });
 
 export const {
-  //useRegisterByAdminMutation,
-  //useUpdateAvatarMutation,
-  //useEditProfileMutation,
-  //useUpdatePasswordMutation,
+  useUpdateSettingsUserMutation,
   useGetAllUsersQuery,
   useGetAllCustomersQuery,
   useGetUserQuery,
-  //useUpdateUserRoleMutation,
+  useUpdatePrivacyUserMutation,
+  useUpdateProfileUserMutation,
+  useUpdatePasswordUserMutation,
+  useUpdateSecurityUserMutation,
+  useUpdateNotificationOptionUserMutation,
   useBlockedUserMutation,
   useUnblockUserMutation,
   useDeleteUserMutation,

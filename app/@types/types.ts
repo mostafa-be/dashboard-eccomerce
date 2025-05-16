@@ -1,5 +1,5 @@
 /**
- * Represents an image with a public ID and URL.
+ * Image type: Represents an image with a public ID and URL.
  */
 export type Image = {
   public_id: string;
@@ -7,7 +7,7 @@ export type Image = {
 };
 
 /**
- * Represents a product category.
+ * Category type: Represents a product category.
  */
 export type category = {
   _id: string;
@@ -18,7 +18,7 @@ export type category = {
 };
 
 /**
- * Represents a product collection.
+ * Collection type: Represents a product collection.
  */
 export type Collection = {
   _id: string;
@@ -29,7 +29,7 @@ export type Collection = {
 };
 
 /**
- * Represents a product tag.
+ * Tag type: Represents a product tag.
  */
 export type Tag = {
   _id: string;
@@ -39,7 +39,7 @@ export type Tag = {
 };
 
 /**
- * Represents a product brand.
+ * Brand type: Represents a product brand.
  */
 export type Brand = {
   _id: string;
@@ -50,7 +50,7 @@ export type Brand = {
 };
 
 /**
- * Represents a color option for a product.
+ * Color type: Represents a color option for a product.
  */
 export type Color = {
   _id: string;
@@ -61,7 +61,7 @@ export type Color = {
 };
 
 /**
- * Represents a size option for a product.
+ * Size type: Represents a size option for a product.
  */
 export type Size = {
   _id: string;
@@ -71,7 +71,7 @@ export type Size = {
 };
 
 /**
- * Represents a product with its details.
+ * Product type: Represents a product with its details.
  */
 export type Product = {
   _id: string;
@@ -94,7 +94,108 @@ export type Product = {
 };
 
 /**
- * Represents a user with their details.
+ * Preferences type: User preferences for notifications, ads, etc.
+ */
+export type IPreferences = {
+  newsletter?: boolean;
+  personalizedAds?: boolean;
+  notificationsEmail?: boolean;
+  notificationsPush?: boolean;
+  darkModeSchedule?: { start: string; end: string };
+  autoPlayVideos?: boolean;
+  languageLearningMode?: boolean;
+  compactMode?: boolean;
+  [key: string]: any;
+};
+
+/**
+ * Accessibility type: Accessibility settings for the user.
+ */
+export type IAccessibility = {
+  highContrast?: boolean;
+  textToSpeech?: boolean;
+  fontSize?: "small" | "medium" | "large";
+  dyslexicFont?: boolean;
+  screenReader?: boolean;
+};
+
+/**
+ * NotificationsOptions type: Notification options for the user.
+ */
+export type INotificationsOptions = {
+  marketing?: boolean;
+  productUpdates?: boolean;
+  reminders?: boolean;
+};
+
+/**
+ * Privacy type: Privacy settings for the user.
+ */
+export type IPrivacy = {
+  profileVisibility?: "public" | "private" | "friends";
+  searchEngineIndexing?: boolean;
+  showOnlineStatus?: boolean;
+  allowFriendRequests?: boolean;
+  allowMessagesFrom?: "everyone" | "friends" | "noone";
+};
+
+/**
+ * Security type: Security settings for the user.
+ */
+export type ISecurity = {
+  twoFactorAuth?: boolean;
+  loginAlerts?: boolean;
+  backupCodes?: string[];
+  recentDevices?: { device: string; lastActive: Date }[];
+  trustedDevices?: string[];
+};
+
+/**
+ * Notification type: Represents a notification.
+ */
+export type INotification = {
+  title: string;
+  message: string;
+  type: string;
+  isRead: boolean;
+  createdAt: Date;
+};
+
+/**
+ * Integrations type: Connected integrations for the user.
+ */
+export type IIntegrations = {
+  googleConnected?: boolean;
+  amazonConnected?: boolean;
+  facebookConnected?: boolean;
+  githubConnected?: boolean;
+  dropboxConnected?: boolean;
+  jiraConnected?: boolean;
+  slackConnected?: boolean;
+  notionConnected?: boolean;
+  zapierConnected?: boolean;
+  trelloConnected?: boolean;
+  asanaConnected?: boolean;
+  mondayConnected?: boolean;
+  shopifyConnected?: boolean;
+  quickbooksConnected?: boolean;
+  stripeConnected?: boolean;
+  paypalConnected?: boolean;
+  [key: string]: any;
+};
+
+/**
+ * Account activity type: Tracks user account activity.
+ */
+export type IAccountActivity = {
+  lastLogin?: Date;
+  lastPasswordChange?: Date;
+  accountCreated?: Date;
+  lastProfileUpdate?: Date;
+};
+
+/**
+ * User type: Represents a user with their details.
  */
 export type User = {
   _id: string;
@@ -114,13 +215,36 @@ export type User = {
     quantity: number;
     price: number;
   }[];
+  settings?: {
+    theme?: string;
+    language?: string;
+    privacy?: IPrivacy;
+    security?: ISecurity;
+    integrations?: IIntegrations;
+    preferences?: IPreferences;
+    accessibility?: IAccessibility;
+    accountActivity?: IAccountActivity;
+    appearance?: {
+      sidebarCollapsed?: boolean;
+      colorScheme?: string;
+      customBackground?: string;
+    };
+    notificationsOptions?: INotificationsOptions;
+    timeZone?: string;
+    currency?: string;
+    languageLearning?: {
+      enabled?: boolean;
+      targetLanguage?: string;
+    };
+    [key: string]: any;
+  };
   wishlist: object[];
   compared: object[];
   orders: Order[];
 };
 
 /**
- * Represents an expense with its details.
+ * Expense type: Represents an expense with its details.
  */
 export type Expense = {
   _id: string;
@@ -135,7 +259,7 @@ export type Expense = {
 };
 
 /**
- * Represents an order with its details.
+ * Order type: Represents an order with its details.
  */
 export type Order = {
   _id: string;
@@ -164,9 +288,8 @@ export type Order = {
 };
 
 /**
- * Represents a tag blog post with its details.
+ * TagBlog type: Represents a tag for a blog post.
  */
-
 export type TagBlog = {
   _id: string;
   name: string;
@@ -175,9 +298,8 @@ export type TagBlog = {
 };
 
 /**
- * Represents a tag blog post with its details.
+ * CategoryBlog type: Represents a category for a blog post.
  */
-
 export type CategoryBlog = {
   _id: string;
   name: string;
@@ -186,7 +308,7 @@ export type CategoryBlog = {
 };
 
 /**
- * Represents a blog post with its details.
+ * Blog type: Represents a blog post with its details.
  */
 export type Blog = {
   _id: string;
@@ -207,7 +329,7 @@ export type Blog = {
 };
 
 /**
- * Represents a Banner post with its details.
+ * Banner type: Represents a banner post with its details.
  */
 export type Banner = {
   _id: string;
@@ -223,7 +345,7 @@ export type Banner = {
 };
 
 /**
- * Represents a FAQ (Frequently Asked Question) with its details.
+ * Faq type: Represents a FAQ (Frequently Asked Question).
  */
 export type Faq = {
   _id: string;
@@ -234,9 +356,8 @@ export type Faq = {
 };
 
 /**
- * Represents a policy with its details.
+ * Policy type: Represents a policy with its details.
  */
-
 export type Policy = {
   _id: string;
   type: string;
@@ -245,10 +366,10 @@ export type Policy = {
   createdAt: Date;
   updatedAt: Date;
 };
-/**
- * Represents a notification with its details.
- */
 
+/**
+ * Notification type: Represents a notification with its details.
+ */
 export type Notification = {
   _id: string;
   title: string;
