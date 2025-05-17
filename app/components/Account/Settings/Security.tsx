@@ -7,6 +7,7 @@ import {
   TitleCard,
 } from "../../ui/card";
 import { Input } from "../../ui/input";
+import { Button } from "../../ui/button";
 import { ISecurity } from "@/app/@types/types";
 import { useUpdateSecurityUserMutation } from "@/redux/features/users/usersApi";
 import { useFormik } from "formik";
@@ -14,8 +15,8 @@ import { toast } from "react-hot-toast";
 
 /**
  * Security Component
- * Renders security settings using Card components and Input.
- * Handles update with useUpdateSecurityUserMutation and toast notifications.
+ * Allows users to manage security settings such as 2FA, login alerts, backup codes, and devices.
+ * Uses Card UI components, Formik for form state, Button/Input components, and toast notifications.
  */
 type Props = {
   sectionRefs: React.MutableRefObject<{
@@ -39,6 +40,7 @@ const Security = ({ sectionRefs, security }: Props) => {
       loginAlerts: !!security?.loginAlerts,
     },
     onSubmit: (values) => {
+      console.log("Form values:", values);
       updateSecurityUser(values);
     },
     enableReinitialize: true,
@@ -146,17 +148,17 @@ const Security = ({ sectionRefs, security }: Props) => {
               </ul>
             </div>
           )}
+          <CardFooter className="flex items-center justify-end pt-4">
+            <Button
+              type="submit"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow transition-all duration-150"
+              disabled={isLoading}
+            >
+              {isLoading ? "Saving..." : "Save Security Settings"}
+            </Button>
+          </CardFooter>
         </form>
       </CardContent>
-      <CardFooter className="flex items-center justify-end pt-4">
-        <button
-          type="submit"
-          className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg shadow transition-all duration-150"
-          disabled={isLoading}
-        >
-          {isLoading ? "Saving..." : "Save Security Settings"}
-        </button>
-      </CardFooter>
     </Card>
   );
 };

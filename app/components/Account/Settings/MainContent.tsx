@@ -7,10 +7,11 @@ import EditPassword from "./EditPassword";
 import Preferences from "./Preferences";
 import TwoFA from "./TwoFA";
 import Notifications from "./Notifications";
-import Privacy from './Privacy';
+import Privacy from "./Privacy";
 import Security from "./Security";
 import Integrations from "./Integrations";
 import Danger from "./Danger";
+import { useLoadUserQuery } from "@/redux/features/api/apiSlice";
 
 /**
  * MainContent Component
@@ -32,12 +33,20 @@ type Props = {
 const MainContent = ({ options, setActiveSection }: Props) => {
   const sectionRefs = useRef<Record<string, HTMLDivElement | null>>({});
   const containerRef = useRef<HTMLDivElement | null>(null);
+  const { refetch } = useLoadUserQuery({}, { refetchOnMountOrArgChange: true });
 
   // Get user settings from Redux (assuming user.settings shape matches your schema)
   const { user } = useSelector((state: { auth: { user: User } }) => state.auth);
   const { settings } = user;
-  const { preferences, privacy, security, accessibility, language, theme } =
-    settings || {};
+  const {
+    preferences,
+    privacy,
+    security,
+    accessibility,
+    language,
+    theme,
+    notificationsOptions,
+  } = settings || {};
   // Scrollspy effect: update activeSection based on scroll position
   useEffect(() => {
     const handleScroll = () => {
@@ -73,10 +82,18 @@ const MainContent = ({ options, setActiveSection }: Props) => {
         theme={theme}
         accessibility={accessibility}
       />
-      <TwoFA sectionRefs={sectionRefs} security={security} />
-      <Notifications sectionRefs={sectionRefs} />
+          <TwoFA sectionRefs={sectionRefs} security={security} refetch={refetch} />
+      <Notifications
+        sectionRefs={sectionRefs}
+        notificationsOptions={notificationsOptions}
+        refetch={refetch}
+      />
       <Privacy sectionRefs={sectionRefs} privacy={privacy} />
-      <Security sectionRefs={sectionRefs} security={security} />
+      <Security
+        sectionRefs={sectionRefs}
+        security={security}
+        refetch={refetch}
+      />
       <Integrations sectionRefs={sectionRefs} />
       <Danger sectionRefs={sectionRefs} />
     </div>

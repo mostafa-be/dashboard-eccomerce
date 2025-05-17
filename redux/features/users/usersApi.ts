@@ -48,7 +48,7 @@ export const userApi = apiSlice.injectEndpoints({
     }),
     updateSecurityUser: builder.mutation({
       query: (data) => ({
-        url: `update-user-settings`,
+        url: `update-user-security`,
         method: "PUT",
         body: data,
         credentials: "include" as const,
@@ -103,6 +103,7 @@ export const {
   useUpdatePrivacyUserMutation,
   useUpdateProfileUserMutation,
   useUpdatePasswordUserMutation,
+  // useUpdateSecurityUserMutation,
   useUpdateSecurityUserMutation,
   useUpdateNotificationOptionUserMutation,
   useBlockedUserMutation,

@@ -36,7 +36,7 @@ const SettingsContent = () => {
 
 
   return (
-    <div className="w-full max-w-7xl h-[clc(100dvh-90px)] overflow-y-scroll mx-auto flex flex-col md:flex-row gap-6 md:gap-10 mt-8 md:mt-12">
+    <div className="w-full space-y-10 max-w-7xl h-[clc(100dvh-90px)] overflow-y-scroll mx-auto flex flex-col md:flex-row gap-6 md:gap-10 mt-8 md:mt-12">
       {/* Sidebar Navigation */}
       <SidebarSettings
         activeSection={activeSection}

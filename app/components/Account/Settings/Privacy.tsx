@@ -51,10 +51,14 @@ const Privacy = ({ sectionRefs, privacy }: Props) => {
     },
     onSubmit: (values) => {
       // Convert profileVisibility back to string value
-      updatePrivacyUser({
-        ...values,
-        profileVisibility: values.profileVisibility ? "private" : "public",
-      });
+      const data = {
+        privacy: {
+          ...values,
+          profileVisibility: values.profileVisibility ? "private" : "public",
+        },
+      };
+      console.log(data);
+      updatePrivacyUser(data);
     },
     enableReinitialize: true,
   });

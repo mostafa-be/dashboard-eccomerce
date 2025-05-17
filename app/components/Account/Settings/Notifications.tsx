@@ -22,16 +22,24 @@ type Props = {
     [key: string]: HTMLDivElement | null;
   }>;
   notificationsOptions?: INotificationsOptions;
+  refetch: () => void;
 };
 
-const Notifications = ({ sectionRefs, notificationsOptions }: Props) => {
+const Notifications = ({
+  sectionRefs,
+  notificationsOptions,
+  refetch,
+}: Props) => {
   const [updateNotificationOptionUser, { isSuccess, error, isLoading }] =
     useUpdateNotificationOptionUserMutation();
 
   useEffect(() => {
-    if (isSuccess) toast.success("Notification settings updated successfully!");
+    if (isSuccess) {
+      toast.success("Notification settings updated successfully!");
+      refetch();
+    }
     if (error) toast.error("Failed to update notification settings.");
-  }, [isSuccess, error]);
+  }, [isSuccess, error, refetch]);
 
   const formik = useFormik({
     initialValues: {
@@ -40,7 +48,15 @@ const Notifications = ({ sectionRefs, notificationsOptions }: Props) => {
       reminders: !!notificationsOptions?.reminders,
     },
     onSubmit: (values) => {
-      updateNotificationOptionUser(values);
+      const data = {
+        notificationsOptions: {
+          ...values,
+          marketing: values.marketing,
+          productUpdates: values.productUpdates,
+          reminders: values.reminders,
+        },
+      };
+      updateNotificationOptionUser(data);
     },
     enableReinitialize: true,
   });
