@@ -11,9 +11,13 @@ import {
 } from "@/app/components/ui/dropdown-menu";
 import { ColumnDef } from "@tanstack/react-table";
 import { ChevronsUpDown, MoreHorizontal, PhoneCall } from "lucide-react";
-import { Checkbox } from "@/app/components/ui/checkbox"
-import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/ui/avatar";
-import { Order } from "@/app/components/Orders/columns";
+import { Checkbox } from "@/app/components/ui/checkbox";
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/app/components/ui/avatar";
+import { Order } from "@/app/@types/types";
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -51,29 +55,30 @@ export const columns: ColumnDef<Order>[] = [
     header: "User Information",
     cell: ({ row }) => {
       const order = row.original;
-      const avatar = order?.avatar?.url;
+      // Defensive: fallback if user or user.name is missing
+      const userName = order?.user?.name || "Unknown";
+      const userEmail = order?.user?.email || "No email";
+      const avatarUrl = order?.user?.avatar?.url;
       return (
         <div className="flex items-center">
           <Avatar>
-            {avatar ? (
-              <AvatarImage
-                src={order?.user?.avatar?.url}
-                alt={order.user.name}
-              />
+            {avatarUrl ? (
+              <AvatarImage src={avatarUrl} alt={userName} />
             ) : (
               <AvatarFallback>
-                {order.user.name.toUpperCase().slice(0, 1)}
+                {userName.toUpperCase().slice(0, 1)}
               </AvatarFallback>
             )}
           </Avatar>
           <div className="ml-2">
-            <p className="text-sm font-medium">{order.user.name}</p>
-            <p className="text-xs text-gray-500">{order.user.email}</p>
+            <p className="text-sm font-medium">{userName}</p>
+            <p className="text-xs text-gray-500">{userEmail}</p>
           </div>
         </div>
       );
     },
   },
+
   {
     header: "WhatsApp",
     cell: ({ row }) => {
@@ -92,15 +97,18 @@ export const columns: ColumnDef<Order>[] = [
           <p className="ml-2 text-xs font-medium">{order.user.mobile}</p>
         </div>
       );
-
     },
   },
   {
-    accessorKey: "_id",
-    header:() => <div className="text-right">ID Order</div>,
+    accessorKey: "invoiceId",
+    header: () => <div className="text-right">Invoice ID</div>,
     cell: ({ row }) => {
-      const id = row.getValue("_id") as string;
-      return <div className="text-right font-medium">#{id.slice(0, 4)}</div>;
+      const invoiceId = row.getValue("invoiceId") as string;
+      return (
+        <div className="text-right font-medium">
+          {invoiceId ? invoiceId : "-"}
+        </div>
+      );
     },
   },
   {
@@ -192,7 +200,7 @@ export const columns: ColumnDef<Order>[] = [
               Copy Order ID
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem >View Order details</DropdownMenuItem>
+            <DropdownMenuItem>View Order details</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );

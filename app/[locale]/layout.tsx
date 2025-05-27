@@ -1,6 +1,5 @@
 "use client";
 import { Josefin_Sans, Poppins } from "next/font/google";
-import "./globals.css";
 //import { NextIntlClientProvider } from "next-intl";
 //import { getMessages } from "next-intl/server";
 import { Providers } from "./provider";
@@ -8,7 +7,7 @@ import { SessionProvider } from "next-auth/react";
 import { ThemeProvider } from "@/utils/theme-provider";
 import { Toaster } from "react-hot-toast";
 import { Custom } from "@/utils/Custom";
-
+import "./globals.css"
 
 const poppins = Poppins({
   subsets: ["latin"],

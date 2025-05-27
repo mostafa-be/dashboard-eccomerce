@@ -205,6 +205,7 @@ export type User = {
   avatar: Image;
   role: string;
   functionality: string;
+  isActive: boolean;
   isVerified: boolean;
   isBlocked: boolean;
   address: object[];

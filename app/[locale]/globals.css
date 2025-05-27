@@ -1,8 +1,7 @@
-/* 
-  globals.css
-  Global styles for the dashboard-eccomerce app.
-  Includes Tailwind base, component, and utility layers, color variables, and custom scrollbar styling.
-*/
+/**
+ * Global styles for the dashboard-eccomerce app.
+ * Includes Tailwind base, component, and utility layers, color variables, and custom scrollbar styling.
+ */
 
 @tailwind base;
 @tailwind components;
@@ -72,10 +71,6 @@ body {
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
   }
-}
-
-/* Base element styling */
-@layer base {
   * {
     @apply border-border outline-ring/50;
     scroll-behavior: smooth;

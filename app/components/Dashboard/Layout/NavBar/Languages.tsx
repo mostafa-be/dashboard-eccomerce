@@ -61,7 +61,7 @@ const Languages = () => {
               }`}
               onClick={() => handleSelect(lang.code)}
               role="option"
-              aria-selected={selected === lang.code}
+              aria-selected={selected === lang.code ? true : false}
             >
               {lang.Flag && (
                 <lang.Flag className="w-6 h-6 rounded-full object-cover border border-gray-200 dark:border-gray-700" />

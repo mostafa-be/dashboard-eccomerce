@@ -1,7 +1,7 @@
 import Link from "next/link";
 import React from "react";
-import { Order } from "../../Orders/columns";
 import { Avatar, AvatarFallback, AvatarImage } from "../../ui/avatar";
+import { Order } from "@/app/@types/types";
 
 type Props = {
   order: Order;
@@ -10,7 +10,10 @@ type Props = {
 
 const CardLastOrder = ({ order, index }: Props) => {
   const { _id, user, totalPrice, paidAt } = order;
-  const { name, email, avatar } = user || {};
+  // Defensive: fallback if user or user.name is missing
+  const name = user?.name || "Unknown";
+  const email = user?.email || "No email";
+  const avatar = user?.avatar;
   return (
     <Link
       href={`/en/dashboard/orders/${_id}`}
@@ -23,9 +26,7 @@ const CardLastOrder = ({ order, index }: Props) => {
           {avatar ? (
             <AvatarImage src={avatar?.url} alt={name} />
           ) : (
-            <AvatarFallback>
-              {user.name.toUpperCase().slice(0, 1)}
-            </AvatarFallback>
+            <AvatarFallback>{name.toUpperCase().slice(0, 1)}</AvatarFallback>
           )}
         </Avatar>
         <div className="flex flex-col">

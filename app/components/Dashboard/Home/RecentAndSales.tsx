@@ -2,7 +2,7 @@ import React from "react";
 import { Card, CardContent, HeaderCard, TitleCard } from "../../ui/card";
 import Link from "next/link";
 import CardLastOrder from "./CardLastOrder";
-import { Order } from "../../Orders/columns";
+import { Order } from "@/app/@types/types";
 
 type RecentAndSalesProps = {
   data:Order[]

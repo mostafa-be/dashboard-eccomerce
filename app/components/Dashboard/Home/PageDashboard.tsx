@@ -19,6 +19,7 @@ import {
 import CardLoading from "../../Loader/CardLoading";
 import CardError from "../../Loader/CardError";
 import ChangerExporter from "../../ui/ChangerExporter";
+import Country from "./Country";
 
 const PageDashboard = () => {
   const [period, setPeriod] = React.useState<string>("7d");
@@ -120,7 +121,7 @@ const PageDashboard = () => {
     period,
     handlePeriodChange,
   };
-  console.log(statistics)
+  console.log(statistics);
   return (
     <section className="w-full space-y-10">
       <ChangerExporter
@@ -193,6 +194,11 @@ const PageDashboard = () => {
         { data: ordersTable },
         "max-md:mt-5 w-full col-span-9 "
       )}
+      {/* Advanced Country Map Section */}
+      <div className="w-full mt-8">
+        {/* You can further customize this Country component to look like Shopify's map 
+        <Country />*/}
+      </div>
     </section>
   );
 };

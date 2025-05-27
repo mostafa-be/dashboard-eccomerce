@@ -9,6 +9,14 @@ export const userApi = apiSlice.injectEndpoints({
         credentials: "include" as const,
       }),
     }),
+
+    getTeamMembers: builder.query({
+      query: () => ({
+        url: "get-team",
+        method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
     getAllCustomers: builder.query({
       query: () => ({
         url: "get-all-customers",
@@ -20,6 +28,14 @@ export const userApi = apiSlice.injectEndpoints({
       query: ({ id }) => ({
         url: `get-user/${id}`,
         method: "GET",
+        credentials: "include" as const,
+      }),
+    }),
+    changeRoleUser: builder.mutation({
+      query: ({ id, role }) => ({
+        url: `change-role/${id}`,
+        method: "PUT",
+        body: { role },
         credentials: "include" as const,
       }),
     }),
@@ -99,12 +115,14 @@ export const {
   useUpdateSettingsUserMutation,
   useGetAllUsersQuery,
   useGetAllCustomersQuery,
+  useGetTeamMembersQuery,
   useGetUserQuery,
   useUpdatePrivacyUserMutation,
   useUpdateProfileUserMutation,
   useUpdatePasswordUserMutation,
   // useUpdateSecurityUserMutation,
   useUpdateSecurityUserMutation,
+  useChangeRoleUserMutation,
   useUpdateNotificationOptionUserMutation,
   useBlockedUserMutation,
   useUnblockUserMutation,
