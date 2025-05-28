@@ -1,12 +1,25 @@
 "use client";
-//import { signIn } from "next-auth/react";
 
 import React, { useEffect, useState } from "react";
-import { Eye, EyeOff, Check, X } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Check,
+  X,
+  ArrowLeft,
+  Building,
+  // Mail,
+  // Phone,
+} from "lucide-react";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 import toast from "react-hot-toast";
-import { useRegisterMutation } from "@/redux/features/auth/authApi";
+import {
+  useRegisterMutation,
+  //useVerifyOtpMutation,
+  useSocialAuthMutation,
+  useActivationMutation,
+} from "@/redux/features/auth/authApi";
 import {
   US,
   GB,
@@ -19,8 +32,9 @@ import {
   CN,
   JP,
 } from "country-flag-icons/react/3x2";
-import { Button } from "@/app/components/ui/button"; // Add this import
+import { Button } from "@/app/components/ui/button";
 import Link from "next/link";
+import { RegistrationType } from "./RegisterPage";
 
 // Country codes with imported flag components
 const countryCodes = [
@@ -80,45 +94,104 @@ const schema = Yup.object().shape({
   marketingConsent: Yup.boolean(),
 });
 
-const RegisterContent = () => {
+// OTP verification schema
+const otpSchema = Yup.object().shape({
+  otp: Yup.string()
+    .required("OTP is required")
+    .matches(/^[0-9]+$/, "OTP must contain only digits")
+    .length(6, "OTP must be exactly 6 digits"),
+});
+
+// Social auth completion schema
+const socialCompletionSchema = Yup.object().shape({
+  mobile: Yup.string()
+    .matches(/^\d+$/, "Mobile number must contain only digits")
+    .min(8, "Mobile number must be at least 8 digits")
+    .required("Mobile number is required"),
+  countryCode: Yup.string().required("Country code is required"),
+  password: Yup.string()
+    .required("Password is required")
+    .min(8, "Password must be at least 8 characters long")
+    .matches(/[a-z]/, "Password must contain at least one lowercase letter")
+    .matches(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .matches(/[0-9]/, "Password must contain at least one number")
+    .matches(
+      /[^A-Za-z0-9]/,
+      "Password must contain at least one special character"
+    ),
+});
+
+// Store creation schema
+const storeSchema = Yup.object().shape({
+  storeName: Yup.string()
+    .required("Store name is required")
+    .min(3, "Store name must be at least 3 characters"),
+  storeDescription: Yup.string()
+    .required("Store description is required")
+    .min(20, "Description must be at least 20 characters"),
+  storeType: Yup.string().required("Please select a store type"),
+  storeCategory: Yup.string().required("Please select a category"),
+});
+
+// Add these props to the component
+interface RegisterContentProps {
+  setTypeRegister: (type: RegistrationType) => void;
+  method?: "email" | "social";
+  initialData?: any;
+  setRegistrationData?: (data: any) => void;
+}
+
+const RegisterContent: React.FC<RegisterContentProps> = ({
+  setTypeRegister,
+  method = "email",
+  initialData,
+  setRegistrationData,
+}) => {
   const [show, setShow] = useState(false);
-  const [register, { isSuccess, error, isLoading }] = useRegisterMutation();
+  const [showOtpForm, setShowOtpForm] = useState(false);
+  const [registrationEmail, setRegistrationEmail] = useState("");
+  const [activationToken, setActivationToken] = useState("");
+  const [showSocialCompletion, setShowSocialCompletion] = useState(false);
+  const [showStoreCreation, setShowStoreCreation] = useState(false);
+  const [socialAuthData, setSocialAuthData] = useState<{
+    name: string;
+    email: string;
+    avatar: string;
+  } | null>(null);
 
-  // Auto-detect country code based on user's location
-  useEffect(() => {
-    // Function to get user's country code by geolocation
-    const detectUserCountry = async () => {
-      try {
-        // Using ipinfo.io to get user's country info
-        const response = await fetch(
-          "https://ipinfo.io/json?token=YOUR_TOKEN_HERE"
-        );
-        const data = await response.json();
+  // API hooks
+  const [
+    register,
+    {
+      isSuccess: registerSuccess,
+      error: registerError,
+      isLoading: registerLoading,
+    },
+  ] = useRegisterMutation();
+  const [
+    activation,
+    {
+      isSuccess: activationSuccess,
+      error: activationError,
+      isLoading: activationLoading,
+    },
+  ] = useActivationMutation();
+  const [
+    socialAuth,
+    { isSuccess: socialSuccess, error: socialError, isLoading: socialLoading },
+  ] = useSocialAuthMutation();
 
-        if (data && data.country) {
-          // Find the matching country code
-          const countryInfo = countryCodes.find(
-            (c) => c.country === data.country
-          );
-          if (countryInfo) {
-            formik.setFieldValue("countryCode", countryInfo.code);
-          }
-        }
-      } catch (error) {
-        console.error("Error detecting user location:", error);
-        // Fallback to default country code
-      }
-    };
+  // If method is "social", use initialData to pre-fill form fields
+  const [firstName, lastName] = initialData?.name?.split(" ") || ["", ""];
 
-    detectUserCountry();
-  }, []);
-
+  // Regular registration form
   const formik = useFormik({
     initialValues: {
-      firstName: "",
-      lastName: "",
-      email: "",
+      firstName: method === "social" ? firstName : "",
+      lastName: method === "social" ? lastName : "",
+      email: method === "social" ? initialData?.email || "" : "",
       countryCode: "+212",
+      country: "",
       mobile: "",
       password: "",
       termsAccepted: false,
@@ -126,26 +199,63 @@ const RegisterContent = () => {
     },
     validationSchema: schema,
     onSubmit: async (values) => {
-      // Combine first and last name for the API
       const name = `${values.firstName} ${values.lastName}`;
-      // Combine country code and mobile
       const mobile = `${values.countryCode}${values.mobile}`;
-      await register({
-        name,
-        email: values.email,
-        mobile,
-        password: values.password,
-      });
+
+      if (method === "email") {
+        // Email registration flow
+        try {
+          const response = await register({
+            name,
+            email: values.email,
+            mobile,
+            password: values.password,
+          }).unwrap();
+
+          if (response.activationToken) {
+            setActivationToken(response.activationToken);
+            setRegistrationEmail(values.email);
+            if (setRegistrationData) {
+              setRegistrationData({
+                email: values.email,
+                password: values.password, // Store password for auto-login
+                activationToken: response.activationToken,
+              });
+            }
+            setTypeRegister("verify");
+            toast.success("Please verify your email");
+          }
+        } catch (err) {
+          // Error handling in useEffect
+        }
+      } else {
+        // Social auth completion flow
+        try {
+          await socialAuth({
+            name: name,
+            email: initialData?.email,
+            avatar: initialData?.avatar,
+            mobile: mobile,
+            password: values.password,
+            isVerified: true, // Social auth users are automatically verified
+          }).unwrap();
+
+          // Success handling in useEffect
+        } catch (err) {
+          // Error handling in useEffect
+        }
+      }
     },
   });
 
-  // Calculate password strength
+  // Calculate password strength - Move this after formik is initialized
   const getPasswordStrength = (password: string) => {
     if (!password) return 0;
     return passwordRequirements.filter((req) => req.regex.test(password))
       .length;
   };
 
+  // Get password strength value - place this after formik initialization
   const passwordStrength = getPasswordStrength(formik.values.password);
 
   // Get color based on strength
@@ -156,33 +266,186 @@ const RegisterContent = () => {
   };
 
   // Social media login handlers
-  const handleGoogleLogin = () => {
-    // Handle Google login integration
-    toast.loading("Continue with Google coming soon");
+  const handleGoogleLogin = async () => {
+    try {
+      // Simulate successful Google login
+      // In a real app, integrate with Google Auth API
+      const userData = {
+        name: "John Doe",
+        email: "johndoe@example.com",
+        avatar: "https://i.pravatar.cc/300",
+      };
+
+      setSocialAuthData(userData);
+      setShowSocialCompletion(true);
+      toast.success("Please complete your profile");
+    } catch (error) {
+      toast.error("Google login failed");
+    }
   };
 
-  const handleFacebookLogin = () => {
-    // Handle Facebook login integration
-    toast.custom("Continue with Facebook coming soon");
+  const handleFacebookLogin = async () => {
+    try {
+      // Simulate successful Facebook login
+      // In a real app, integrate with Facebook Auth API
+      const userData = {
+        name: "Jane Smith",
+        email: "janesmith@example.com",
+        avatar: "https://i.pravatar.cc/301",
+      };
+
+      setSocialAuthData(userData);
+      setShowSocialCompletion(true);
+      toast.success("Please complete your profile");
+    } catch (error) {
+      toast.error("Facebook login failed");
+    }
   };
 
-  const handleAppleLogin = () => {
-    // Handle Apple login integration
-    toast.arguments("Continue with Apple coming soon");
+  const handleAppleLogin = async () => {
+    try {
+      // Simulate successful Apple login
+      // In a real app, integrate with Apple Auth API
+      const userData = {
+        name: "Alex Johnson",
+        email: "alexjohnson@example.com",
+        avatar: "https://i.pravatar.cc/302",
+      };
+
+      setSocialAuthData(userData);
+      setShowSocialCompletion(true);
+      toast.success("Please complete your profile");
+    } catch (error) {
+      toast.error("Apple login failed");
+    }
   };
 
+  // Social auth completion form
+  const socialCompletionFormik = useFormik({
+    initialValues: {
+      countryCode: "+212",
+      mobile: "",
+      password: "",
+    },
+    validationSchema: socialCompletionSchema,
+    onSubmit: async (values) => {
+      if (!socialAuthData) return;
+
+      try {
+        const mobile = `${values.countryCode}${values.mobile}`;
+        await socialAuth({
+          name: socialAuthData.name,
+          email: socialAuthData.email,
+          avatar: socialAuthData.avatar,
+          mobile: mobile,
+          password: values.password,
+        }).unwrap();
+
+        // Social auth success will be handled in useEffect
+      } catch (err) {
+        // Error handling in useEffect
+      }
+    },
+  });
+
+  // OTP verification form
+  const otpFormik = useFormik({
+    initialValues: {
+      otp: "",
+    },
+    validationSchema: otpSchema,
+    onSubmit: async (values) => {
+      try {
+        await activation({
+          activation_token: activationToken,
+          activation_code: values.otp,
+        }).unwrap();
+
+        // Success handling in useEffect
+      } catch (err) {
+        // Error handling in useEffect
+      }
+    },
+  });
+
+  // Store creation form (shown after successful verification)
+  const storeFormik = useFormik({
+    initialValues: {
+      storeName: "",
+      storeDescription: "",
+      storeType: "",
+      storeCategory: "",
+    },
+    validationSchema: storeSchema,
+    onSubmit: async (values) => {
+      try {
+        // Call your API to create store
+        // For now we'll just show a success message
+        toast.success("Store created successfully!");
+        setTimeout(() => {
+          window.location.href = "/en/dashboard";
+        }, 2000);
+      } catch (err) {
+        toast.error("Failed to create store");
+      }
+    },
+  });
+
+  // Handle regular registration OTP verification success
   useEffect(() => {
-    if (isSuccess) {
-      toast.success("Please check your email to verify your account!");
+    if (activationSuccess) {
+      toast.success("Email verified successfully!");
+      // Show store creation form
+      setShowOtpForm(false);
+      setShowStoreCreation(true);
     }
 
-    if (error) {
-      if ("data" in error) {
-        const errorData = error as { data: { message: string } };
-        toast.error(errorData.data.message);
+    if (activationError) {
+      if ("data" in activationError) {
+        const errorData = activationError as { data: { message: string } };
+        toast.error(errorData.data.message || "Invalid OTP. Please try again.");
       }
     }
-  }, [isSuccess, error]);
+  }, [activationSuccess, activationError]);
+
+  // Handle social auth success/error
+  useEffect(() => {
+    if (socialSuccess) {
+      toast.success("Registration successful!");
+      // Show store creation form or redirect to dashboard
+      setTypeRegister("store");
+    }
+
+    if (socialError) {
+      if ("data" in socialError) {
+        const errorData = socialError as { data: { message: string } };
+        toast.error(errorData.data.message || "Social login failed");
+      }
+    }
+  }, [socialSuccess, socialError, setTypeRegister]);
+
+  // Handle registration errors
+  useEffect(() => {
+    if (registerError) {
+      if ("data" in registerError) {
+        const errorData = registerError as { data: { message: string } };
+        toast.error(errorData.data.message || "Registration failed");
+      }
+    }
+  }, [registerError]);
+
+  // Handle resending OTP
+  const handleResendOtp = async () => {
+    try {
+      await register({
+        email: registrationEmail,
+        resendOtp: true,
+      }).unwrap();
+      toast.success("New OTP has been sent to your email");
+    } catch (err) {
+      toast.error("Failed to resend OTP. Please try again.");
+    }
+  };
 
   const { errors, touched, values, handleChange, handleSubmit } = formik;
 
@@ -191,12 +454,423 @@ const RegisterContent = () => {
     countryCodes.find((c) => c.code === values.countryCode) || countryCodes[0];
   const FlagComponent = currentCountry.FlagComponent;
 
+  // Social completion selected country
+  const socialCurrentCountry =
+    countryCodes.find(
+      (c) => c.code === socialCompletionFormik.values.countryCode
+    ) || countryCodes[0];
+  const SocialFlagComponent = socialCurrentCountry.FlagComponent;
+
+  // Store Creation Form
+  if (showStoreCreation) {
+    return (
+      <div className="w-full h-full flex items-center justify-center flex-col gap-4 p-3">
+        <div className="w-full flex flex-col gap-2">
+          <h1 className="text-2xl text-center font-semibold text-black dark:text-white">
+            Create Your Store
+          </h1>
+          <p className="text-center text-sm text-gray-500">
+            Set up your store details to start selling
+          </p>
+        </div>
+
+        <form
+          onSubmit={storeFormik.handleSubmit}
+          className="w-full mt-6 space-y-6"
+        >
+          <div>
+            <label
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              htmlFor="storeName"
+            >
+              Store Name
+            </label>
+            <div className="relative mt-1.5">
+              <Building className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500 h-5 w-5" />
+              <input
+                type="text"
+                id="storeName"
+                name="storeName"
+                value={storeFormik.values.storeName}
+                onChange={storeFormik.handleChange}
+                placeholder="My Amazing Store"
+                className={`outline-none w-full text-black dark:text-white bg-transparent rounded-lg h-[45px] pl-10 pr-3.5 border ${
+                  storeFormik.errors.storeName && storeFormik.touched.storeName
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                } transition-all focus:ring-2`}
+              />
+            </div>
+            {storeFormik.errors.storeName && storeFormik.touched.storeName && (
+              <span className="text-sm text-red-500 mt-1 block">
+                {storeFormik.errors.storeName}
+              </span>
+            )}
+          </div>
+
+          <div>
+            <label
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              htmlFor="storeDescription"
+            >
+              Store Description
+            </label>
+            <textarea
+              id="storeDescription"
+              name="storeDescription"
+              value={storeFormik.values.storeDescription}
+              onChange={storeFormik.handleChange}
+              rows={4}
+              placeholder="Describe what your store sells and what makes it unique..."
+              className={`outline-none w-full text-black dark:text-white bg-transparent rounded-lg p-3.5 border ${
+                storeFormik.errors.storeDescription &&
+                storeFormik.touched.storeDescription
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              } mt-1.5 transition-all focus:ring-2`}
+            />
+            {storeFormik.errors.storeDescription &&
+              storeFormik.touched.storeDescription && (
+                <span className="text-sm text-red-500 mt-1 block">
+                  {storeFormik.errors.storeDescription}
+                </span>
+              )}
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                htmlFor="storeType"
+              >
+                Store Type
+              </label>
+              <select
+                id="storeType"
+                name="storeType"
+                value={storeFormik.values.storeType}
+                onChange={storeFormik.handleChange}
+                className={`outline-none w-full text-black dark:text-white bg-transparent rounded-lg h-[45px] px-3.5 border ${
+                  storeFormik.errors.storeType && storeFormik.touched.storeType
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                } mt-1.5 transition-all focus:ring-2`}
+              >
+                <option value="">Select Type</option>
+                <option value="physical">Physical Products</option>
+                <option value="digital">Digital Products</option>
+                <option value="services">Services</option>
+                <option value="hybrid">Hybrid</option>
+              </select>
+              {storeFormik.errors.storeType &&
+                storeFormik.touched.storeType && (
+                  <span className="text-sm text-red-500 mt-1 block">
+                    {storeFormik.errors.storeType}
+                  </span>
+                )}
+            </div>
+
+            <div>
+              <label
+                className="text-sm font-medium text-gray-700 dark:text-gray-300"
+                htmlFor="storeCategory"
+              >
+                Category
+              </label>
+              <select
+                id="storeCategory"
+                name="storeCategory"
+                value={storeFormik.values.storeCategory}
+                onChange={storeFormik.handleChange}
+                className={`outline-none w-full text-black dark:text-white bg-transparent rounded-lg h-[45px] px-3.5 border ${
+                  storeFormik.errors.storeCategory &&
+                  storeFormik.touched.storeCategory
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                } mt-1.5 transition-all focus:ring-2`}
+              >
+                <option value="">Select Category</option>
+                <option value="fashion">Fashion</option>
+                <option value="electronics">Electronics</option>
+                <option value="home">Home & Garden</option>
+                <option value="beauty">Beauty & Personal Care</option>
+                <option value="health">Health & Wellness</option>
+                <option value="food">Food & Beverage</option>
+                <option value="art">Art & Crafts</option>
+                <option value="books">Books & Media</option>
+                <option value="other">Other</option>
+              </select>
+              {storeFormik.errors.storeCategory &&
+                storeFormik.touched.storeCategory && (
+                  <span className="text-sm text-red-500 mt-1 block">
+                    {storeFormik.errors.storeCategory}
+                  </span>
+                )}
+            </div>
+          </div>
+
+          <button
+            type="submit"
+            className="w-full rounded-lg flex items-center justify-center py-4 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 cursor-pointer transition-colors shadow-md hover:shadow-lg mt-4"
+          >
+            Create Store & Continue
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  // Social Auth Completion Form
+  if (showSocialCompletion && socialAuthData) {
+    return (
+      <div className="w-full h-full flex items-center justify-center flex-col gap-4 p-3">
+        <div className="w-full flex flex-col gap-2 mb-4">
+          <button
+            onClick={() => setTypeRegister("method-select")}
+            className="flex items-center gap-1 text-sm text-blue-600 mb-2 hover:text-blue-800 transition-colors"
+          >
+            <ArrowLeft size={16} />
+            <span>Back to registration options</span>
+          </button>
+
+          <h1 className="text-2xl text-center font-semibold text-black dark:text-white">
+            Complete Your Profile
+          </h1>
+          <p className="text-center text-sm text-gray-500">
+            Just a few more details needed
+          </p>
+
+          <div className="flex flex-col items-center mt-4">
+            <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-blue-500">
+              <img
+                src={initialData?.avatar}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+            </div>
+            <p className="mt-2 font-medium">{initialData?.name}</p>
+            <p className="text-sm text-gray-500">{initialData?.email}</p>
+          </div>
+        </div>
+
+        <form onSubmit={socialCompletionFormik.handleSubmit} className="w-full">
+          {/* Phone field */}
+          <div className="mb-4">
+            <label
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              htmlFor="mobile"
+            >
+              Mobile Number
+            </label>
+            <div className="mt-1.5 flex">
+              <div className="relative">
+                <select
+                  name="countryCode"
+                  value={socialCompletionFormik.values.countryCode}
+                  onChange={socialCompletionFormik.handleChange}
+                  className="h-[45px] appearance-none rounded-l-lg pl-10 pr-8 py-2 border border-r-0 border-gray-300 focus:border-blue-500 bg-white dark:bg-black-100 text-black dark:text-white cursor-pointer min-w-country-code"
+                  title="Select country code"
+                >
+                  {countryCodes.map((country) => (
+                    <option
+                      key={country.code}
+                      value={country.code}
+                      className="flex items-center gap-1"
+                    >
+                      {country.code}
+                    </option>
+                  ))}
+                </select>
+                <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300">
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20">
+                    <path
+                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 011.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                      clipRule="evenodd"
+                      fillRule="evenodd"
+                    ></path>
+                  </svg>
+                </div>
+                <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+                  <SocialFlagComponent className="h-4 w-6" />
+                </div>
+              </div>
+              <input
+                type="tel"
+                name="mobile"
+                value={socialCompletionFormik.values.mobile}
+                onChange={socialCompletionFormik.handleChange}
+                id="socialMobile"
+                placeholder="612345678"
+                className={`outline-none w-full text-black dark:text-white bg-transparent rounded-r-lg h-[45px] px-3.5 border ${
+                  socialCompletionFormik.errors.mobile &&
+                  socialCompletionFormik.touched.mobile
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                } transition-all focus:ring-2`}
+              />
+            </div>
+            {socialCompletionFormik.errors.mobile &&
+              socialCompletionFormik.touched.mobile && (
+                <span className="text-sm text-red-500 mt-1 block">
+                  {socialCompletionFormik.errors.mobile}
+                </span>
+              )}
+          </div>
+
+          {/* Password field */}
+          <div className="mb-6">
+            <label
+              className="text-sm font-medium text-gray-700 dark:text-gray-300"
+              htmlFor="socialPassword"
+            >
+              Create Password
+            </label>
+            <div className="relative mt-1.5">
+              <input
+                type={show ? "text" : "password"}
+                name="password"
+                value={socialCompletionFormik.values.password}
+                onChange={socialCompletionFormik.handleChange}
+                id="socialPassword"
+                placeholder="••••••••"
+                className={`outline-none w-full text-black dark:text-white bg-transparent rounded-lg h-[45px] px-3.5 border ${
+                  socialCompletionFormik.errors.password &&
+                  socialCompletionFormik.touched.password
+                    ? "border-red-500 focus:ring-red-500"
+                    : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+                } pr-10 transition-all focus:ring-2`}
+              />
+              <button
+                type="button"
+                className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                onClick={() => setShow(!show)}
+              >
+                {show ? (
+                  <EyeOff className="text-gray-500 dark:text-gray-400 h-5 w-5" />
+                ) : (
+                  <Eye className="text-gray-500 dark:text-gray-400 h-5 w-5" />
+                )}
+              </button>
+            </div>
+            {socialCompletionFormik.errors.password &&
+              socialCompletionFormik.touched.password && (
+                <span className="text-sm text-red-500 mt-1 block">
+                  {socialCompletionFormik.errors.password}
+                </span>
+              )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={socialLoading}
+            className="w-full rounded-lg flex items-center justify-center py-4 text-base font-semibold text-white bg-blue-600 hover:bg-blue-700 transition-colors shadow-md hover:shadow-lg"
+          >
+            {socialLoading ? "Processing..." : "Complete Registration"}
+          </button>
+        </form>
+      </div>
+    );
+  }
+
+  // OTP verification form
+  if (showOtpForm) {
+    return (
+      <div className="w-full h-full flex items-center justify-center flex-col gap-4 p-3">
+        <div className="w-full flex flex-col gap-2">
+          <button
+            onClick={() => setShowOtpForm(false)}
+            className="flex items-center gap-1 text-sm text-blue-600 mb-2"
+          >
+            <ArrowLeft size={16} />
+            <span>Back to registration</span>
+          </button>
+
+          <h1 className="text-2xl text-center font-semibold text-black dark:text-white">
+            Verify Your Email
+          </h1>
+          <p className="text-center text-sm text-gray-500">
+            We've sent a 6-digit verification code to{" "}
+            <span className="font-medium">{registrationEmail}</span>
+          </p>
+        </div>
+
+        <form
+          onSubmit={otpFormik.handleSubmit}
+          className="w-full max-w-md mt-6"
+        >
+          <div className="mb-6">
+            <label
+              className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 block"
+              htmlFor="otp"
+            >
+              Enter OTP Code
+            </label>
+            <input
+              type="text"
+              id="otp"
+              name="otp"
+              maxLength={6}
+              value={otpFormik.values.otp}
+              onChange={otpFormik.handleChange}
+              className={`outline-none w-full text-center tracking-[0.5em] text-xl text-black dark:text-white bg-transparent rounded-lg h-[45px] px-3.5 border ${
+                otpFormik.errors.otp && otpFormik.touched.otp
+                  ? "border-red-500 focus:ring-red-500"
+                  : "border-gray-300 focus:border-blue-500 focus:ring-blue-500"
+              } mt-1.5 transition-all focus:ring-2`}
+              placeholder="• • • • • •"
+            />
+            {otpFormik.errors.otp && otpFormik.touched.otp && (
+              <span className="text-sm text-red-500 mt-1 block">
+                {otpFormik.errors.otp}
+              </span>
+            )}
+          </div>
+
+          <button
+            type="submit"
+            disabled={activationLoading}
+            className={`w-full rounded-lg flex items-center justify-center py-4 text-base font-semibold text-white ${
+              activationLoading
+                ? "bg-blue-600/80 cursor-not-allowed"
+                : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
+            } transition-colors shadow-md hover:shadow-lg`}
+          >
+            {activationLoading ? "Verifying..." : "Verify Email"}
+          </button>
+
+          <div className="mt-6 text-center">
+            <p className="text-sm text-gray-600 dark:text-gray-400">
+              Didn't receive the code?{" "}
+              <button
+                type="button"
+                onClick={handleResendOtp}
+                disabled={registerLoading}
+                className="text-blue-600 hover:text-blue-800 font-medium"
+              >
+                {registerLoading ? "Sending..." : "Resend OTP"}
+              </button>
+            </p>
+          </div>
+        </form>
+      </div>
+    );
+  }
+
+  // Normal email registration form (the existing form)
   return (
     <form
-      onSubmit={handleSubmit}
+      onSubmit={formik.handleSubmit}
       className="w-full h-full flex items-center justify-center flex-col gap-2 p-3"
     >
       <div className="w-full flex flex-col gap-2">
+        <button
+          onClick={() => setTypeRegister("method-select")}
+          className="flex items-center gap-1 text-sm text-blue-600 mb-2 hover:text-blue-800 transition-colors"
+        >
+          <ArrowLeft size={16} />
+          <span>Back to registration options</span>
+        </button>
+
         <h1 className="text-2xl text-center font-semibold text-black dark:text-white">
           Create your account
         </h1>
@@ -205,7 +879,7 @@ const RegisterContent = () => {
         </p>
       </div>
 
-      <div className="w-full  flex flex-col mt-4 gap-4">
+      <div className="w-full flex flex-col mt-4 gap-4">
         {/* Social Media Login - Enhanced UI */}
         <div className="w-full mb-4">
           <div className="grid grid-cols-3 gap-3">
@@ -599,14 +1273,14 @@ const RegisterContent = () => {
         <div className="w-full mt-6">
           <button
             type="submit"
-            disabled={isLoading}
+            disabled={registerLoading}
             className={`w-full rounded-lg flex items-center justify-center py-4 text-base font-semibold text-white ${
-              isLoading
+              registerLoading
                 ? "bg-blue-600/80 cursor-not-allowed"
                 : "bg-blue-600 hover:bg-blue-700 cursor-pointer"
             } transition-colors shadow-md hover:shadow-lg`}
           >
-            {isLoading ? "Creating Account..." : "Create Your Account"}
+            {registerLoading ? "Creating Account..." : "Create Your Account"}
           </button>
         </div>
 

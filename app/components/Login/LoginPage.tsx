@@ -3,30 +3,22 @@
 import React, { Suspense, useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import Description from "../Home/Description";
-import RegisterContent from "./RegisterContent";
-import Verification from "./Verification";
+import Login from "./Login";
+import ForgotPassword from "./ForgotPassword";
 import { Loader2 } from "lucide-react";
-import RegisterMethodSelection from "./RegisterMethodSelection";
 
 /**
- * Registration flow types
+ * Login page states
  */
-export type RegistrationType =
-  | "method-select"
-  | "email"
-  | "social"
-  | "verify"
-  | "store";
+type AuthType = "login" | "forgotPassword";
 
 /**
- * RegisterPage Component
- * Main registration container that handles different registration states
+ * LoginPage Component
+ * Main login container with animated transitions between states
  */
-const RegisterPage = () => {
+const LoginPage = () => {
   const [isLoaded, setIsLoaded] = useState(false);
-  const [registerType, setRegisterType] =
-    useState<RegistrationType>("method-select");
-  const [registrationData, setRegistrationData] = useState<any>(null);
+  const [authType, setAuthType] = useState<AuthType>("login");
 
   // Simulate loading state
   useEffect(() => {
@@ -59,7 +51,7 @@ const RegisterPage = () => {
     <div className="min-h-dvh bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <main className="container relative mx-auto flex flex-col lg:grid lg:grid-cols-12 gap-4 p-4 md:p-6 lg:p-8 xl:p-10">
         {/* Left side - Analytics description */}
-        <section className="order-2 lg:order-1 lg:col-span-7 xl:col-span-7 h-auto  lg:h-[calc(100vh-3rem)] flex items-center justify-center mb-8 lg:mb-0 overflow-hidden rounded-2xl shadow-lg">
+        <section className="order-2 lg:order-1 lg:col-span-7 xl:col-span-7 h-auto lg:h-[calc(100vh-3rem)] flex items-center justify-center mb-8 lg:mb-0 overflow-hidden rounded-2xl shadow-lg">
           <Suspense
             fallback={
               <div className="w-full h-full flex items-center justify-center bg-white/30 backdrop-blur-sm rounded-2xl">
@@ -71,7 +63,7 @@ const RegisterPage = () => {
           </Suspense>
         </section>
 
-        {/* Right side - Registration form */}
+        {/* Right side - Login form */}
         <section className="order-1 lg:order-2 lg:col-span-5 xl:col-span-5 flex items-center justify-center h-auto">
           <div className="w-full px-5 py-8 bg-white dark:bg-gray-900 shadow-xl rounded-2xl transition-all border border-gray-100 dark:border-gray-800">
             <AnimatePresence mode="wait">
@@ -85,73 +77,25 @@ const RegisterPage = () => {
                 >
                   <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
                 </motion.div>
-              ) : registerType === "method-select" ? (
+              ) : authType === "login" ? (
                 <motion.div
-                  key="register-method"
+                  key="login-form"
                   variants={contentVariants}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
                 >
-                  <RegisterMethodSelection
-                    setRegisterType={setRegisterType}
-                    setRegistrationData={setRegistrationData}
-                  />
-                </motion.div>
-              ) : registerType === "email" ? (
-                <motion.div
-                  key="register-email"
-                  variants={contentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  <RegisterContent
-                    setTypeRegister={setRegisterType}
-                    method="email"
-                    initialData={registrationData}
-                    setRegistrationData={setRegistrationData}
-                  />
-                </motion.div>
-              ) : registerType === "social" ? (
-                <motion.div
-                  key="register-social"
-                  variants={contentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  <RegisterContent
-                    setTypeRegister={setRegisterType}
-                    method="social"
-                    initialData={registrationData}
-                    setRegistrationData={setRegistrationData}
-                  />
-                </motion.div>
-              ) : registerType === "verify" ? (
-                <motion.div
-                  key="register-verify"
-                  variants={contentVariants}
-                  initial="hidden"
-                  animate="visible"
-                  exit="exit"
-                >
-                  <Verification
-                    setTypeRegister={setRegisterType}
-                    email={registrationData?.email}
-                    registrationData={registrationData}
-                  />
+                  <Login setAuth={setAuthType} />
                 </motion.div>
               ) : (
                 <motion.div
-                  key="register-fallback"
+                  key="forgot-password"
                   variants={contentVariants}
                   initial="hidden"
                   animate="visible"
                   exit="exit"
-                  className="flex justify-center items-center h-64"
                 >
-                  <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                  <ForgotPassword setAuth={setAuthType} />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -189,8 +133,9 @@ const RegisterPage = () => {
           </div>
         </div>
       </footer>
+
     </div>
   );
 };
 
-export default RegisterPage;
+export default LoginPage;

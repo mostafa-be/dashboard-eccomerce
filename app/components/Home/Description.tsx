@@ -2,17 +2,36 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import dynamic from 'next/dynamic';
-import { Users, BarChart4, Facebook, LayoutTemplate, Clock, CreditCard, 
-  ArrowRight, Zap, Layers, Sparkles, LineChart, ChevronUp, ChevronDown, Check } from "lucide-react";
+import dynamic from "next/dynamic";
+import {
+  Users,
+  BarChart4,
+  Facebook,
+  LayoutTemplate,
+  Clock,
+  CreditCard,
+  ArrowRight,
+  Zap,
+  Layers,
+  Sparkles,
+  LineChart,
+  ChevronUp,
+  ChevronDown,
+  Check,
+} from "lucide-react";
 
 // Dynamically import chart components with no SSR to avoid hydration issues
-const DynamicChartComponents = dynamic(() => import('./DynamicChartComponents'), {
-  ssr: false,
-  loading: () => <div className="w-full h-[220px] flex items-center justify-center">
-    <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-  </div>
-});
+const DynamicChartComponents = dynamic(
+  () => import("./DynamicChartComponents"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="w-full h-[220px] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+    ),
+  }
+);
 
 /**
  * Template data interface
@@ -319,9 +338,9 @@ const Description = () => {
 
               {/* Replace with dynamic import to avoid hydration mismatch */}
               {isClient ? (
-                <DynamicChartComponents 
-                  chartType="conversion" 
-                  data={conversionData} 
+                <DynamicChartComponents
+                  chartType="conversion"
+                  data={conversionData}
                 />
               ) : (
                 <div className="w-full h-[220px]"></div>
@@ -384,9 +403,9 @@ const Description = () => {
 
                 {/* Replace with dynamic import */}
                 {isClient ? (
-                  <DynamicChartComponents 
-                    chartType="revenue" 
-                    data={revenueData} 
+                  <DynamicChartComponents
+                    chartType="revenue"
+                    data={revenueData}
                   />
                 ) : (
                   <div className="h-[130px]"></div>

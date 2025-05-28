@@ -1,18 +1,23 @@
-'use client';
+"use client";
 
-import React from 'react';
+import React from "react";
 import {
-  AreaChart, Area, XAxis, YAxis, CartesianGrid, 
-  Tooltip, ResponsiveContainer
+  AreaChart,
+  Area,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
 } from "recharts";
 
 interface ChartProps {
-  chartType: 'conversion' | 'revenue';
-  data: Array<{name: string, value: number}>;
+  chartType: string | "conversion" | "revenue";
+  data: Array<{ name: string; value: number }>;
 }
 
 const DynamicChartComponents = ({ chartType, data }: ChartProps) => {
-  if (chartType === 'conversion') {
+  if (chartType === "conversion") {
     return (
       <div className="w-full h-[180px] sm:h-[220px]">
         <ResponsiveContainer width="100%" height="100%">
@@ -21,23 +26,9 @@ const DynamicChartComponents = ({ chartType, data }: ChartProps) => {
             margin={{ top: 10, right: 5, left: 0, bottom: 5 }}
           >
             <defs>
-              <linearGradient
-                id="colorConversion"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop
-                  offset="5%"
-                  stopColor="#3b82f6"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="#3b82f6"
-                  stopOpacity={0}
-                />
+              <linearGradient id="colorConversion" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -79,30 +70,16 @@ const DynamicChartComponents = ({ chartType, data }: ChartProps) => {
       </div>
     );
   }
-  
-  if (chartType === 'revenue') {
+
+  if (chartType === "revenue") {
     return (
       <div className="h-[130px]">
         <ResponsiveContainer width="100%" height="100%">
           <AreaChart data={data}>
             <defs>
-              <linearGradient
-                id="colorRevenue"
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
-                <stop
-                  offset="5%"
-                  stopColor="#22c55e"
-                  stopOpacity={0.8}
-                />
-                <stop
-                  offset="95%"
-                  stopColor="#22c55e"
-                  stopOpacity={0}
-                />
+              <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#22c55e" stopOpacity={0.8} />
+                <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid
@@ -129,7 +106,7 @@ const DynamicChartComponents = ({ chartType, data }: ChartProps) => {
       </div>
     );
   }
-  
+
   return null;
 };
 
