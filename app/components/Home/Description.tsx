@@ -33,9 +33,7 @@ const DynamicChartComponents = dynamic(
   }
 );
 
-/**
- * Template data interface
- */
+// Type definitions
 interface Template {
   name: string;
   image: string;
@@ -43,9 +41,6 @@ interface Template {
   features: string[];
 }
 
-/**
- * Pricing plan interface
- */
 interface PricingPlan {
   name: string;
   price: string;
@@ -53,9 +48,6 @@ interface PricingPlan {
   features: string[];
 }
 
-/**
- * Analytics stat item interface
- */
 interface StatItem {
   stage: string;
   count: number;
@@ -176,7 +168,6 @@ const Description = () => {
 
   /**
    * Handle tab section changes
-   * @param section - The section to activate (analytics, templates, pricing)
    */
   const handleSectionChange = (section: string) => {
     setActiveSection(section);

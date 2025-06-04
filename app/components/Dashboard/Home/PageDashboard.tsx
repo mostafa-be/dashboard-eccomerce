@@ -19,7 +19,6 @@ import {
 import CardLoading from "../../Loader/CardLoading";
 import CardError from "../../Loader/CardError";
 import ChangerExporter from "../../ui/ChangerExporter";
-import Country from "./Country";
 
 const PageDashboard = () => {
   const [period, setPeriod] = React.useState<string>("7d");
@@ -32,8 +31,8 @@ const PageDashboard = () => {
   } = useGetGeneralStatisticsQuery(
     { period: period },
     { refetchOnMountOrArgChange: true }
-  );
-
+    );
+  
   const {
     data: dataOrdersSales,
     isLoading: isLoadingOrdersSales,
@@ -43,8 +42,8 @@ const PageDashboard = () => {
   } = useGetOrderSalesPeriodicallyQuery(
     { period },
     { refetchOnMountOrArgChange: true }
-  );
-
+    );
+  
   const {
     data: dataBestSellingProducts,
     isLoading: isLoadingBestSellingProducts,

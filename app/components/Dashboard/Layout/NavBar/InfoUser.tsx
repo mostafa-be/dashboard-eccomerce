@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useSelector } from "react-redux";
+import { useLocale } from "next-intl";
 import { DropdownMenuAccount } from "./DropdownMenuAccount";
 import {
   Avatar,
@@ -26,10 +27,17 @@ const InfoUser = () => {
     }) => state.auth
   );
 
+  const locale = useLocale();
+  const isRTL = locale === "ar";
+
   const { name, avatar, functionality } = user;
 
   return (
-    <div className="flex items-center gap-1.5">
+    <div
+      className={`flex items-center gap-1.5 ${
+        isRTL ? "flex-row-reverse" : "flex-row"
+      }`}
+    >
       {/* User Avatar */}
       <Avatar>
         {avatar ? (
@@ -40,7 +48,11 @@ const InfoUser = () => {
       </Avatar>
 
       {/* User Name and Role */}
-      <div className="hidden md:flex flex-col items-center gap-1">
+      <div
+        className={`hidden md:flex flex-col items-center gap-1 ${
+          isRTL ? "text-right" : "text-left"
+        }`}
+      >
         <p className="text-sm font-[500] text-black dark:text-white/90">
           {name}
         </p>
@@ -50,7 +62,7 @@ const InfoUser = () => {
       </div>
 
       {/* Dropdown Menu */}
-      <DropdownMenuAccount />
+      <DropdownMenuAccount isRTL={isRTL} />
     </div>
   );
 };

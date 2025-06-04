@@ -1,5 +1,109 @@
 {
     "titlePages":{
-        "dashboard": "لوحة التحكم"
+        "dashboard": "لوحة التحكم",
+        "home": "الرئيسية",
+        "login": "تسجيل الدخول",
+        "createStore": "إنشاء متجرك"
+    },
+    "dashboard": {
+        "sidebar": {
+            "dashboard": "لوحة التحكم",
+            "orders": "الطلبات",
+            "expenses": "المصروفات",
+            "customers": "العملاء",
+            "products": {
+                "main": "المنتجات",
+                "list": "قائمة المنتجات",
+                "brands": "قائمة العلامات التجارية",
+                "collections": "قائمة المجموعات",
+                "categories": "قائمة الفئات",
+                "colors": "قائمة الألوان",
+                "sizes": "قائمة المقاسات",
+                "tags": "قائمة العلامات"
+            },
+            "enquiries": "الاستفسارات",
+            "notifications": "الإشعارات",
+            "analytics": "التحليلات",
+            "blogs": {
+                "main": "المدونات",
+                "list": "قائمة المدونات",
+                "categories": "قائمة الفئات",
+                "tags": "قائمة العلامات"
+            },
+            "reports": "التقارير",
+            "layout": {
+                "main": "التصميم",
+                "banners": "اللافتات",
+                "policies": "السياسات",
+                "faqs": "الأسئلة المتكررة"
+            },
+            "settings": "الإعدادات"
+        },
+        "account": {
+            "myAccount": "حسابي",
+            "profile": "الملف الشخصي",
+            "billing": "الفواتير",
+            "settings": "الإعدادات",
+            "team": "الفريق",
+            "newTeam": "فريق جديد",
+            "notifications": "الإشعارات",
+            "documents": "المستندات",
+            "favorites": "المفضلة",
+            "help": "المساعدة",
+            "privacy": "الخصوصية",
+            "language": "اللغة",
+            "logout": "تسجيل الخروج"
+        }
+    },
+    "home": {
+        "welcome": "مرحبًا بك في Nextora",
+        "subtitle": "سجل الدخول أو أنشئ حسابًا لبدء البيع عبر الإنترنت",
+        "login": "تسجيل الدخول",
+        "createAccount": "إنشاء حساب",
+        "whyChoose": "لماذا تختار Nextora؟",
+        "features": {
+            "easySetup": {
+                "title": "إعداد متجر سهل",
+                "description": "احصل على متجرك عبر الإنترنت جاهزًا للعمل في دقائق"
+            },
+            "analytics": {
+                "title": "تحليلات قوية",
+                "description": "اتخذ قرارات مدعومة بالبيانات مع رؤى في الوقت الحقيقي"
+            },
+            "customerManagement": {
+                "title": "إدارة العملاء",
+                "description": "بناء العلاقات وتعزيز ولاء العملاء"
+            }
+        },
+        "legal": "بالمتابعة، فإنك توافق على {terms} و {privacy} الخاصة بـ Nextora."
+    },
+    "login": {
+        "title": "تسجيل الدخول إلى حسابك",
+        "subtitle": "أدخل بيانات اعتماد للوصول إلى لوحة التحكم",
+        "email": "البريد الإلكتروني",
+        "password": "كلمة المرور",
+        "forgotPassword": "نسيت كلمة المرور؟",
+        "continueWith": "أو تابع باستخدام",
+        "google": "جوجل",
+        "facebook": "فيسبوك",
+        "apple": "آبل",
+        "signIn": "تسجيل الدخول",
+        "noAccount": "ليس لديك حساب؟",
+        "createAccount": "إنشاء حساب",
+        "connecting": "جاري الاتصال..."
+    },
+    "common": {
+        "termsOfService": "شروط الخدمة",
+        "privacyPolicy": "سياسة الخصوصية",
+        "contactUs": "اتصل بنا",
+        "allRightsReserved": "جميع الحقوق محفوظة"
+    },
+    "language": {
+        "en": "English",
+        "fr": "Français",
+        "ar": "العربية",
+        "de": "Deutsch",
+        "it": "Italiano",
+        "es": "Español"
     }
 }

@@ -3,10 +3,12 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Mail, ArrowRight } from "lucide-react";
+import { RegistrationType } from "./RegisterPage";
+import Link from "next/link";
 
 interface RegisterMethodSelectionProps {
-  setRegisterType: (type: string) => void;
-  setRegistrationData: (data:any) => void;
+  setRegisterType: (type: RegistrationType) => void;
+  setRegistrationData: (data: any) => void;
 }
 
 const RegisterMethodSelection: React.FC<RegisterMethodSelectionProps> = ({
@@ -60,7 +62,6 @@ const RegisterMethodSelection: React.FC<RegisterMethodSelectionProps> = ({
         avatar: "https://i.pravatar.cc/302",
         isFromSocial: true,
       };
-
       setRegistrationData(userData);
       setRegisterType("social");
     } catch (error) {
@@ -85,7 +86,7 @@ const RegisterMethodSelection: React.FC<RegisterMethodSelectionProps> = ({
           Join Nextora
         </h1>
         <p className="text-gray-500 dark:text-gray-400 text-sm">
-          Choose how you'd like to register
+          Choose how you&#39;d like to register
         </p>
       </motion.div>
 
@@ -174,12 +175,12 @@ const RegisterMethodSelection: React.FC<RegisterMethodSelectionProps> = ({
       >
         <p className="text-sm text-gray-600 dark:text-gray-400">
           Already have an account?{" "}
-          <a
+          <Link
             href="/en/login"
             className="text-blue-600 hover:underline font-medium"
           >
             Sign in
-          </a>
+          </Link>
         </p>
       </motion.div>
     </div>

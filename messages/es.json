@@ -1,0 +1,59 @@
+{
+  "titlePages": {
+    "dashboard": "Panel de control",
+    "home": "Inicio",
+    "login": "Iniciar sesión",
+    "createStore": "Crear tu tienda"
+  },
+  "home": {
+    "welcome": "Bienvenido a Nextora",
+    "subtitle": "Inicia sesión o regístrate para comenzar a vender en línea",
+    "login": "Iniciar sesión",
+    "createAccount": "Crear cuenta",
+    "whyChoose": "¿Por qué elegir Nextora?",
+    "features": {
+      "easySetup": {
+        "title": "Configuración sencilla",
+        "description": "Pon en marcha tu tienda online en minutos"
+      },
+      "analytics": {
+        "title": "Análisis potentes",
+        "description": "Toma decisiones basadas en datos con información en tiempo real"
+      },
+      "customerManagement": {
+        "title": "Gestión de clientes",
+        "description": "Construye relaciones y aumenta la lealtad de los clientes"
+      }
+    },
+    "legal": "Al continuar, aceptas los {terms} y la {privacy} de Nextora."
+  },
+  "login": {
+    "title": "Inicia sesión en tu cuenta",
+    "subtitle": "Introduce tus credenciales para acceder a tu panel",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "forgotPassword": "¿Olvidaste tu contraseña?",
+    "continueWith": "o continúa con",
+    "google": "Google",
+    "facebook": "Facebook", 
+    "apple": "Apple",
+    "signIn": "Iniciar sesión",
+    "noAccount": "¿No tienes una cuenta?",
+    "createAccount": "Crear una cuenta",
+    "connecting": "Conectando..."
+  },
+  "common": {
+    "termsOfService": "Términos de servicio",
+    "privacyPolicy": "Política de privacidad",
+    "contactUs": "Contáctanos",
+    "allRightsReserved": "Todos los derechos reservados"
+  },
+  "language": {
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "es": "Español"
+  }
+}

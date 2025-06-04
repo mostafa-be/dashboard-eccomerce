@@ -2,12 +2,14 @@ import { NavBar } from "@/app/components/Dashboard/Layout/NavBar/NavBar";
 import { ThemeProvider } from "@/utils/theme-provider";
 import "./Dashboard.css";
 import SideBarDesktop from "@/app/components/Dashboard/Layout/Sider/SideBarDesktop";
-import AdminProtected from "@/hooks/adminProtected";
+import StoreProtected from "@/hooks/storeProtected";
+//import StoreProtected from "@/hooks/storeProtected";
+//import AdminProtected from "@/hooks/adminProtected";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
-    <AdminProtected>
-      <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+    <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+      <StoreProtected>
         <main className="relative flex min-h-dvh flex-col md:flex-row">
           <SideBarDesktop />
           <div className="flex-grow flex flex-col">
@@ -17,7 +19,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             </div>
           </div>
         </main>
-      </ThemeProvider>
-    </AdminProtected>
+      </StoreProtected>
+    </ThemeProvider>
   );
 }

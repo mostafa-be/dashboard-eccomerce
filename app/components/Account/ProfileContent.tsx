@@ -26,7 +26,7 @@ const ProfileContent = () => {
       };
     }) => state.auth
   );
-
+console.log("User data:", user);
   const router = useRouter();
 
   // Fetch all orders and filter by current user

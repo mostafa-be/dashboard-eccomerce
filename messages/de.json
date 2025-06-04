@@ -1,0 +1,59 @@
+{
+  "titlePages": {
+    "dashboard": "Dashboard",
+    "home": "Startseite",
+    "login": "Anmelden",
+    "createStore": "Shop erstellen"
+  },
+  "home": {
+    "welcome": "Willkommen bei Nextora",
+    "subtitle": "Melden Sie sich an oder registrieren Sie sich, um mit dem Online-Verkauf zu beginnen",
+    "login": "Anmelden",
+    "createAccount": "Konto erstellen",
+    "whyChoose": "Warum Nextora wählen?",
+    "features": {
+      "easySetup": {
+        "title": "Einfache Store-Einrichtung",
+        "description": "Bringen Sie Ihren Online-Shop in Minuten zum Laufen"
+      },
+      "analytics": {
+        "title": "Leistungsstarke Analysen",
+        "description": "Treffen Sie datengestützte Entscheidungen mit Echtzeit-Einblicken"
+      },
+      "customerManagement": {
+        "title": "Kundenverwaltung",
+        "description": "Bauen Sie Beziehungen auf und steigern Sie die Kundenbindung"
+      }
+    },
+    "legal": "Durch Fortfahren akzeptieren Sie die {terms} und {privacy} von Nextora."
+  },
+  "login": {
+    "title": "Bei Ihrem Konto anmelden",
+    "subtitle": "Geben Sie Ihre Zugangsdaten ein, um auf Ihr Dashboard zuzugreifen",
+    "email": "E-Mail-Adresse",
+    "password": "Passwort",
+    "forgotPassword": "Passwort vergessen?",
+    "continueWith": "oder fortfahren mit",
+    "google": "Google",
+    "facebook": "Facebook",
+    "apple": "Apple",
+    "signIn": "Anmelden",
+    "noAccount": "Haben Sie kein Konto?",
+    "createAccount": "Konto erstellen",
+    "connecting": "Verbindung wird hergestellt..."
+  },
+  "common": {
+    "termsOfService": "Nutzungsbedingungen",
+    "privacyPolicy": "Datenschutzrichtlinie",
+    "contactUs": "Kontaktieren Sie uns",
+    "allRightsReserved": "Alle Rechte vorbehalten"
+  },
+  "language": {
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "es": "Español"
+  }
+}

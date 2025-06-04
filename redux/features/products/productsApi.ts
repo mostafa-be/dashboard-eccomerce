@@ -3,37 +3,37 @@ import { apiSlice } from "../api/apiSlice";
 export const productsApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     createProduct: builder.mutation({
-      query: (data) => ({
-        url: "create-product",
+      query: ({ storeId, data }) => ({
+        url: `stores/${storeId}/products/create`,
         method: "POST",
         body: data,
         credentials: "include" as const,
       }),
     }),
     getProduct: builder.query({
-      query: ({ id }) => ({
-        url: `get-product/${id}`,
+      query: ({ storeId, productId }) => ({
+        url: `stores/${storeId}/products/${productId}`,
         method: "GET",
         credentials: "include" as const,
       }),
     }),
     getAllProducts: builder.query({
-      query: () => ({
-        url: "get-products",
+      query: ({ storeId }) => ({
+        url: `stores/${storeId}/products`,
         method: "GET",
         credentials: "include" as const,
       }),
     }),
     getBestSellingProducts: builder.query({
-      query: () => ({
-        url: "get-best-selling-products",
+      query: ({ storeId }) => ({
+        url: `stores/${storeId}/best-selling-products`,
         method: "GET",
         credentials: "include" as const,
       }),
     }),
     addReview: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `add-review/${id}`,
+      query: ({ storeId, productId, data }) => ({
+        url: `stores/${storeId}/products/${productId}/review`,
         method: "PUT",
         body: data,
         credentials: "include" as const,
@@ -48,16 +48,16 @@ export const productsApi = apiSlice.injectEndpoints({
       }),
     }),
     editProduct: builder.mutation({
-      query: ({ id, data }) => ({
-        url: `edit-product/${id}`,
+      query: ({ storeId, productId, data }) => ({
+        url: `stores/${storeId}/products/${productId}`,
         method: "PUT",
         body: data,
         credentials: "include" as const,
       }),
     }),
     deleteProduct: builder.mutation({
-      query: (id) => ({
-        url: `delete-product/${id}`,
+      query: ({ storeId, productId }) => ({
+        url: `stores/${storeId}/products/${productId}`,
         method: "DELETE",
         credentials: "include" as const,
       }),

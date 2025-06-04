@@ -6,6 +6,8 @@ import Description from "../Home/Description";
 import Login from "./Login";
 import ForgotPassword from "./ForgotPassword";
 import { Loader2 } from "lucide-react";
+import SectionLoadingFallback from "../ui/SectionLoadingFallback";
+import Footer from "../Home/Footer";
 
 /**
  * Login page states
@@ -51,14 +53,8 @@ const LoginPage = () => {
     <div className="min-h-dvh bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <main className="container relative mx-auto flex flex-col lg:grid lg:grid-cols-12 gap-4 p-4 md:p-6 lg:p-8 xl:p-10">
         {/* Left side - Analytics description */}
-        <section className="order-2 lg:order-1 lg:col-span-7 xl:col-span-7 h-auto lg:h-[calc(100vh-3rem)] flex items-center justify-center mb-8 lg:mb-0 overflow-hidden rounded-2xl shadow-lg">
-          <Suspense
-            fallback={
-              <div className="w-full h-full flex items-center justify-center bg-white/30 backdrop-blur-sm rounded-2xl">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-              </div>
-            }
-          >
+        <section className="order-2 lg:order-1 lg:col-span-7 xl:col-span-7 h-auto lg:h-[calc(100vh-3rem)] mb-8 lg:mb-0 overflow-hidden rounded-2xl shadow-lg">
+          <Suspense fallback={<SectionLoadingFallback />}>
             <Description />
           </Suspense>
         </section>
@@ -73,9 +69,9 @@ const LoginPage = () => {
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
-                  className="flex justify-center items-center h-64"
+                  className="h-64"
                 >
-                  <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                  <SectionLoadingFallback variant="minimal" height="h-64" />
                 </motion.div>
               ) : authType === "login" ? (
                 <motion.div
@@ -102,38 +98,8 @@ const LoginPage = () => {
           </div>
         </section>
       </main>
-
       {/* Footer with links */}
-      <footer className="py-4 border-t border-gray-200 dark:border-gray-800">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              © {new Date().getFullYear()} Nextora. All rights reserved.
-            </p>
-            <div className="flex gap-6">
-              <a
-                href="#"
-                className="text-sm text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              >
-                Terms of Service
-              </a>
-              <a
-                href="#"
-                className="text-sm text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              >
-                Privacy Policy
-              </a>
-              <a
-                href="#"
-                className="text-sm text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              >
-                Contact Us
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
-
+      <Footer />
     </div>
   );
 };

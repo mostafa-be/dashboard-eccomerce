@@ -6,14 +6,16 @@ type RegistrationResponse = {
   activationToken: string;
 };
 
-type RegistrationData = {};
+type RegistrationData = {
+  
+};
 
 export const authApi = apiSlice.injectEndpoints({
   endpoints: (builder) => ({
     // endpoints here
     registerByAdmin: builder.mutation({
       query: (data) => ({
-        url: "registration-by-admin",
+        url: "auth/registration-by-admin",
         method: "POST",
         body: data,
         credentials: "include" as const,
@@ -21,7 +23,7 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     register: builder.mutation<RegistrationResponse, RegistrationData>({
       query: (data) => ({
-        url: "registration",
+        url: "auth/registration",
         method: "POST",
         body: data,
         credentials: "include" as const,
@@ -41,7 +43,7 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     activation: builder.mutation({
       query: ({ activation_token, activation_code }) => ({
-        url: "activate-user",
+        url: "auth/activate-user",
         method: "POSt",
         body: {
           activation_token,
@@ -51,7 +53,7 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     login: builder.mutation({
       query: ({ email, password }) => ({
-        url: "login",
+        url: "auth/login",
         method: "POSt",
         body: {
           email,
@@ -75,7 +77,7 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     forgotPassword: builder.mutation({
       query: ({ email }) => ({
-        url: "forgot-password",
+        url: "auth/forgot-password",
         method: "POSt",
         body: {
           email,
@@ -98,7 +100,7 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     socialAuth: builder.mutation({
       query: ({ email, name, avatar }) => ({
-        url: "social-auth",
+        url: "auth/social-auth",
         method: "POSt",
         body: {
           email,
@@ -123,7 +125,7 @@ export const authApi = apiSlice.injectEndpoints({
     }),
     logOut: builder.query({
       query: () => ({
-        url: "logout",
+        url: "auth/logout",
         method: "Get",
         credentials: "include" as const,
       }),

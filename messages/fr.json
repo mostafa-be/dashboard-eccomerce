@@ -1,5 +1,109 @@
 {
-    "titlePages":{
-        "dashboard": "dashboard"
+    "titlePages": {
+        "dashboard": "Tableau de bord",
+        "home": "Accueil",
+        "login": "Connexion",
+        "createStore": "Créer Votre Boutique"
+    },
+    "dashboard": {
+        "sidebar": {
+            "dashboard": "Tableau de bord",
+            "orders": "Commandes",
+            "expenses": "Dépenses",
+            "customers": "Clients",
+            "products": {
+                "main": "Produits",
+                "list": "Liste des produits",
+                "brands": "Liste des marques",
+                "collections": "Liste des collections",
+                "categories": "Liste des catégories",
+                "colors": "Liste des couleurs",
+                "sizes": "Liste des tailles",
+                "tags": "Liste des tags"
+            },
+            "enquiries": "Demandes",
+            "notifications": "Notifications",
+            "analytics": "Analytiques",
+            "blogs": {
+                "main": "Blogs",
+                "list": "Liste des blogs",
+                "categories": "Liste des catégories",
+                "tags": "Liste des tags"
+            },
+            "reports": "Rapports",
+            "layout": {
+                "main": "Mise en page",
+                "banners": "Bannières",
+                "policies": "Politiques",
+                "faqs": "FAQs"
+            },
+            "settings": "Paramètres"
+        },
+        "account": {
+            "myAccount": "Mon compte",
+            "profile": "Profil",
+            "billing": "Facturation",
+            "settings": "Paramètres",
+            "team": "Équipe",
+            "newTeam": "Nouvelle équipe",
+            "notifications": "Notifications",
+            "documents": "Documents",
+            "favorites": "Favoris",
+            "help": "Aide",
+            "privacy": "Confidentialité",
+            "language": "Langue",
+            "logout": "Se déconnecter"
+        }
+    },
+    "home": {
+        "welcome": "Bienvenue sur Nextora",
+        "subtitle": "Connectez-vous ou inscrivez-vous pour commencer à vendre en ligne",
+        "login": "Se connecter",
+        "createAccount": "Créer un compte",
+        "whyChoose": "Pourquoi choisir Nextora ?",
+        "features": {
+            "easySetup": {
+                "title": "Configuration facile",
+                "description": "Créez votre boutique en ligne en quelques minutes"
+            },
+            "analytics": {
+                "title": "Analyses puissantes",
+                "description": "Prenez des décisions basées sur des données en temps réel"
+            },
+            "customerManagement": {
+                "title": "Gestion des clients",
+                "description": "Développez des relations et augmentez la fidélité des clients"
+            }
+        },
+        "legal": "En continuant, vous acceptez les {terms} et la {privacy} de Nextora."
+    },
+    "login": {
+        "title": "Connectez-vous à votre compte",
+        "subtitle": "Entrez vos identifiants pour accéder à votre tableau de bord",
+        "email": "Adresse e-mail",
+        "password": "Mot de passe",
+        "forgotPassword": "Mot de passe oublié ?",
+        "continueWith": "ou continuez avec",
+        "google": "Google",
+        "facebook": "Facebook",
+        "apple": "Apple",
+        "signIn": "Se connecter",
+        "noAccount": "Vous n'avez pas de compte ?",
+        "createAccount": "Créer un compte",
+        "connecting": "Connexion en cours..."
+    },
+    "common": {
+        "termsOfService": "Conditions d'utilisation",
+        "privacyPolicy": "Politique de confidentialité",
+        "contactUs": "Contactez-nous",
+        "allRightsReserved": "Tous droits réservés"
+    },
+    "language": {
+        "en": "English",
+        "fr": "Français",
+        "ar": "العربية",
+        "de": "Deutsch",
+        "it": "Italiano",
+        "es": "Español"
     }
 }

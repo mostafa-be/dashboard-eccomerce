@@ -1,5 +1,109 @@
 {
-    "titlePages":{
-        "dashboard": "dashboard"
+    "titlePages": {
+        "dashboard": "Dashboard",
+        "home": "Home",
+        "login": "Login",
+        "createStore": "Create Your Store"
+    },
+    "dashboard": {
+        "sidebar": {
+            "dashboard": "Dashboard",
+            "orders": "Orders",
+            "expenses": "Expenses",
+            "customers": "Customers",
+            "products": {
+                "main": "Products",
+                "list": "Products List",
+                "brands": "Brands List",
+                "collections": "Collections List",
+                "categories": "Categories List",
+                "colors": "Colors List",
+                "sizes": "Sizes List",
+                "tags": "Tags List"
+            },
+            "enquiries": "Enquiries",
+            "notifications": "Notifications",
+            "analytics": "Analytics",
+            "blogs": {
+                "main": "Blogs",
+                "list": "Blogs List",
+                "categories": "Categories List",
+                "tags": "Tags List"
+            },
+            "reports": "Reports",
+            "layout": {
+                "main": "Layout",
+                "banners": "Banners",
+                "policies": "Policies",
+                "faqs": "FAQs"
+            },
+            "settings": "Settings"
+        },
+        "account": {
+            "myAccount": "My Account",
+            "profile": "Profile",
+            "billing": "Billing",
+            "settings": "Settings",
+            "team": "Team",
+            "newTeam": "New Team",
+            "notifications": "Notifications",
+            "documents": "Documents",
+            "favorites": "Favorites",
+            "help": "Help",
+            "privacy": "Privacy",
+            "language": "Language",
+            "logout": "Log out"
+        }
+    },
+    "home": {
+        "welcome": "Welcome to Nextora",
+        "subtitle": "Log in or sign up to start selling online",
+        "login": "Log in",
+        "createAccount": "Create account",
+        "whyChoose": "Why choose Nextora?",
+        "features": {
+            "easySetup": {
+                "title": "Easy Store Setup",
+                "description": "Get your online store up and running in minutes"
+            },
+            "analytics": {
+                "title": "Powerful Analytics",
+                "description": "Make data-driven decisions with real-time insights"
+            },
+            "customerManagement": {
+                "title": "Customer Management",
+                "description": "Build relationships and boost customer loyalty"
+            }
+        },
+        "legal": "By continuing, you agree to Nextora's {terms} and {privacy}."
+    },
+    "login": {
+        "title": "Login to your account",
+        "subtitle": "Enter your credentials to access your dashboard",
+        "email": "Email Address",
+        "password": "Password",
+        "forgotPassword": "Forgot password?",
+        "continueWith": "or continue with",
+        "google": "Google",
+        "facebook": "Facebook",
+        "apple": "Apple",
+        "signIn": "Sign In",
+        "noAccount": "Don't have an account?",
+        "createAccount": "Create an account",
+        "connecting": "Connecting..."
+    },
+    "common": {
+        "termsOfService": "Terms of Service",
+        "privacyPolicy": "Privacy Policy",
+        "contactUs": "Contact Us",
+        "allRightsReserved": "All rights reserved"
+    },
+    "language": {
+        "en": "English",
+        "fr": "Français",
+        "ar": "العربية",
+        "de": "Deutsch",
+        "it": "Italiano",
+        "es": "Español"
     }
 }

@@ -1,0 +1,59 @@
+{
+  "titlePages": {
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "login": "Accesso",
+    "createStore": "Crea il tuo negozio"
+  },
+  "home": {
+    "welcome": "Benvenuto su Nextora",
+    "subtitle": "Accedi o registrati per iniziare a vendere online",
+    "login": "Accedi",
+    "createAccount": "Crea account",
+    "whyChoose": "Perché scegliere Nextora?",
+    "features": {
+      "easySetup": {
+        "title": "Configurazione facile",
+        "description": "Avvia il tuo negozio online in pochi minuti"
+      },
+      "analytics": {
+        "title": "Analisi potenti",
+        "description": "Prendi decisioni basate sui dati con informazioni in tempo reale"
+      },
+      "customerManagement": {
+        "title": "Gestione clienti",
+        "description": "Costruisci relazioni e aumenta la fedeltà dei clienti"
+      }
+    },
+    "legal": "Continuando, accetti i {terms} e la {privacy} di Nextora."
+  },
+  "login": {
+    "title": "Accedi al tuo account",
+    "subtitle": "Inserisci le tue credenziali per accedere alla dashboard",
+    "email": "Indirizzo email",
+    "password": "Password",
+    "forgotPassword": "Password dimenticata?",
+    "continueWith": "o continua con",
+    "google": "Google",
+    "facebook": "Facebook",
+    "apple": "Apple",
+    "signIn": "Accedi",
+    "noAccount": "Non hai un account?",
+    "createAccount": "Crea un account",
+    "connecting": "Connessione in corso..."
+  },
+  "common": {
+    "termsOfService": "Termini di servizio",
+    "privacyPolicy": "Informativa sulla privacy",
+    "contactUs": "Contattaci",
+    "allRightsReserved": "Tutti i diritti riservati"
+  },
+  "language": {
+    "en": "English",
+    "fr": "Français",
+    "ar": "العربية",
+    "de": "Deutsch",
+    "it": "Italiano",
+    "es": "Español"
+  }
+}

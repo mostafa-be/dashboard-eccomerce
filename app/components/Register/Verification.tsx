@@ -12,14 +12,15 @@ import {
   ArrowLeft,
   Check,
   Loader2,
-  X,
+  // X,
   RefreshCw,
   AlertCircle,
   ShieldCheck,
 } from "lucide-react";
+import { RegistrationType } from "./RegisterPage";
 
 type Props = {
-  setTypeRegister?: (type: string) => void;
+  setTypeRegister: (type: RegistrationType) => void;
   setAuth?: (type: string) => void;
   email?: string;
   registrationData?: {
@@ -35,10 +36,13 @@ const Verification: FC<Props> = ({
   registrationData,
 }) => {
   // Choose the appropriate function based on which prop is available
-  const navigate = (page: string) => {
-    if (setTypeRegister) setTypeRegister(page);
-    if (setAuth) setAuth(page);
-  };
+  const navigate = React.useCallback(
+    (page: string) => {
+      if (setTypeRegister) setTypeRegister(page as RegistrationType);
+      if (setAuth) setAuth(page);
+    },
+    [setTypeRegister, setAuth]
+  );
 
   // Get token from Redux store
   const { token } = useSelector(
@@ -46,11 +50,9 @@ const Verification: FC<Props> = ({
   );
 
   // API mutations
-  const [activation, { isSuccess, isLoading, error }] = useActivationMutation();
-  const [
-    login,
-    { isSuccess: loginSuccess, isLoading: loginLoading, error: loginError },
-  ] = useLoginMutation();
+  const [activation, { isSuccess, error }] = useActivationMutation();
+  const [login, { isSuccess: loginSuccess, error: loginError }] =
+    useLoginMutation();
 
   // States for UI interactions
   const [isSendingOtp, setIsSendingOtp] = useState<boolean>(false);
@@ -158,7 +160,7 @@ const Verification: FC<Props> = ({
   };
 
   // Automatically login the user after successful verification
-  const handleAutoLogin = async () => {
+  const handleAutoLogin = React.useCallback(async () => {
     // Check if we have the email and password
     if (!registrationData?.email || !registrationData?.password) {
       // If no email/password, just redirect to the store page
@@ -183,7 +185,7 @@ const Verification: FC<Props> = ({
     } finally {
       setIsLoggingIn(false);
     }
-  };
+  }, [registrationData?.email, registrationData?.password, login, navigate]);
 
   // Verify OTP submission
   const handleVerifyOtp = async (digits = otpDigits) => {
@@ -208,7 +210,7 @@ const Verification: FC<Props> = ({
 
       // Success handling will be done in the useEffect below
       setIsVerified(true);
-    } catch (err) {
+    } catch {
       setIsError(true);
       setErrorMessage("Invalid verification code");
       setIsSubmitted(false);
@@ -231,7 +233,7 @@ const Verification: FC<Props> = ({
       inputRefs[0].current?.focus();
 
       toast.success("New verification code sent to your email");
-    } catch (error) {
+    } catch {
       toast.error("Failed to resend code. Please try again.");
     } finally {
       setIsSendingOtp(false);
@@ -241,20 +243,33 @@ const Verification: FC<Props> = ({
   // Auto-focus first input on component mount
   useEffect(() => {
     inputRefs[0].current?.focus();
+    // inputRefs is a stable array, so it's safe to omit from dependencies
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // Handle activation API success/error responses
   useEffect(() => {
-    if (isSuccess) {
+    let autoLoginTimeout: NodeJS.Timeout;
+
+    if (isSuccess && !isLoggingIn) {
       toast.success("Email verified successfully!");
       setIsVerified(true);
-      // Start auto login process
-      handleAutoLogin();
+
+      // Use a timeout to prevent immediate state changes in the same render cycle
+      autoLoginTimeout = setTimeout(() => {
+        // Start auto login process only if we haven't started it already
+        handleAutoLogin();
+      }, 500);
     }
 
     if (error) {
       if ("data" in error) {
-        const errorData = error as any;
+        interface ErrorDataType {
+          data?: {
+            message?: string;
+          };
+        }
+        const errorData = error as ErrorDataType;
         setErrorMessage(errorData.data?.message || "Invalid verification code");
       } else {
         setErrorMessage("An error occurred. Please try again.");
@@ -266,22 +281,36 @@ const Verification: FC<Props> = ({
       setOtpDigits(["", "", "", ""]);
       setTimeout(() => inputRefs[0].current?.focus(), 100);
     }
-  }, [isSuccess, error]);
+
+    // Cleanup timeout to prevent memory leaks
+    return () => {
+      if (autoLoginTimeout) clearTimeout(autoLoginTimeout);
+    };
+  }, [isSuccess, error, handleAutoLogin, inputRefs, isLoggingIn]);
 
   // Handle login API success/error responses
   useEffect(() => {
+    let redirectTimeout: NodeJS.Timeout;
+
     if (loginSuccess) {
       toast.success("Login successful! Redirecting to dashboard...");
       // Redirect to dashboard after successful login
-      setTimeout(() => {
+      redirectTimeout = setTimeout(() => {
         window.location.href = "/en/dashboard";
       }, 1000);
     }
 
     if (loginError) {
       console.log("Login error, continuing to store creation");
-      navigate("store");
+      // Add a small delay to prevent potential update loop
+      redirectTimeout = setTimeout(() => {
+        navigate("store");
+      }, 100);
     }
+
+    return () => {
+      if (redirectTimeout) clearTimeout(redirectTimeout);
+    };
   }, [loginSuccess, loginError, navigate]);
 
   // Animation variants
@@ -389,7 +418,7 @@ const Verification: FC<Props> = ({
               transition={{ delay: 0.3 }}
               className="text-center text-sm text-gray-500 dark:text-gray-400"
             >
-              We've sent a 4-digit code to{" "}
+              We&apos;ve sent a 4-digit code to{" "}
               <span className="font-medium">
                 {email || registrationData?.email || "your email"}
               </span>
@@ -505,7 +534,7 @@ const Verification: FC<Props> = ({
             className="mt-6 text-center"
           >
             <p className="text-sm text-gray-600 dark:text-gray-400">
-              Didn't receive a code?
+              Didn&apos;t receive a code?
             </p>
             <button
               type="button"

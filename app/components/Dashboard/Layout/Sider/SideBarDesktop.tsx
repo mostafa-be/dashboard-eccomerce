@@ -1,6 +1,7 @@
 "use client";
 import React from "react";
 import { SideBar, SideBarItem } from "./SideBar";
+import { usePathname } from "next/navigation";
 import {
   Bell,
   Box,
@@ -14,43 +15,63 @@ import {
   HandCoins,
   Origami,
 } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
+import { useStoreContext } from "@/hooks/ExpiredProtected";
 
 const SideBarDesktop = () => {
   const [expanded, setExpanded] = React.useState<boolean>(true);
-  const url = `en/dashboard`;
+  const locale = useLocale();
+  const { storeId } = useStoreContext();
+  const pathname = usePathname();
+  const t = useTranslations("dashboard.sidebar"); // Initialize translations for sidebar
 
+  // Properly construct URL with storeId - Add leading slash
+  const baseUrl = `/${locale}/store/${storeId}/dashboard`;
+
+  // Function to check if a link is active based on current pathname
+  const isLinkActive = (linkUrl: string) => {
+    // Exact match for dashboard
+    if (linkUrl === baseUrl && pathname === baseUrl) {
+      return true;
+    }
+
+    // For other links, check if pathname starts with the URL (nested routes)
+    return linkUrl !== baseUrl && pathname.startsWith(linkUrl);
+  };
+
+  // Apply active state to all sidebar items
   return (
     <SideBar expanded={expanded} setExpanded={setExpanded}>
       <SideBarItem
         icon={<LayoutDashboard size={25} />}
-        text="Dashboard"
-        active={true}
+        text={t("dashboard")}
+        active={isLinkActive(baseUrl)}
         links={false}
-        url={`${url}`}
+        url={baseUrl}
         alert={false}
       />
       <SideBarItem
         icon={<PackageOpen size={25} />}
-        text="Orders"
-        active={false}
+        text={t("orders")}
+        active={isLinkActive(`${baseUrl}/orders`)}
         links={false}
-        url={`${url}/orders`}
+        url={`${baseUrl}/orders`}
         alert={false}
       />
       <SideBarItem
         icon={<HandCoins size={25} />}
-        text="Expenses"
-        active={false}
+        text={t("expenses")}
+        active={isLinkActive(`${baseUrl}/expenses`)}
         links={false}
-        url={`${url}/expenses`}
+        url={`${baseUrl}/expenses`}
         alert={false}
       />
       <SideBarItem
         icon={<UsersRound size={25} />}
-        text="Customers"
-        active={false}
+        text={t("customers")}
+        active={isLinkActive(`${baseUrl}/customers`)}
         links={false}
-        url={`${url}/customers`}
+        url={`${baseUrl}/customers`}
         alert={false}
       />
       {/*   <SideBarItem
@@ -63,164 +84,137 @@ const SideBarDesktop = () => {
       />*/}
       <SideBarItem
         icon={<Box size={25} />}
-        text="Products"
-        active={false}
+        text={t("products.main")}
+        active={pathname.includes(`${baseUrl}/products`)}
         links={true}
         alert={false}
         groupLinks={[
           {
-            text: "Products List",
-            url: `${url}/products`,
-            active: false,
+            text: t("products.list"),
+            url: `${baseUrl}/products`,
+            active:
+              isLinkActive(`${baseUrl}/products`) &&
+              !pathname.includes("/products/"),
           },
           {
-            text: "Brands List",
-            url: `${url}/products/brands`,
-            active: false,
+            text: t("products.brands"),
+            url: `${baseUrl}/products/brands`,
+            active: isLinkActive(`${baseUrl}/products/brands`),
           },
           {
-            text: "Collections List",
-            url: `${url}/products/collections`,
-            active: false,
+            text: t("products.collections"),
+            url: `${baseUrl}/products/collections`,
+            active: isLinkActive(`${baseUrl}/products/collections`),
           },
           {
-            text: "Categories List",
-            url: `${url}/products/categories`,
-            active: false,
+            text: t("products.categories"),
+            url: `${baseUrl}/products/categories`,
+            active: isLinkActive(`${baseUrl}/products/categories`),
           },
           {
-            text: "Colors List",
-            url: `${url}/products/colors`,
-            active: false,
+            text: t("products.colors"),
+            url: `${baseUrl}/products/colors`,
+            active: isLinkActive(`${baseUrl}/products/colors`),
           },
           {
-            text: "Sizes List",
-            url: `${url}/products/sizes`,
-            active: false,
+            text: t("products.sizes"),
+            url: `${baseUrl}/products/sizes`,
+            active: isLinkActive(`${baseUrl}/products/sizes`),
           },
           {
-            text: "Tags List",
-            url: `${url}/products/tags`,
-            active: false,
+            text: t("products.tags"),
+            url: `${baseUrl}/products/tags`,
+            active: isLinkActive(`${baseUrl}/products/tags`),
           },
         ]}
       />
       <SideBarItem
         icon={<MessagesSquare size={25} />}
-        text="Enquiries"
-        active={false}
+        text={t("enquiries")}
+        active={isLinkActive(`${baseUrl}/enquiries`)}
         links={false}
-        url={`${url}/enquiries`}
+        url={`${baseUrl}/enquiries`}
         alert={false}
       />
       <SideBarItem
         icon={<Bell size={25} />}
-        text="Notifications"
-        active={false}
+        text={t("notifications")}
+        active={isLinkActive(`${baseUrl}/notifications`)}
         links={false}
-        url={`${url}/notifications`}
+        url={`${baseUrl}/notifications`}
         alert={false}
       />
-
       <SideBarItem
         icon={<ChartPie size={25} />}
-        text="Analytics"
-        active={false}
+        text={t("analytics")}
+        active={isLinkActive(`${baseUrl}/analytics`)}
         links={false}
-        url={`${url}/analytics`}
+        url={`${baseUrl}/analytics`}
         alert={false}
       />
       <SideBarItem
         icon={<Newspaper size={25} />}
-        text="Blogs"
-        active={false}
+        text={t("blogs.main")}
+        active={pathname.includes(`${baseUrl}/blogs`)}
         links={true}
         alert={false}
         groupLinks={[
           {
-            text: "Blogs List",
-            url: `${url}/blogs`,
-            active: false,
+            text: t("blogs.list"),
+            url: `${baseUrl}/blogs`,
+            active:
+              isLinkActive(`${baseUrl}/blogs`) && !pathname.includes("/blogs/"),
           },
           {
-            text: "Categories List",
-            url: `${url}/blogs/categories`,
-            active: false,
+            text: t("blogs.categories"),
+            url: `${baseUrl}/blogs/categories`,
+            active: isLinkActive(`${baseUrl}/blogs/categories`),
           },
           {
-            text: "Tags List",
-            url: `${url}/blogs/tags`,
-            active: false,
+            text: t("blogs.tags"),
+            url: `${baseUrl}/blogs/tags`,
+            active: isLinkActive(`${baseUrl}/blogs/tags`),
           },
         ]}
       />
       <SideBarItem
         icon={<ChartPie size={25} />}
-        text="Reports"
-        active={false}
+        text={t("reports")}
+        active={isLinkActive(`${baseUrl}/reports`)}
         links={false}
-        url={`${url}/reports`}
+        url={`${baseUrl}/reports`}
         alert={false}
       />
       <SideBarItem
         icon={<Origami size={25} />}
-        text="Layout"
-        active={false}
+        text={t("layout.main")}
+        active={pathname.includes(`${baseUrl}/layout`)}
         links={true}
         alert={false}
         groupLinks={[
           {
-            text: "Banners",
-            url: `${url}/layout/banners`,
-            active: false,
+            text: t("layout.banners"),
+            url: `${baseUrl}/layout/banners`,
+            active: isLinkActive(`${baseUrl}/layout/banners`),
           },
           {
-            text: "Policies",
-            url: `${url}/layout/policies`,
-            active: false,
+            text: t("layout.policies"),
+            url: `${baseUrl}/layout/policies`,
+            active: isLinkActive(`${baseUrl}/layout/policies`),
           },
           {
-            text: "FAQs",
-            url: `${url}/layout/faqs`,
-            active: false,
+            text: t("layout.faqs"),
+            url: `${baseUrl}/layout/faqs`,
+            active: isLinkActive(`${baseUrl}/layout/faqs`),
           },
         ]}
       />
-      {/*      <SideBarItem
-        icon={<Settings size={25} />}
-        text="Settings"
-        active={false}
-        links={true}
-        alert={false}
-        groupLinks={[
-          {
-            text: "General Settings",
-            url: `${url}/settings/general`,
-            active: false,
-          },
-          {
-            text: "Payment Settings",
-            url: `${url}/settings/payment`,
-            active: false,
-          },
-          {
-            text: "Shipping Settings",
-            url: `${url}/settings/shipping`,
-            active: false,
-          },
-          {
-            text: "Tax Settings",
-            url: `${url}/settings/tax`,
-            active: false,
-          },
-        ]}
-      />*/}
       <SideBarItem
         icon={<Settings size={25} />}
-        text="Settings"
-        active={false}
+        text={t("settings")}
+        active={isLinkActive(`${baseUrl}/settings`)}
         links={false}
-        url={`${url}/settings`}
+        url={`${baseUrl}/settings`}
         alert={false}
       />
     </SideBar>

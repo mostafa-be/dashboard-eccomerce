@@ -5,8 +5,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import Description from "../Home/Description";
 import RegisterContent from "./RegisterContent";
 import Verification from "./Verification";
-import { Loader2 } from "lucide-react";
 import RegisterMethodSelection from "./RegisterMethodSelection";
+import SectionLoadingFallback from "../ui/SectionLoadingFallback";
+import Footer from "../Home/Footer";
+import { Loader2 } from "lucide-react";
 
 /**
  * Registration flow types
@@ -19,22 +21,10 @@ export type RegistrationType =
   | "store";
 
 /**
- * RegisterPage Component
- * Main registration container that handles different registration states
+ * Custom hook for registration page animations
  */
-const RegisterPage = () => {
-  const [isLoaded, setIsLoaded] = useState(false);
-  const [registerType, setRegisterType] =
-    useState<RegistrationType>("method-select");
-  const [registrationData, setRegistrationData] = useState<any>(null);
-
-  // Simulate loading state
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoaded(true), 300);
-    return () => clearTimeout(timer);
-  }, []);
-
-  // Animation variants
+export const useRegistrationMotion = () => {
+  // Main content animation variants
   const contentVariants = {
     hidden: { opacity: 0, y: 20 },
     visible: {
@@ -55,16 +45,55 @@ const RegisterPage = () => {
     },
   };
 
+  // Page transition animation variants
+  const pageTransition = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.5 } },
+    exit: { opacity: 0, transition: { duration: 0.3 } },
+  };
+
+  // Loading animation variants
+  const loadingVariants = {
+    initial: { opacity: 0 },
+    animate: { opacity: 1, transition: { duration: 0.3 } },
+    exit: { opacity: 0, transition: { duration: 0.2 } },
+  };
+
+  return {
+    contentVariants,
+    pageTransition,
+    loadingVariants,
+  };
+};
+
+/**
+ * RegisterPage Component
+ * Main registration container that handles different registration states
+ */
+const RegisterPage = () => {
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [registerType, setRegisterType] =
+    useState<RegistrationType>("method-select");
+  const [registrationData, setRegistrationData] = useState<any>(null);
+
+  // Get motion variants from our custom hook
+  const { contentVariants, loadingVariants } =
+    useRegistrationMotion();
+
+  // Simulate loading state
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoaded(true), 300);
+    return () => clearTimeout(timer);
+  }, []);
+
   return (
     <div className="min-h-dvh bg-gradient-to-b from-white to-blue-50 dark:from-gray-900 dark:to-gray-800">
       <main className="container relative mx-auto flex flex-col lg:grid lg:grid-cols-12 gap-4 p-4 md:p-6 lg:p-8 xl:p-10">
         {/* Left side - Analytics description */}
-        <section className="order-2 lg:order-1 lg:col-span-7 xl:col-span-7 h-auto  lg:h-[calc(100vh-3rem)] flex items-center justify-center mb-8 lg:mb-0 overflow-hidden rounded-2xl shadow-lg">
+        <section className="order-2 lg:order-1 lg:col-span-7 xl:col-span-7 h-auto lg:h-[calc(100vh-3rem)] mb-8 lg:mb-0 overflow-hidden rounded-2xl shadow-lg">
           <Suspense
             fallback={
-              <div className="w-full h-full flex items-center justify-center bg-white/30 backdrop-blur-sm rounded-2xl">
-                <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
-              </div>
+              <SectionLoadingFallback message="Loading presentation..." />
             }
           >
             <Description />
@@ -78,12 +107,13 @@ const RegisterPage = () => {
               {!isLoaded ? (
                 <motion.div
                   key="loading"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
+                  variants={loadingVariants}
+                  initial="initial"
+                  animate="animate"
+                  exit="exit"
                   className="flex justify-center items-center h-64"
                 >
-                  <Loader2 className="h-8 w-8 animate-spin text-blue-500" />
+                  <SectionLoadingFallback variant="minimal" height="h-64" />
                 </motion.div>
               ) : registerType === "method-select" ? (
                 <motion.div
@@ -160,35 +190,7 @@ const RegisterPage = () => {
       </main>
 
       {/* Footer with links */}
-      <footer className="py-4 border-t border-gray-200 dark:border-gray-800">
-        <div className="container mx-auto px-4">
-          <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              © {new Date().getFullYear()} Nextora. All rights reserved.
-            </p>
-            <div className="flex gap-6">
-              <a
-                href="#"
-                className="text-sm text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              >
-                Terms of Service
-              </a>
-              <a
-                href="#"
-                className="text-sm text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              >
-                Privacy Policy
-              </a>
-              <a
-                href="#"
-                className="text-sm text-gray-500 hover:text-blue-600 dark:text-gray-400 dark:hover:text-blue-400 transition-colors"
-              >
-                Contact Us
-              </a>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

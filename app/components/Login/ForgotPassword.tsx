@@ -6,10 +6,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import toast from "react-hot-toast";
 
+type AuthType = "login" | "forgotPassword";
 type Props = {
-  setAuth: (type: string) => void;
+  setAuth: React.Dispatch<React.SetStateAction<AuthType>>;
 };
-
 const ForgotPassword = ({ setAuth }: Props) => {
   const [isSubmitted, setIsSubmitted] = useState(false);
 
@@ -73,8 +73,8 @@ const ForgotPassword = ({ setAuth }: Props) => {
             className="w-16 h-16 bg-green-100 dark:bg-green-900/20 rounded-full flex items-center justify-center mb-4"
           >
             <CheckCircle className="h-8 w-8 text-green-500" />
-                  </motion.div>
-                  
+          </motion.div>
+
           <motion.h2
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
